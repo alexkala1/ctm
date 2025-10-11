@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.nuxt/
+.output/
+dist/
+build/
+
+# Generated files
+.nitro/
+.cache/
+
+# Environment files
+.env
+.env.*
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Prisma
+prisma/migrations/
+
+# Auto-generated files
+.eslintrc-auto-import.json

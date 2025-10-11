@@ -1,0 +1,141 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  engineType    = "binary"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                  String       @id @default(cuid())
+  email               String       @unique
+  name                String?
+  hashedPassword      String? // For email/password auth
+  role                UserRole     @default(USER)
+  status              UserStatus   @default(PENDING)
+  avatarUrl           String?
+  provider            AuthProvider @default(EMAIL)
+  providerId          String?
+  lastLoginAt         DateTime?
+  approvedAt          DateTime?
+  approvedBy          String? // ID of admin who approved
+  failedLoginAttempts Int          @default(0)
+  lockedUntil         DateTime? // Account lockout
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  auditLogs           AuditLog[]
+  createdTournaments  Tournament[]
+
+  @@map("users")
+}
+
+model Tournament {
+  id                          String           @id @default(cuid())
+  name                        String           @unique
+  status                      TournamentStatus @default(DRAFT)
+  tournamentStart             DateTime
+  tournamentEnd               DateTime
+  tournamentRegistrationStart DateTime
+  tournamentRegistrationEnd   DateTime
+  proclamations               String?
+  chessResults                String?
+  categories                  String[]         @default([])
+  hasTeams                    Boolean          @default(false)
+  createdBy                   String?
+  createdAt                   DateTime         @default(now())
+  updatedAt                   DateTime         @updatedAt
+  deletedAt                   DateTime?
+  competitors                 Competitor[]
+  creator                     User?            @relation(fields: [createdBy], references: [id])
+
+  @@index([status])
+  @@index([tournamentStart])
+  @@index([createdBy])
+  @@index([deletedAt])
+  @@map("tournaments")
+}
+
+model Competitor {
+  id                     String                 @id @default(cuid())
+  tournamentId           String
+  personalNumber         Int
+  firstName              String
+  lastName               String
+  ratedPlayerLinks       String[]               @default([])
+  gender                 Gender
+  category               String
+  team                   String?
+  tournamentDocumentUrl  String?
+  playerAcceptanceStatus PlayerAcceptanceStatus @default(PENDING)
+  adminNotes             String?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  deletedAt              DateTime?
+  tournament             Tournament             @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, personalNumber])
+  @@unique([tournamentId, firstName, lastName])
+  @@index([deletedAt])
+  @@index([tournamentId])
+  @@index([playerAcceptanceStatus])
+  @@index([category])
+  @@map("competitors")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  entityType String
+  entityId   String
+  action     String
+  oldValue   Json?
+  newValue   Json?
+  changedBy  String
+  changedAt  DateTime @default(now())
+  user       User     @relation(fields: [changedBy], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([changedBy])
+  @@index([changedAt])
+  @@map("audit_logs")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  GITHUB
+}
+
+enum TournamentStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  FINISHED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum PlayerAcceptanceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

@@ -1,0 +1,663 @@
+# 🔥 Ultimate Claude Prompt — Chess Tournament App (Nuxt Kit + Faker)
+
+You are a **senior full-stack engineer with 10+ years of experience in Nuxt, Prisma, Supabase, and responsive web design**.
+Your job is to **design and scaffold** a chess tournament management application.
+Follow **production-grade best practices**, enforce **type safety**, and make all architectural decisions explicit.
+
+## 🚨 CRITICAL ISSUES TO ADDRESS
+
+**MANDATORY: Fix these issues before development begins**
+
+1. **Database Migration**: Change from SQLite to PostgreSQL for Supabase compatibility
+2. **Missing Dependencies**: Add 15+ essential packages for full functionality
+3. **Incomplete Schema**: Replace basic schema with comprehensive tournament models
+4. **Security Gaps**: Implement production-grade security measures
+5. **Testing Setup**: Configure comprehensive testing strategy
+6. **Performance**: Add caching, optimization, and mobile performance
+7. **Type Safety**: Create complete TypeScript type definitions
+8. **Project Structure**: Implement scalable folder organization
+
+**DO NOT PROCEED** without addressing these critical issues first.
+
+---
+
+## 📌 Specification
+
+### Tech Stack
+
+* Frontend: Nuxt 4 (Nuxt UI, Pinia, i18n, VueUse)
+* Backend: Nitro + Nuxt Kit endpoints
+* Database/ORM: Supabase (PostgreSQL) + Prisma
+* Language: TypeScript (strict mode, shared types in `types/` folder)
+* Code Quality: ESLint + Prettier + Vitest + Playwright
+* Testing: Unit (Vitest), Integration (Playwright), API Contract tests
+* File Handling: XLSX, PDF, CSV import/export
+* Email: Nodemailer + Supabase Auth
+* Monitoring: Sentry integration
+* Mock Data: Faker for seeding tournaments and participants
+* Caching: Redis for performance optimization
+
+### Required Dependencies
+
+**Core Dependencies:**
+```json
+{
+  "dependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "@nuxt/eslint": "^1.9.0",
+    "@nuxt/image": "^1.11.0",
+    "@nuxt/scripts": "^0.11.13",
+    "@nuxt/ui": "^3.3.3",
+    "@nuxtjs/supabase": "^1.6.2",
+    "@nuxtjs/i18n": "^8.0.0",
+    "@nuxtjs/sentry": "^8.0.0",
+    "@pinia/nuxt": "^0.11.2",
+    "@prisma/nuxt": "^0.3.0",
+    "@supabase/supabase-js": "^2.38.0",
+    "@unhead/vue": "^2.0.14",
+    "@vee-validate/nuxt": "^4.15.1",
+    "@vueuse/nuxt": "^13.9.0",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.10",
+    "eslint": "^9.35.0",
+    "file-saver": "^2.0.5",
+    "jspdf": "^2.5.1",
+    "nodemailer": "^6.9.7",
+    "nuxt": "^4.1.1",
+    "papaparse": "^5.4.1",
+    "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.5.0",
+    "typescript": "^5.9.2",
+    "vue": "^3.5.21",
+    "vue-router": "^4.5.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/file-saver": "^2.0.0",
+    "@types/node": "^20.10.0",
+    "@types/nodemailer": "^6.4.0",
+    "@types/papaparse": "^5.3.0",
+    "@vitest/ui": "^1.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "axe-core": "^4.8.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "happy-dom": "^12.10.0",
+    "jsdom": "^23.0.0",
+    "prettier": "^3.1.0",
+    "vitest": "^1.0.0",
+    "workbox-webpack-plugin": "^7.0.0"
+  }
+}
+```
+
+**Critical Notes:**
+- Use PostgreSQL (NOT SQLite) for Supabase compatibility
+- All dependencies must be compatible with Nuxt 4
+- Include proper TypeScript types for all packages
+- Ensure testing dependencies are properly configured
+
+---
+
+### Authentication & Roles
+
+* **Visitors**:
+
+  * No login required.
+  * Can view tournaments and participants (visitor-safe fields only).
+  * Can register as competitors → records created with `status = pending`.
+
+* **Admins**:
+
+  * Must log in via Supabase Auth (email/password or OAuth).
+  * Can manage tournaments, participants, approvals, import/export, dashboards.
+
+* **Super Admin**:
+
+  * Can create and manage other admin accounts.
+  * Full control over all tournaments and participants.
+
+* **Role Management**:
+
+  * `User` model includes `role` field (`super_admin`, `admin`, `user`).
+  * Role checks enforced in Nuxt Kit server endpoints and Supabase functions.
+
+---
+
+### Database Configuration
+
+**CRITICAL: Use PostgreSQL (NOT SQLite) for Supabase compatibility**
+
+```prisma
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum TournamentStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  FINISHED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum PlayerAcceptanceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+```
+
+### Tournament Model
+
+* `id`: String (CUID)
+* `name`: string (unique)
+* `status`: enum (`DRAFT` | `OPEN` | `IN_PROGRESS` | `FINISHED`)
+* `tournamentStart`: DateTime
+* `tournamentEnd`: DateTime
+* `tournamentRegistrationStart`: DateTime
+* `tournamentRegistrationEnd`: DateTime
+* `proclamations`: string? (URL or JSON metadata)
+* `chessResults`: string? (URL or JSON metadata)
+* `categories`: string[] (admin-defined)
+* `hasTeams`: boolean
+* `hasSchools`: boolean
+* `createdBy`: string? (User relation)
+* `createdAt`: DateTime
+* `updatedAt`: DateTime
+* Relations: `creator`, `competitors`, `auditLogs`
+
+---
+
+### Competitor Model
+
+* `id`: String (CUID)
+* `tournamentId`: String
+* `personalNumber`: Int (unique per tournament)
+* `firstName`: String
+* `lastName`: String
+* `ratedPlayerLinks`: String[] (default: [])
+* `gender`: enum (`MALE` | `FEMALE`)
+* `category`: String
+* `team`: String?
+* `school`: String?
+* `tournamentDocumentUrl`: String?
+* `playerAcceptanceStatus`: enum (`PENDING` | `APPROVED` | `REJECTED`)
+* `adminNotes`: String?
+* `createdAt`: DateTime
+* `updatedAt`: DateTime
+* Relations: `tournament`, `auditLogs`
+
+**Database Constraints:**
+* `personalNumber` unique per tournament
+* `category` validated against tournament categories
+* Composite unique constraint on `[tournamentId, firstName, lastName]`
+
+### Complete Prisma Schema
+
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  createdTournaments Tournament[]
+  auditLogs          AuditLog[]
+  
+  @@map("users")
+}
+
+model Tournament {
+  id                        String            @id @default(cuid())
+  name                      String            @unique
+  status                    TournamentStatus  @default(DRAFT)
+  tournamentStart           DateTime
+  tournamentEnd             DateTime
+  tournamentRegistrationStart DateTime
+  tournamentRegistrationEnd DateTime
+  proclamations             String?           // URL or JSON metadata
+  chessResults              String?           // URL or JSON metadata
+  categories                String[]          @default([])
+  hasTeams                  Boolean           @default(false)
+  hasSchools                Boolean           @default(false)
+  createdBy                 String?
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
+  
+  // Relations
+  creator                   User?             @relation(fields: [createdBy], references: [id])
+  competitors               Competitor[]
+  auditLogs                 AuditLog[]
+  
+  // Indexes
+  @@index([status])
+  @@index([tournamentStart])
+  @@index([createdBy])
+  @@map("tournaments")
+}
+
+model Competitor {
+  id                      String                  @id @default(cuid())
+  tournamentId            String
+  personalNumber          Int
+  firstName               String
+  lastName                String
+  ratedPlayerLinks        String[]                @default([])
+  gender                  Gender
+  category                String
+  team                    String?
+  school                  String?
+  tournamentDocumentUrl   String?
+  playerAcceptanceStatus  PlayerAcceptanceStatus  @default(PENDING)
+  adminNotes              String?
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  
+  // Relations
+  tournament              Tournament              @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  auditLogs               AuditLog[]
+  
+  // Constraints
+  @@unique([tournamentId, personalNumber])
+  @@unique([tournamentId, firstName, lastName])
+  @@index([tournamentId])
+  @@index([playerAcceptanceStatus])
+  @@index([category])
+  @@map("competitors")
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  entityType  String   // 'tournament' | 'competitor' | 'user'
+  entityId    String
+  action      String   // 'create' | 'update' | 'delete' | 'approve' | 'reject'
+  oldValue    Json?
+  newValue    Json?
+  changedBy   String
+  changedAt   DateTime @default(now())
+  
+  // Relations
+  user        User     @relation(fields: [changedBy], references: [id])
+  tournament  Tournament? @relation(fields: [entityId], references: [id])
+  competitor  Competitor? @relation(fields: [entityId], references: [id])
+  
+  @@index([entityType, entityId])
+  @@index([changedBy])
+  @@index([changedAt])
+  @@map("audit_logs")
+}
+```
+
+---
+
+### Landing Page
+
+* Tournaments table with filters (name/date/category/status).
+
+* Registration open → **Register** button.
+
+* Registration modal (visitor): required fields = `firstName`, `lastName`, `category`, `school`/`team`, `tournamentDocument`.
+
+* Mobile-first design: stacked layout or scrollable tables.
+
+* Admin-only **Create Tournament** modal:
+
+  * Fields: `name`, all date pickers.
+  * Toggles: `hasTeams`, `hasSchools`.
+  * Input: multiple categories (strings).
+
+---
+
+### Tournament Page
+
+**Visitor View**:
+
+* See participants (no document URL, no status).
+* Filters: search by name, filter by team/school/category/gender.
+* Mobile-friendly: cards or scrollable tables.
+
+**Admin View**:
+
+* Full participant table (all fields).
+* Approve/reject competitors.
+* CRUD: add/edit/delete participants (modal form).
+* **Import/Export functionality**: CSV, XLS/XLSX, PDF with validation and error reporting.
+* Mobile-friendly: scrollable tables, responsive modals, adaptive forms.
+
+---
+
+### Admin Enhancements
+
+* **Bulk operations**: approve/reject multiple participants, upload competitors, download documents, send email notifications, import/export tables.
+* **Table improvements**: advanced filtering, sorting, hide/show columns, row highlights by status, pagination/infinite scroll.
+* **Quick actions & inline editing**: approve/reject, edit, download document directly from table.
+* **Dashboard / Overview**: stats on participants, pending approvals, category/team distribution, alerts for new registrations or registration closing.
+* **Audit logs**: track approvals/rejections, tournament edits, including `changedBy`, `changedAt`, `oldValue`, `newValue`.
+* **Mobile-friendly admin UX**: collapsible/scrollable tables, full-width modals, keyboard shortcuts, touch-friendly buttons.
+* **Email Notifications**: visitor confirmation & status updates, admin alerts.
+
+---
+
+### Responsiveness & UX Requirements
+
+* Mobile-first design for all pages and components.
+* Tables: scrollable horizontally or collapse to cards on small screens.
+* Modals: full-width on mobile, centered on desktop.
+* Forms: stack vertically on narrow screens.
+* Navigation: hamburger menu on mobile, standard menu on desktop.
+* Lazy-load large participant tables for mobile performance.
+* Immediate validation feedback on forms.
+* Accessibility: WCAG 2.1 compliance, automated a11y testing (axe-core, eslint-plugin-jsx-a11y).
+
+---
+
+### Mock Data & Faker
+
+* Use Faker to generate realistic tournaments and participant data.
+* Seed database on startup or with a dedicated CLI script.
+* Ensure data variety: categories, genders, teams, schools, ratings.
+
+---
+
+### Testing Strategy
+
+**CRITICAL: Comprehensive testing setup required for production**
+
+#### Unit Testing (Vitest)
+```typescript
+// vitest.config.ts
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    environment: 'happy-dom',
+    globals: true,
+    setupFiles: ['./tests/setup.ts']
+  }
+})
+```
+
+**Required Unit Tests:**
+- All Vue components (`components/` folder)
+- Pinia stores (`stores/` folder)
+- Utility functions (`utils/` folder)
+- Composables (`composables/` folder)
+- Form validation logic
+- File handling functions
+
+#### Integration Testing (Playwright)
+```typescript
+// playwright.config.ts
+import { defineConfig } from '@playwright/test'
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
+  ],
+})
+```
+
+**Required Integration Tests:**
+- User registration flow
+- Tournament creation (admin)
+- Competitor approval/rejection
+- File upload/download
+- Import/export functionality
+- Mobile responsiveness
+- Accessibility compliance
+
+#### API Contract Testing
+- Validate all Nuxt Kit endpoints
+- Test authentication middleware
+- Verify role-based access control
+- Test file upload limits and validation
+- Validate email sending functionality
+
+#### Testing Requirements
+- **Coverage**: Minimum 80% code coverage
+- **Accessibility**: Automated a11y testing with axe-core
+- **Performance**: Lighthouse CI integration
+- **Security**: OWASP ZAP security scanning
+- **Mobile**: Cross-device testing on real devices
+
+---
+
+### Deployment Guidelines
+
+* Host Nuxt frontend on Vercel or Netlify.
+* Supabase for DB, Auth, and file storage.
+* Prisma migrations for DB schema updates.
+* CI/CD: GitHub Actions for linting, testing, migrations, and deployment.
+
+---
+
+### Performance Considerations
+
+**CRITICAL: Production-grade performance optimizations required**
+
+#### Database Performance
+* Pagination defaults: 20 rows per table
+* Database indexes on all foreign keys and search fields:
+  - `tournamentId`, `personalNumber`, `playerAcceptanceStatus`
+  - `category`, `status`, `tournamentStart`, `createdBy`
+* Query optimization with Prisma select/include patterns
+* Connection pooling for PostgreSQL
+* Redis caching for frequently accessed data
+
+#### Frontend Performance
+* Lazy loading for large participant tables
+* Virtual scrolling for mobile performance
+* Image optimization with Nuxt Image
+* Code splitting and dynamic imports
+* Service worker for offline functionality
+* Bundle size optimization (target: <500KB initial load)
+
+#### Caching Strategy
+```typescript
+// Redis caching configuration
+const cacheConfig = {
+  tournamentList: { ttl: 300 }, // 5 minutes
+  tournamentDetails: { ttl: 600 }, // 10 minutes
+  participantList: { ttl: 180 }, // 3 minutes
+  userProfile: { ttl: 900 }, // 15 minutes
+}
+```
+
+#### Mobile Performance
+* Critical CSS inlining
+* Progressive Web App (PWA) features
+* Touch-optimized interactions
+* Reduced data usage for mobile users
+* Offline-first architecture for core features
+
+---
+
+### Security Requirements
+
+**CRITICAL: Production-grade security implementation required**
+
+#### Authentication & Authorization
+* Supabase Auth with JWT tokens
+* Role-based access control (RBAC) enforcement
+* Session management with secure cookies
+* Password complexity requirements
+* Multi-factor authentication (MFA) support
+* Rate limiting on authentication endpoints
+
+#### Data Protection
+* Input validation and sanitization on all endpoints
+* SQL injection prevention with Prisma
+* XSS protection with Content Security Policy
+* CSRF protection for state-changing operations
+* Data encryption at rest and in transit
+* GDPR compliance for user data
+
+#### File Security
+* File type validation (whitelist approach)
+* Virus scanning for uploaded documents
+* Secure file storage in Supabase
+* Access control for file downloads
+* File size limits (5MB max per file)
+* Content Security Policy for file previews
+
+#### API Security
+```typescript
+// Security headers configuration
+const securityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+}
+```
+
+#### Environment Security
+* Environment variables for all secrets
+* No hardcoded credentials in code
+* Secure database connection strings
+* API key rotation strategy
+* Logging and monitoring for security events
+
+### File / Document Handling
+
+* Only store file URLs in DB (Supabase Storage)
+* Enforce size limit (5MB per file)
+* File type validation (PDF, DOC, DOCX, JPG, PNG only)
+* Virus scanning for uploaded documents
+* Inline preview of PDFs/images in admin dashboard
+* Secure file access with signed URLs
+* Automatic file cleanup for rejected applications
+
+---
+
+### 🎯 Tasks for Claude
+
+**PHASE 1: CRITICAL FIXES (MANDATORY)**
+1. **Database Migration**: Update Prisma schema from SQLite to PostgreSQL
+2. **Dependencies**: Add all missing production dependencies (testing, file handling, security)
+3. **Project Structure**: Create comprehensive folder organization
+4. **Type Definitions**: Complete TypeScript types for all models and API responses
+5. **Security Setup**: Implement authentication, authorization, and security headers
+
+**PHASE 2: CORE FUNCTIONALITY**
+6. **Prisma Schema**: Complete Tournament, Competitor, User, and AuditLog models
+7. **Pinia Stores**: Setup for tournaments, competitors, auth, and UI state
+8. **API Endpoints**: Nuxt Kit server routes with role-based access control
+9. **Pages**: Landing, tournament views, admin dashboard, authentication
+10. **Components**: Reusable UI components with mobile-first design
+
+**PHASE 3: ADVANCED FEATURES**
+11. **Admin Features**: Bulk operations, dashboards, inline editing, audit logs
+12. **Import/Export**: CSV, XLS/XLSX, PDF functionality with validation
+13. **File Handling**: Secure upload, validation, and preview system
+14. **Email System**: Notifications and status updates
+15. **Internationalization**: Multi-language support setup
+
+**PHASE 4: PRODUCTION READINESS**
+16. **Testing**: Unit (Vitest), Integration (Playwright), API contract tests
+17. **Performance**: Caching, optimization, mobile performance
+18. **Monitoring**: Sentry integration and error tracking
+19. **Deployment**: CI/CD pipeline and production configuration
+20. **Mock Data**: Faker-based seeding scripts for development
+
+---
+
+### ✅ Constraints / Best Practices
+
+**MANDATORY REQUIREMENTS:**
+* **Database**: PostgreSQL ONLY (no SQLite) for Supabase compatibility
+* **Security**: All endpoints must have proper authentication and authorization
+* **Type Safety**: TypeScript strict mode, no `any` or `unknown` types
+* **Testing**: Minimum 80% code coverage with comprehensive test suite
+* **Performance**: <500KB initial bundle size, <3s load time on mobile
+* **Accessibility**: WCAG 2.1 AA compliance with automated testing
+* **Mobile**: Mobile-first responsive design for all components
+
+**FUNCTIONAL REQUIREMENTS:**
+* Visitors never need login; competitor registration always sets `status = pending`
+* Admin-only features must enforce `UNAUTHORIZED` if role ≠ admin
+* All file uploads must be validated and scanned for viruses
+* All API responses must include proper error handling and validation
+* All forms must have client-side and server-side validation
+* All database operations must use proper transactions and error handling
+
+**TECHNICAL REQUIREMENTS:**
+* Prisma: composite keys, correct relations, proper indexes
+* Supabase: auth roles, manual admin creation, secure file storage
+* Pinia: centralized state management with persistence
+* Nuxt UI: consistent component usage and theming
+* ESLint + Prettier: consistent code style and formatting
+* i18n: All user-facing text must be translatable
+
+---
+
+### 📑 Expected Output Format
+
+Claude, structure your response in clear sections with code blocks:
+
+1. Folder structure (tree diagram)
+2. Prisma schema (`schema.prisma`)
+3. TypeScript types (`types/*.ts`)
+4. Pinia stores
+5. Nuxt pages
+6. Nuxt Kit server endpoints for admin operations
+7. Supabase Auth integration
+8. ESLint + Prettier configs
+9. Responsive components & mobile-first design
+10. Admin enhancements: bulk operations, dashboards, inline editing, notifications, audit logs
+11. Import/export functionality (CSV, XLS/XLSX, PDF)
+12. Internationalization setup
+13. Email notifications integration
+14. Testing strategy (unit, integration, API contract)
+15. Deployment & CI/CD guidelines
+16. Performance optimizations
+17. File/document handling rules
+18. Faker mock data scripts
+
+---
+
+### 📢 Instruction
+
+* First: analyze potential pitfalls in architecture.
+* Then: propose fixes/improvements.
+* Finally: generate requested outputs in the
+
+
+**expected format**, including responsive design, admin UX enhancements, import/export, i18n, notifications, accessibility, testing, deployment, performance, and Faker mock data.

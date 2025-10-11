@@ -1,0 +1,27 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "include": [
+    "./.nuxt/tsconfig.json",
+    "./.nuxt/nuxt.d.ts",
+    "./.nuxt/imports.d.ts",
+    "./app/**/*",
+    "./components/**/*",
+    "./server/**/*",
+    "./stores/**/*",
+    "./types/**/*",
+    "./utils/**/*",
+    "./*.ts",
+    "./*.js",
+    "./*.mjs",
+    "./*.vue"
+  ],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["./*"]
+    }
+  }
+}

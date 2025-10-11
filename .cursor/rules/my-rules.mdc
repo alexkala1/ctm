@@ -1,0 +1,169 @@
+# 🤖 AI Coding Guidelines for Nuxt 4 Project
+
+This document defines the rules and practices all AI coding agents (e.g., Claude, ChatGPT) must follow to ensure code is consistent, maintainable, and aligned with official documentation.
+
+---
+
+## 🔑 General Principles
+
+- **Documentation first**: Always follow official documentation for Nuxt, Vue, Prisma, Supabase, Pinia, Tailwind, etc.
+- **Consistency over creativity**: Reuse proven patterns; avoid ad-hoc solutions.
+- **Type-safe and validated**: All data must be typed and validated with `zod` or `yup`.
+- **Nuxt conventions**: Respect Nuxt’s auto-imports and folder structure.
+
+---
+
+## 📂 Project Structure
+
+- `pages/` → Route views (minimal logic).
+- `layouts/` → Shared wrappers.
+- `components/` → UI building blocks.
+- `composables/` → Reusable logic functions.
+- `stores/` → Pinia state management.
+- `server/api/` → API routes with validation + Prisma.
+- `server/utils/` → Server-side helpers.
+
+**Rule**: Business logic goes in `composables/` or `stores/`, never directly in components.
+
+---
+
+## 🟦 TypeScript
+
+- Define types in `/types`.
+- No `any`. Use `unknown` + narrowing.
+- Use `zod`/`yup` schemas for external data.
+- `tsconfig.json` must stay in `strict` mode.
+
+---
+
+## 📦 State Management (Pinia)
+
+- One store per domain (e.g., `useAuthStore`).
+- Use `pinia-plugin-persistedstate` for persistence.
+- Only persist serializable state.
+- Mutations only inside store actions.
+
+---
+
+## 📝 Forms & Validation
+
+- Use **vee-validate** + `@vee-validate/zod`.
+- Validate both client and server side.
+- Example:
+
+  ```ts
+  const schema = toTypedSchema(
+    z.object({
+      email: z.string().email(),
+      password: z.string().min(8),
+    })
+  )
+  ```
+
+---
+
+## 🛠 Backend & Data
+
+### Supabase
+
+- Use for **auth, storage, realtime**.
+- Do not query DB directly from frontend.
+
+### Prisma
+
+- Use for structured database queries.
+- Wrap queries in `server/api/` routes.
+- Always validate requests with `zod`.
+
+### API Routes
+
+- Place in `server/api/*.ts`.
+- Must:
+  - Parse + validate body.
+  - Handle errors.
+  - Return `{ data, error }` consistently.
+
+---
+
+## 🎨 UI & Styling
+
+- Use `@nuxt/ui` first (`<UButton>`, `<UCard>`).
+- Use **TailwindCSS** for styling.
+- Use `@tailwindcss/forms` for form controls.
+- Respect `@nuxtjs/color-mode` (dark/light theme).
+
+---
+
+## 🌍 Internationalization
+
+- Use `@nuxtjs/i18n`.
+- Never hardcode strings; use `$t('key')`.
+- Keep translations in `/locales/*.json`.
+
+---
+
+## 🛡 Error Handling & Monitoring
+
+- Use `@sentry/nuxt` for error tracking.
+- API routes:
+  - Catch errors → return `{ error: message }`.
+  - Do not expose stack traces.
+
+- Frontend → friendly messages only.
+
+---
+
+## 📅 Date & Time
+
+- Prefer **date-fns**.
+- Use **dayjs** for relative time only.
+- Store dates as ISO strings, not `Date` objects, in state.
+
+---
+
+## 🧰 Utilities
+
+- `lodash-es` → deep operations.
+- `papaparse` → CSV import/export.
+- `xlsx` → Excel export.
+- `file-saver`, `jspdf`, `jspdf-autotable` → file/PDF generation.
+
+---
+
+## 🧪 Testing
+
+- Unit tests: **Vitest** (`vitest`, `@vitest/ui`).
+- Component tests: `@testing-library/vue` + `@vue/test-utils`.
+- E2E: **Playwright**.
+- Mock APIs: **MSW**.
+- Accessibility: **axe-core**.
+
+---
+
+## 🧹 Code Quality
+
+- Lint with `@nuxt/eslint`.
+- Format with **Prettier**.
+- Accessibility checks: `eslint-plugin-jsx-a11y`.
+- CI must run `eslint`, `prettier --check`, `vitest`.
+
+---
+
+## 🔒 Security
+
+- Validate all input (client + server) with `zod`.
+- Keep secrets in `.env`.
+- Enforce Supabase Row-Level Security (RLS).
+- Sanitize all uploads.
+
+---
+
+# ✅ Golden Rules for Claude
+
+1. **Start with official docs** for every dependency.
+2. **Respect Nuxt conventions** over custom structures.
+3. **Never skip validation** (zod/vee-validate).
+4. **Keep logic layered correctly** (UI ↔ Composables ↔ API ↔ DB).
+5. **Ask for clarification** instead of guessing when uncertain.
+
+---
