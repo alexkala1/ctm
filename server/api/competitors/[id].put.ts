@@ -8,13 +8,13 @@ const updateCompetitorSchema = z.object({
   lastName: z.string().min(1, 'Last name is required').optional(),
   gender: z.enum(['MALE', 'FEMALE']).optional(),
   category: z.string().min(1, 'Category is required').optional(),
-  team: z.string().optional(),
+  team: z.string().optional().nullable(),
   ratedPlayerLinks: z.array(z.string()).optional().default([]),
   tournamentDocumentUrl: z.string().url().optional().or(z.literal('')),
   playerAcceptanceStatus: z
     .enum(['PENDING', 'APPROVED', 'REJECTED'])
     .optional(),
-  adminNotes: z.string().optional(),
+  adminNotes: z.string().optional().nullable(),
   _delete: z.boolean().optional(),
 })
 
@@ -97,31 +97,6 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Check if name combination is unique within the tournament (excluding current competitor)
-    if (
-      validatedData.firstName &&
-      validatedData.lastName &&
-      (validatedData.firstName !== existingCompetitor.firstName ||
-        validatedData.lastName !== existingCompetitor.lastName)
-    ) {
-      const duplicateName = await prisma.competitor.findFirst({
-        where: {
-          tournamentId: existingCompetitor.tournamentId,
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          deletedAt: null,
-          id: { not: competitorId },
-        },
-      })
-
-      if (duplicateName) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: `A participant with the name "${validatedData.firstName} ${validatedData.lastName}" already exists in this tournament`,
-        })
-      }
-    }
-
     // Prepare update data (only include provided fields)
     const updateData: Record<string, unknown> = {
       updatedAt: new Date(),
@@ -180,7 +155,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Validation error',
-        data: error.errors,
+        data: error.issues,
       })
     }
 

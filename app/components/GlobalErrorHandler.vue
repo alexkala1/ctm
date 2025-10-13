@@ -23,7 +23,7 @@ const isRetrying = ref(false)
 // Global error handler
 const handleGlobalError = (event: ErrorEvent) => {
   console.error('Global error caught:', event.error)
-  
+
   hasError.value = true
   errorTitle.value = 'Application Error'
   errorMessage.value = 'An unexpected error occurred in the application.'
@@ -33,7 +33,7 @@ const handleGlobalError = (event: ErrorEvent) => {
 // Unhandled promise rejection handler
 const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
   console.error('Unhandled promise rejection:', event.reason)
-  
+
   hasError.value = true
   errorTitle.value = 'Promise Rejection Error'
   errorMessage.value = 'An unhandled promise was rejected.'
@@ -43,7 +43,7 @@ const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
 // Vue error handler
 const handleVueError = (error: Error, instance: any, info: string) => {
   console.error('Vue error:', error, info)
-  
+
   hasError.value = true
   errorTitle.value = 'Vue Component Error'
   errorMessage.value = 'An error occurred in a Vue component.'
@@ -53,14 +53,14 @@ const handleVueError = (error: Error, instance: any, info: string) => {
 // Retry handler
 const handleRetry = async () => {
   isRetrying.value = true
-  
+
   try {
     // Clear the error
     hasError.value = false
     errorTitle.value = ''
     errorMessage.value = ''
     errorDetails.value = ''
-    
+
     // Refresh the page to reset state
     await navigateTo(useRoute().fullPath, { replace: true })
   } catch (error) {
@@ -85,7 +85,7 @@ onMounted(() => {
   // Global error handlers
   window.addEventListener('error', handleGlobalError)
   window.addEventListener('unhandledrejection', handleUnhandledRejection)
-  
+
   // Vue error handler
   const app = getCurrentInstance()?.appContext?.app
   if (app) {
@@ -118,6 +118,6 @@ const clearError = () => {
 provide('errorHandler', {
   setError,
   clearError,
-  hasError: readonly(hasError)
+  hasError: readonly(hasError),
 })
 </script>

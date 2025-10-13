@@ -24,7 +24,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     '/tournaments/**',
     '/support', 
     '/privacy', 
-    '/terms'
+    '/terms',
+    '/ui-demo'
   ]
   
   // Check if current route is public
@@ -55,4 +56,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return navigateTo('/auth/login?message=pending-approval')
     }
   }
+  
+  // For all other routes, allow access (they're not protected)
+  return
 })

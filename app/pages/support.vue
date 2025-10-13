@@ -1,22 +1,22 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <!-- Header -->
-              <div class="text-center mb-12">
-                <div class="flex justify-center mb-6">
-                  <img 
-                    src="/icon.svg" 
-                    alt="Chess Tournament Manager" 
-                    class="h-16 w-16" 
-                  >
-                </div>
-                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                  Support Center
-                </h1>
-                <p class="text-xl text-gray-600 dark:text-gray-400">
-                  Get help with Chess Tournament Manager
-                </p>
-              </div>
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <div class="flex justify-center mb-6">
+          <img 
+            src="/icon.svg" 
+            alt="Chess Tournament Manager" 
+            class="h-16 w-16" 
+          >
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          Support Center
+        </h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">
+          Get help with Chess Tournament Manager
+        </p>
+      </div>
 
       <!-- Contact Information -->
       <UCard class="mb-8">
@@ -62,7 +62,10 @@
           </h2>
         </template>
         
-        <UAccordion :items="faqItems" type="multiple" />
+        <UAccordion
+          :items="faqItems"
+          type="multiple"
+        />
       </UCard>
 
       <!-- Documentation Links -->
@@ -80,17 +83,29 @@
             </h3>
             <ul class="space-y-2">
               <li>
-                <UButton variant="link" color="primary" href="#">
+                <UButton
+                  variant="link"
+                  color="primary"
+                  href="#"
+                >
                   Creating Your First Tournament
                 </UButton>
               </li>
               <li>
-                <UButton variant="link" color="primary" href="#">
+                <UButton
+                  variant="link"
+                  color="primary"
+                  href="#"
+                >
                   Managing Participants
                 </UButton>
               </li>
               <li>
-                <UButton variant="link" color="primary" href="#">
+                <UButton
+                  variant="link"
+                  color="primary"
+                  href="#"
+                >
                   Tournament Settings
                 </UButton>
               </li>
@@ -102,17 +117,29 @@
             </h3>
             <ul class="space-y-2">
               <li>
-                <UButton variant="link" color="primary" href="#">
+                <UButton
+                  variant="link"
+                  color="primary"
+                  href="#"
+                >
                   Import/Export Data
                 </UButton>
               </li>
               <li>
-                <UButton variant="link" color="primary" href="#">
+                <UButton
+                  variant="link"
+                  color="primary"
+                  href="#"
+                >
                   Custom Tournament Formats
                 </UButton>
               </li>
               <li>
-                <UButton variant="link" color="primary" href="#">
+                <UButton
+                  variant="link"
+                  color="primary"
+                  href="#"
+                >
                   API Documentation
                 </UButton>
               </li>

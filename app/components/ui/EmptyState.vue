@@ -20,7 +20,10 @@
       </p>
       
       <!-- Action Buttons -->
-      <div v-if="actions && actions.length > 0" class="flex flex-col sm:flex-row gap-3 justify-center">
+      <div
+        v-if="actions && actions.length > 0"
+        class="flex flex-col sm:flex-row gap-3 justify-center"
+      >
         <UButton
           v-for="action in actions"
           :key="action.label"
@@ -32,13 +35,20 @@
           class="w-full sm:w-auto"
           @click="action.click"
         >
-          <Icon v-if="action.icon" :name="action.icon" class="w-4 h-4 mr-2" />
+          <Icon
+            v-if="action.icon"
+            :name="action.icon"
+            class="w-4 h-4 mr-2"
+          />
           {{ action.label }}
         </UButton>
       </div>
       
       <!-- Additional Info -->
-      <div v-if="additionalInfo" class="mt-6 text-sm text-gray-500 dark:text-gray-400">
+      <div
+        v-if="additionalInfo"
+        class="mt-6 text-sm text-gray-500 dark:text-gray-400"
+      >
         <p>{{ additionalInfo }}</p>
       </div>
     </div>
@@ -73,6 +83,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 <style scoped>
 .empty-state {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s;
 }
 </style>

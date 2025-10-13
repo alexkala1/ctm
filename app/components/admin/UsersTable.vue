@@ -3,18 +3,21 @@
     <div class="px-4 py-5 sm:px-6">
       <div class="flex justify-between items-center">
         <div>
-          <h3
-            class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
-          >
-            Users
-          </h3>
+          <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Users</h3>
           <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
             {{ users.length }} registered users
           </p>
         </div>
         <div class="flex space-x-2">
-          <UButton color="primary" size="sm" @click="$emit('add-user')">
-            <Icon name="i-heroicons-plus" class="w-6 h-6 mr-1" />
+          <UButton
+            color="primary"
+            size="sm"
+            @click="$emit('add-user')"
+          >
+            <Icon
+              name="i-heroicons-plus"
+              class="w-6 h-6 mr-1"
+            />
             Add User
           </UButton>
         </div>
@@ -49,7 +52,7 @@
       :data="users || []"
       :columns="columns"
       :loading="loading"
-      :empty="'No users found'"
+      empty="No users found"
     >
       <template #name-cell="{ row }">
         <div class="flex items-center">
@@ -57,12 +60,10 @@
             <div
               class="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center"
             >
-              <span
-                class="text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {{
                   row.original.name?.charAt(0)?.toUpperCase() ||
-                  row.original.email.charAt(0).toUpperCase()
+                    row.original.email.charAt(0).toUpperCase()
                 }}
               </span>
             </div>
@@ -99,16 +100,14 @@
         <div class="flex space-x-2">
           <UButton
             size="xs"
-            variant="outline"
+            variant="soft"
             @click="$emit('edit', row.original)"
-          >
-            Edit
-          </UButton>
+          > Edit </UButton>
           <UButton
             v-if="row.original.role !== 'SUPER_ADMIN'"
             size="xs"
             color="error"
-            variant="outline"
+            variant="soft"
             @click="$emit('delete', row.original.id)"
           >
             Delete
@@ -117,7 +116,7 @@
             v-if="row.original.role !== 'SUPER_ADMIN'"
             size="xs"
             color="primary"
-            variant="outline"
+            variant="soft"
             @click="$emit('change-role', row.original)"
           >
             Change Role
@@ -134,7 +133,7 @@
       <div class="flex-1 flex justify-between sm:hidden">
         <UButton
           :disabled="!pagination.hasPrev"
-          variant="outline"
+          variant="soft"
           size="sm"
           @click="$emit('change-page', pagination.page - 1)"
         >
@@ -142,7 +141,7 @@
         </UButton>
         <UButton
           :disabled="!pagination.hasNext"
-          variant="outline"
+          variant="soft"
           size="sm"
           @click="$emit('change-page', pagination.page + 1)"
         >
@@ -153,9 +152,7 @@
         <div>
           <p class="text-sm text-gray-700 dark:text-gray-300">
             Showing
-            <span class="font-medium">{{
-              (pagination.page - 1) * pagination.limit + 1
-            }}</span>
+            <span class="font-medium">{{ (pagination.page - 1) * pagination.limit + 1 }}</span>
             to
             <span class="font-medium">{{
               Math.min(pagination.page * pagination.limit, pagination.total)
@@ -172,7 +169,7 @@
           >
             <UButton
               :disabled="!pagination.hasPrev"
-              variant="outline"
+              variant="soft"
               size="sm"
               class="rounded-l-md"
               @click="$emit('change-page', pagination.page - 1)"
@@ -181,7 +178,7 @@
             </UButton>
             <UButton
               :disabled="!pagination.hasNext"
-              variant="outline"
+              variant="soft"
               size="sm"
               class="rounded-r-md"
               @click="$emit('change-page', pagination.page + 1)"
@@ -214,9 +211,7 @@ interface Props {
   pagination: Pagination
 }
 
-withDefaults(defineProps<Props>(), {
-  loading: false,
-})
+const { loading = false } = defineProps<Props>()
 
 const emit = defineEmits<{
   'add-user': []
@@ -242,7 +237,6 @@ const columns = [
   { accessorKey: 'actions', header: 'Actions' },
 ]
 
-
 const roleOptions = [
   { label: 'Super Admin', value: 'SUPER_ADMIN' },
   { label: 'Admin', value: 'ADMIN' },
@@ -265,7 +259,6 @@ const debouncedSearch = () => {
 const handleFilterChange = () => {
   emit('filter-change', { ...filters })
 }
-
 
 const formatDate = (dateString: string) => {
   return format(new Date(dateString), 'MMM dd, yyyy')

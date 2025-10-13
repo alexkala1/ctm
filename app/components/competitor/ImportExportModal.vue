@@ -1,65 +1,55 @@
 <template>
-  <div class="space-y-6">
-    <!-- Header -->
-    <div class="flex items-center space-x-3">
-      <div
-        class="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg"
-      >
-        <Icon
-          :name="
-            isImport ? 'i-heroicons-arrow-down-tray' : 'i-heroicons-arrow-up-tray'
-          "
-          class="w-6 h-6 text-white"
-        />
+  <!-- Content -->
+  <div class="space-y-8">
+    <!-- Import Section -->
+    <div
+      v-if="isImport"
+      class="space-y-6"
+    >
+      <div class="flex items-center space-x-3 mb-4">
+        <div
+          class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+        >
+          <Icon
+            name="i-heroicons-information-circle"
+            class="w-4 h-4 text-blue-600 dark:text-blue-400"
+          />
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Import Instructions</h3>
       </div>
-      <div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ isImport ? 'Import Participants' : 'Export Participants' }}
-        </h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          {{
-            isImport
-              ? 'Upload participant data from a file'
-              : 'Download participant data to a file'
-          }}
-        </p>
-      </div>
-    </div>
 
-    <!-- Content -->
-    <div class="space-y-6">
-      <div class="space-y-8">
-        <!-- Import Section -->
-        <div v-if="isImport" class="space-y-6">
-          <div
-            class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
-          >
-            <div class="flex">
+      <div class="space-y-6">
+        <UiModernAlert
+          type="info"
+          title="File Requirements"
+          :show-icon="true"
+        >
+          <ul class="list-disc list-inside space-y-1 text-sm">
+            <li>Use CSV or Excel (.xlsx) files</li>
+            <li>Required columns: First Name, Last Name, Gender, Category</li>
+            <li>Optional columns: Team, Admin Notes</li>
+            <li>Gender must be MALE or FEMALE</li>
+            <li>Category must match tournament categories</li>
+          </ul>
+        </UiModernAlert>
+
+        <!-- File Upload Section -->
+        <div class="space-y-6">
+          <div class="flex items-center space-x-3 mb-4">
+            <div
+              class="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+            >
               <Icon
-                name="i-heroicons-information-circle"
-                class="w-5 h-5 text-blue-400 mr-4"
+                name="i-heroicons-cloud-arrow-up"
+                class="w-4 h-4 text-green-600 dark:text-green-400"
               />
-              <div class="text-sm text-blue-700 dark:text-blue-300">
-                <p class="font-medium mb-1">Import Instructions:</p>
-                <ul class="list-disc list-inside space-y-1">
-                  <li>Use CSV or Excel (.xlsx) files</li>
-                  <li>
-                    Required columns: First Name, Last Name, Gender, Category
-                  </li>
-                  <li>Optional columns: Team, Admin Notes</li>
-                  <li>Gender must be MALE or FEMALE</li>
-                  <li>Category must match tournament categories</li>
-                </ul>
-              </div>
             </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">File Upload</h3>
           </div>
 
-          <!-- File Upload -->
           <div class="space-y-3">
             <div class="space-y-2">
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Select File
               </label>
               <div
@@ -79,7 +69,10 @@
                   class="hidden"
                   @change="handleFileSelect"
                 >
-                <div v-if="!selectedFile" class="py-4">
+                <div
+                  v-if="!selectedFile"
+                  class="py-4"
+                >
                   <Icon
                     name="i-heroicons-cloud-arrow-up"
                     class="w-10 h-10 text-gray-400 dark:text-gray-500"
@@ -95,9 +88,7 @@
                       browse files
                     </UButton>
                   </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-500">
-                    CSV, XLSX files up to 10MB
-                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-500">CSV, XLSX files up to 10MB</p>
                 </div>
                 <div v-else>
                   <Icon
@@ -130,53 +121,79 @@
           </div>
 
           <!-- Download Template -->
-          <div class="bg-gray-50 dark:bg-gray-800 rounded-lg px-6 py-4">
+          <UiModernCard
+            variant="glass"
+            size="md"
+          >
             <div class="flex items-center justify-between w-full">
               <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">
-                  Need a template?
-                </p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Need a template?</p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Download our sample file to see the correct format
                 </p>
               </div>
-              <UButton variant="outline" size="sm" @click="downloadTemplate">
-                <Icon name="i-heroicons-arrow-down-tray" class="w-6 h-6 mr-2" />
+              <UiThemedButton
+                variant="soft"
+                size="sm"
+                @click="downloadTemplate"
+              >
+                <Icon
+                  name="i-heroicons-arrow-down-tray"
+                  class="w-4 h-4 mr-2"
+                />
                 Download Template
-              </UButton>
+              </UiThemedButton>
             </div>
-          </div>
+          </UiModernCard>
         </div>
+      </div>
+    </div>
 
-        <!-- Export Section -->
-        <div v-else class="space-y-6">
-          <div
-            class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-5"
-          >
-            <div class="flex p-4">
+    <!-- Export Section -->
+    <div
+      v-else
+      class="space-y-6"
+    >
+      <div class="flex items-center space-x-3 mb-4">
+        <div
+          class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+        >
+          <Icon
+            name="i-heroicons-information-circle"
+            class="w-4 h-4 text-blue-600 dark:text-blue-400"
+          />
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Export Information</h3>
+      </div>
+
+      <div class="space-y-6">
+        <UiModernAlert
+          type="success"
+          title="Export Options"
+          description="Export all participants from this tournament in your preferred format."
+          :show-icon="true"
+        />
+
+        <!-- Export Format Selection -->
+        <div class="space-y-6">
+          <div class="flex items-center space-x-3 mb-4">
+            <div
+              class="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+            >
               <Icon
-                name="i-heroicons-check-circle"
-                class="w-5 h-5 text-green-400 mr-4"
+                name="i-heroicons-arrow-down-tray"
+                class="w-4 h-4 text-green-600 dark:text-green-400"
               />
-              <div class="text-sm text-green-700 dark:text-green-300">
-                <p class="font-medium mb-1">Export Information:</p>
-                <p>
-                  Export all participants from this tournament in your preferred
-                  format.
-                </p>
-              </div>
             </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Format Selection</h3>
           </div>
 
-          <!-- Export Format Selection -->
           <div class="space-y-3">
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Export Format
             </label>
             <div class="grid grid-cols-3 gap-4">
-              <UButton
+              <UiThemedButton
                 v-for="format in exportFormats"
                 :key="format.value"
                 :variant="selectedFormat === format.value ? 'solid' : 'outline'"
@@ -184,7 +201,10 @@
                 class="p-4 h-auto flex flex-col items-center space-y-3"
                 @click="selectedFormat = format.value"
               >
-                <Icon :name="format.icon" class="w-6 h-6" />
+                <Icon
+                  :name="format.icon"
+                  class="w-6 h-6"
+                />
                 <div class="text-center">
                   <p class="text-sm font-medium">
                     {{ format.label }}
@@ -193,15 +213,13 @@
                     {{ format.description }}
                   </p>
                 </div>
-              </UButton>
+              </UiThemedButton>
             </div>
           </div>
 
           <!-- Export Filename -->
           <div class="space-y-2">
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Filename (optional)
             </label>
             <UInput
@@ -213,11 +231,12 @@
         </div>
 
         <!-- Loading State -->
-        <div v-if="isLoading" class="flex items-center justify-center py-4">
+        <div
+          v-if="isLoading"
+          class="flex items-center justify-center py-4"
+        >
           <div class="flex items-center space-x-3">
-            <div
-              class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"
-            />
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600" />
             <span class="text-sm text-gray-600 dark:text-gray-400">
               {{ isImport ? 'Processing import...' : 'Preparing export...' }}
             </span>
@@ -243,67 +262,89 @@
         />
 
         <!-- Import Results -->
-        <div v-if="importResults" class="space-y-3">
-          <UCard>
-            <h4 class="text-sm font-medium text-gray-900 dark:text-white">
-              Import Results
-            </h4>
+        <div
+          v-if="importResults"
+          class="space-y-4"
+        >
+          <UiModernCard
+            variant="glass"
+            size="md"
+          >
+            <template #header>
+              <h4 class="text-lg font-bold text-gray-900 dark:text-white">Import Results</h4>
+            </template>
             <div class="grid grid-cols-2 gap-4 text-sm">
               <div class="flex items-center space-x-2">
-                <UBadge color="success" variant="soft">
+                <UBadge
+                  color="success"
+                  variant="soft"
+                >
                   {{ importResults.imported }} imported
                 </UBadge>
               </div>
               <div class="flex items-center space-x-2">
-                <UBadge color="error" variant="soft">
+                <UBadge
+                  color="error"
+                  variant="soft"
+                >
                   {{ importResults.errors?.length ?? 0 }} errors
                 </UBadge>
               </div>
             </div>
-          </UCard>
+          </UiModernCard>
 
           <!-- Import Errors Details -->
-          <UCard v-if="importResults.errors && importResults.errors.length > 0">
-            <h5 class="text-sm font-medium text-gray-900 dark:text-white">
-              Import Errors
-            </h5>
-            <div class="max-h-32 overflow-y-auto space-y-1">
-              <UAlert
+          <UiModernCard
+            v-if="importResults.errors && importResults.errors.length > 0"
+            variant="glass"
+            size="md"
+          >
+            <template #header>
+              <h5 class="text-lg font-bold text-gray-900 dark:text-white">Import Errors</h5>
+            </template>
+            <div class="max-h-32 overflow-y-auto space-y-2">
+              <UiModernAlert
                 v-for="(importError, index) in importResults.errors"
                 :key="index"
-                color="error"
-                variant="soft"
-                size="sm"
+                type="error"
                 :title="`Row ${importError.row}: ${importError.message}`"
+                :show-icon="true"
               />
             </div>
-          </UCard>
+          </UiModernCard>
         </div>
       </div>
-      <div class="flex justify-end space-x-4 pt-6">
-        <UButton variant="outline" :disabled="isLoading" @click="closeModal">
-          {{ isImport ? 'Cancel' : 'Close' }}
-        </UButton>
-        <UButton
-          v-if="isImport"
-          :disabled="!selectedFile ?? isLoading"
-          color="primary"
-          @click="handleImport"
-        >
-          <Icon name="i-heroicons-arrow-up-tray" class="w-6 h-6 mr-2" />
-          Import Participants
-        </UButton>
-        <UButton
-          v-else
-          :disabled="isLoading"
-          color="primary"
-          @click="handleExport"
-        >
-          <Icon name="i-heroicons-arrow-down-tray" class="w-6 h-6 mr-2" />
-          Export Participants
-        </UButton>
-      </div>
     </div>
+  </div>
+
+  <div class="flex justify-end space-x-4 pt-6">
+    <UiThemedButton
+      variant="soft"
+      :disabled="isLoading"
+      @click="closeModal"
+    >
+      {{ isImport ? 'Cancel' : 'Close' }}
+    </UiThemedButton>
+    <UiThemedButton
+      v-if="isImport"
+      :disabled="!selectedFile || isLoading"
+      color="primary"
+      :loading="isLoading"
+      icon="i-heroicons-arrow-up-tray"
+      @click="handleImport"
+    >
+      Import Participants
+    </UiThemedButton>
+    <UiThemedButton
+      v-else
+      :disabled="isLoading"
+      color="primary"
+      :loading="isLoading"
+      icon="i-heroicons-arrow-down-tray"
+      @click="handleExport"
+    >
+      Export Participants
+    </UiThemedButton>
   </div>
 </template>
 
@@ -395,15 +436,16 @@ const handleFileDrop = (event: DragEvent) => {
   isDragOver.value = false
 
   const files = event.dataTransfer?.files
-  if (files && files.length > 0) {
+  if (files && files.length > 0 && files[0]) {
     handleFile(files[0])
   }
 }
 
 const handleFileSelect = (event: Event) => {
-  if (event.target && 'files' in event.target && event.target.files) {
-    const files = event.target.files
-    if (files.length > 0) {
+  const target = event.target as HTMLInputElement
+  if (target && target.files) {
+    const files = target.files
+    if (files.length > 0 && files[0]) {
       handleFile(files[0])
     }
   }
@@ -493,15 +535,15 @@ const handleImport = async () => {
     })
 
     if (response.success) {
-      successMessage.value = response.message
+      successMessage.value = response.message || 'Import successful'
       importResults.value = {
         success: true,
-        imported: response.imported,
+        imported: response.imported || 0,
         errors: Array.isArray(response.errors) ? response.errors : [],
         warnings: Array.isArray(response.warnings) ? response.warnings : [],
       }
       handleSuccess(
-        `Successfully imported ${response.imported} participants`,
+        `Successfully imported ${response.imported || 0} participants`,
         'Import Success'
       )
       emit('import-success', importResults.value)
@@ -509,14 +551,14 @@ const handleImport = async () => {
       error.value = response.message || 'Import failed'
       importResults.value = {
         success: false,
-        imported: response.imported ?? 0,
+        imported: response.imported || 0,
         errors: Array.isArray(response.errors) ? response.errors : [],
         warnings: Array.isArray(response.warnings) ? response.warnings : [],
       }
     }
   } catch (err: unknown) {
     handleError(err, 'Import error', 'Import Failed')
-    error.value = err.data?.message || 'Import failed'
+    error.value = (err as { data?: { message?: string } })?.data?.message || 'Import failed'
   } finally {
     isLoading.value = false
   }
@@ -532,7 +574,7 @@ const handleExport = async () => {
       exportFilename.value ||
       `tournament_${props.tournamentId}_participants_${new Date().toISOString().split('T')[0]}`
 
-    const response = await $fetch('/api/export/competitors', {
+    const response = (await $fetch('/api/export/competitors', {
       method: 'POST',
       body: {
         tournamentId: props.tournamentId,
@@ -540,7 +582,7 @@ const handleExport = async () => {
         filename: exportFilename.value ?? undefined,
       },
       responseType: 'blob',
-    })
+    })) as unknown as Blob
 
     // Create blob and trigger download
     const blob = new Blob([response], {
@@ -566,7 +608,7 @@ const handleExport = async () => {
     emit('export-success')
   } catch (err: unknown) {
     handleError(err, 'Export error', 'Export Failed')
-    error.value = err.data?.message || 'Export failed'
+    error.value = (err as { data?: { message?: string } })?.data?.message || 'Export failed'
   } finally {
     isLoading.value = false
   }

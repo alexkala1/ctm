@@ -1,4 +1,4 @@
-import { createError } from 'h3'
+import { createError, type H3Event } from 'h3'
 
 // In-memory store for rate limiting (use Redis in production)
 const attempts = new Map<string, { count: number; resetTime: number }>()
@@ -15,7 +15,7 @@ export interface RateLimitOptions {
 export function createRateLimit(options: RateLimitOptions) {
   const { windowMs, maxAttempts, message = 'Too many attempts, please try again later' } = options
   
-  return (event: any) => {
+  return (event: H3Event) => {
     const clientIP = getClientIP(event) || 'unknown'
     const now = Date.now()
     const key = `rate_limit:${clientIP}`
@@ -47,7 +47,7 @@ export function createRateLimit(options: RateLimitOptions) {
 /**
  * Get client IP address
  */
-function getClientIP(event: any): string | undefined {
+function getClientIP(event: H3Event): string | undefined {
   return event.node.req.headers['x-forwarded-for'] as string ||
          event.node.req.headers['x-real-ip'] as string ||
          event.node.req.connection?.remoteAddress ||

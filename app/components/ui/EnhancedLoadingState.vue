@@ -8,7 +8,10 @@
             :name="icon" 
             class="h-12 w-12 text-primary-600 dark:text-primary-400 animate-spin"
           />
-          <div v-if="showPulse" class="absolute inset-0 rounded-full bg-primary-200 dark:bg-primary-800 animate-ping opacity-75"/>
+          <div
+            v-if="showPulse"
+            class="absolute inset-0 rounded-full bg-primary-200 dark:bg-primary-800 animate-ping opacity-75"
+          />
         </div>
       </div>
       
@@ -23,7 +26,10 @@
       </p>
       
       <!-- Progress Bar (if provided) -->
-      <div v-if="showProgress && progress !== undefined" class="max-w-xs mx-auto mb-6">
+      <div
+        v-if="showProgress && progress !== undefined"
+        class="max-w-xs mx-auto mb-6"
+      >
         <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
           <span>{{ progressLabel || 'Loading...' }}</span>
           <span>{{ progress }}%</span>
@@ -37,7 +43,10 @@
       </div>
       
       <!-- Loading Steps (if provided) -->
-      <div v-if="steps && steps.length > 0" class="max-w-md mx-auto">
+      <div
+        v-if="steps && steps.length > 0"
+        class="max-w-md mx-auto"
+      >
         <div class="space-y-3">
           <div 
             v-for="(step, index) in steps" 
@@ -66,7 +75,10 @@
                 name="i-heroicons-arrow-path"
                 class="w-4 h-4 animate-spin"
               />
-              <span v-else class="text-xs font-medium">{{ index + 1 }}</span>
+              <span
+                v-else
+                class="text-xs font-medium"
+              >{{ index + 1 }}</span>
             </div>
             <span>{{ step }}</span>
           </div>
@@ -74,7 +86,10 @@
       </div>
       
       <!-- Additional Info -->
-      <div v-if="additionalInfo" class="mt-6 text-sm text-gray-500 dark:text-gray-400">
+      <div
+        v-if="additionalInfo"
+        class="mt-6 text-sm text-gray-500 dark:text-gray-400"
+      >
         <p>{{ additionalInfo }}</p>
       </div>
     </div>
@@ -109,7 +124,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <style scoped>
 .enhanced-loading-state {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s;
 }
 
 @keyframes spin {

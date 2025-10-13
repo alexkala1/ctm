@@ -1,9 +1,7 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg w-full">
     <!-- Enhanced Filters -->
-    <div
-      class="px-6 py-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
-    >
+    <div class="px-6 py-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div class="space-y-6">
         <!-- Search and Action Buttons Row -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -12,41 +10,56 @@
               v-model="filters.search"
               placeholder="Search participants by name..."
               icon="i-heroicons-magnifying-glass"
-              size="lg"
+              size="md"
               class="w-full"
               @input="handleSearch"
             />
           </div>
           <div class="flex flex-shrink-0 gap-2">
             <!-- Import/Export Buttons (Admin only) -->
-            <div v-if="isAuthenticated" class="flex gap-2">
+            <div
+              v-if="isAuthenticated"
+              class="flex gap-2"
+            >
               <UButton
-                variant="outline"
-                size="lg"
+                variant="soft"
+                color="info"
+                size="md"
                 class="w-full sm:w-auto"
                 @click="$emit('import-participants')"
               >
-                <Icon name="i-heroicons-arrow-up-tray" class="w-6 h-6 sm:mr-2" />
+                <Icon
+                  name="i-heroicons-arrow-up-tray"
+                  class="w-5 h-5 sm:mr-2"
+                />
                 <span class="hidden sm:inline">Import</span>
               </UButton>
               <UButton
-                variant="outline"
-                size="lg"
+                variant="soft"
+                color="success"
+                size="md"
                 class="w-full sm:w-auto"
                 @click="$emit('export-participants')"
               >
-                <Icon name="i-heroicons-arrow-down-tray" class="w-6 h-6 sm:mr-2" />
+                <Icon
+                  name="i-heroicons-arrow-down-tray"
+                  class="w-5 h-5 sm:mr-2"
+                />
                 <span class="hidden sm:inline">Export</span>
               </UButton>
             </div>
             <UButton
               v-if="canAddParticipant"
+              variant="solid"
               color="primary"
-              size="lg"
+              size="md"
               class="w-full sm:w-auto"
               @click="$emit('add-participant')"
             >
-              <Icon name="i-heroicons-plus" class="w-6 h-6 mr-2" />
+              <Icon
+                name="i-heroicons-plus"
+                class="w-5 h-5 mr-2"
+              />
               Add Participant
             </UButton>
           </div>
@@ -66,7 +79,7 @@
               :items="categoryOptions"
               value-key="value"
               placeholder="All Categories"
-              size="lg"
+              size="md"
               class="w-full"
               @change="handleFilterChange"
             />
@@ -84,14 +97,17 @@
               :items="genderOptions"
               value-key="value"
               placeholder="All Genders"
-              size="lg"
+              size="md"
               class="w-full"
               @change="handleFilterChange"
             />
           </div>
 
           <!-- Status Filter (Admin only) -->
-          <div v-if="isAuthenticated" class="space-y-2 flex-1 min-w-0">
+          <div
+            v-if="isAuthenticated"
+            class="space-y-2 flex-1 min-w-0"
+          >
             <label
               class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide"
             >
@@ -102,14 +118,17 @@
               :items="statusOptions"
               value-key="value"
               placeholder="All Statuses"
-              size="lg"
+              size="md"
               class="w-full"
               @change="handleFilterChange"
             />
           </div>
 
           <!-- Team Filter -->
-          <div v-if="showTeam" class="space-y-2 flex-1 min-w-0">
+          <div
+            v-if="showTeam"
+            class="space-y-2 flex-1 min-w-0"
+          >
             <label
               class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide"
             >
@@ -120,7 +139,7 @@
               :items="teamOptions"
               value-key="value"
               placeholder="All Teams"
-              size="lg"
+              size="md"
               class="w-full"
               @change="handleFilterChange"
             />
@@ -142,71 +161,105 @@
               <UButton
                 v-if="filters.search"
                 variant="soft"
-                color="primary"
+                color="info"
                 size="sm"
-                class="inline-flex items-center"
+                class="inline-flex items-center gap-1"
                 @click="clearSearchFilter"
               >
-                <Icon name="i-heroicons-magnifying-glass" class="w-3 h-3 mr-1" />
+                <Icon
+                  name="i-heroicons-magnifying-glass"
+                  class="w-3 h-3"
+                />
                 "{{ filters.search }}"
-                <Icon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
+                <Icon
+                  name="i-heroicons-x-mark"
+                  class="w-3 h-3"
+                />
               </UButton>
               <UButton
                 v-if="filters.category && filters.category !== 'all'"
                 variant="soft"
-                color="success"
+                color="warning"
                 size="sm"
-                class="inline-flex items-center"
+                class="inline-flex items-center gap-1"
                 @click="clearCategoryFilter"
               >
-                <Icon name="i-heroicons-tag" class="w-3 h-3 mr-1" />
+                <Icon
+                  name="i-heroicons-tag"
+                  class="w-3 h-3"
+                />
                 {{ filters.category }}
-                <Icon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
+                <Icon
+                  name="i-heroicons-x-mark"
+                  class="w-3 h-3"
+                />
               </UButton>
               <UButton
                 v-if="filters.gender && filters.gender !== 'all'"
                 variant="soft"
-                color="info"
+                color="primary"
                 size="sm"
-                class="inline-flex items-center"
+                class="inline-flex items-center gap-1"
                 @click="clearGenderFilter"
               >
-                <Icon name="i-heroicons-user" class="w-3 h-3 mr-1" />
+                <Icon
+                  name="i-heroicons-user"
+                  class="w-3 h-3"
+                />
                 {{ filters.gender }}
-                <Icon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
+                <Icon
+                  name="i-heroicons-x-mark"
+                  class="w-3 h-3"
+                />
               </UButton>
               <UButton
                 v-if="filters.status && filters.status !== 'all'"
                 variant="soft"
-                color="warning"
+                color="success"
                 size="sm"
-                class="inline-flex items-center"
+                class="inline-flex items-center gap-1"
                 @click="clearStatusFilter"
               >
-                <Icon name="i-heroicons-check-circle" class="w-3 h-3 mr-1" />
+                <Icon
+                  name="i-heroicons-check-circle"
+                  class="w-3 h-3"
+                />
                 {{ filters.status }}
-                <Icon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
+                <Icon
+                  name="i-heroicons-x-mark"
+                  class="w-3 h-3"
+                />
               </UButton>
               <UButton
                 v-if="filters.team && filters.team !== 'all'"
                 variant="soft"
-                color="error"
+                color="info"
                 size="sm"
-                class="inline-flex items-center"
+                class="inline-flex items-center gap-1"
                 @click="clearTeamFilter"
               >
-                <Icon name="i-heroicons-users" class="w-3 h-3 mr-1" />
+                <Icon
+                  name="i-heroicons-users"
+                  class="w-3 h-3"
+                />
                 {{ filters.team }}
-                <Icon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
+                <Icon
+                  name="i-heroicons-x-mark"
+                  class="w-3 h-3"
+                />
               </UButton>
             </div>
             <UButton
-              variant="outline"
+              variant="ghost"
+              color="neutral"
               size="sm"
               class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium"
               @click="clearFilters"
             >
-              <Icon name="i-heroicons-trash" class="w-6 h-6 mr-1" />
+              <Icon
+                name="i-heroicons-trash"
+                class="w-4 h-4 mr-2"
+              />
               Clear All
             </UButton>
           </div>
@@ -215,7 +268,10 @@
     </div>
 
     <!-- Mobile Cards (mobile only) -->
-    <div v-if="viewport.isLessThan('md')" class="space-y-4">
+    <div
+      v-if="viewport.isLessThan('md')"
+      class="space-y-4"
+    >
       <div
         v-for="competitor in paginatedCompetitors"
         :key="competitor.id"
@@ -224,55 +280,56 @@
         <!-- Mobile Card Header -->
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center space-x-3">
-            <span class="text-lg font-bold text-gray-900 dark:text-white"
-              >#{{ competitor.personalNumber }}</span
-            >
-            <UBadge
+            <span class="text-lg font-bold text-gray-900 dark:text-white">#{{ competitor.personalNumber }}</span>
+            <UiStatusBadge
               v-if="isAdmin"
-              :color="getStatusColor(competitor.playerAcceptanceStatus)"
-              size="md"
-              :label="getStatusLabel(competitor.playerAcceptanceStatus)"
-              :icon="getStatusIcon(competitor.playerAcceptanceStatus)"
-              rounded-full
-              variant="solid"
+              :status="competitor.playerAcceptanceStatus"
+              variant="soft"
+              size="sm"
             />
           </div>
-          <div class="flex gap-1">
+          <div class="flex gap-2">
             <UButton
               v-if="isAdmin"
               size="xs"
-              variant="ghost"
-              class="p-1 hover:bg-green-50 dark:hover:bg-green-900/20"
+              variant="soft"
+              color="info"
+              class="flex items-center gap-1"
               @click="$emit('view-details', competitor)"
             >
               <Icon
                 name="i-heroicons-eye"
-                class="w-6 h-6 text-green-600 dark:text-green-400"
+                class="w-4 h-4"
               />
+              <span class="hidden sm:inline">View</span>
             </UButton>
             <UButton
               v-if="isAdmin && canEditParticipant"
               size="xs"
-              variant="ghost"
-              class="p-1 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              variant="soft"
+              color="primary"
+              class="flex items-center gap-1"
               @click="$emit('edit', competitor)"
             >
               <Icon
                 name="i-heroicons-pencil"
-                class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                class="w-4 h-4"
               />
+              <span class="hidden sm:inline">Edit</span>
             </UButton>
             <UButton
               v-if="isAdmin"
               size="xs"
-              variant="ghost"
-              class="p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
+              variant="soft"
+              color="error"
+              class="flex items-center gap-1"
               @click="handleDeleteCompetitor(competitor)"
             >
               <Icon
                 name="i-heroicons-trash"
-                class="w-6 h-6 text-red-600 dark:text-red-400"
+                class="w-4 h-4"
               />
+              <span class="hidden sm:inline">Delete</span>
             </UButton>
           </div>
         </div>
@@ -301,24 +358,11 @@
             >
               {{ competitor.category }}
             </span>
-            <span
-              class="inline-flex items-center text-xs text-gray-600 dark:text-gray-400"
-            >
-              <Icon
-                :name="
-                  competitor.gender === 'MALE'
-                    ? 'i-heroicons-user'
-                    : 'i-heroicons-user'
-                "
-                class="w-3 h-3 mr-1"
-                :class="
-                  competitor.gender === 'MALE'
-                    ? 'text-blue-500'
-                    : 'text-pink-500'
-                "
-              />
-              {{ competitor.gender }}
-            </span>
+            <UiStatusBadge
+              :status="competitor.gender"
+              variant="soft"
+              size="xs"
+            />
             <span
               v-if="showTeam && competitor.team"
               class="inline-flex items-center text-xs text-gray-600 dark:text-gray-400"
@@ -331,16 +375,23 @@
     </div>
 
     <!-- Desktop Table (tablet and desktop) -->
-    <div v-if="viewport.isGreaterOrEquals('md')" class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+    <div
+      v-if="viewport.isGreaterOrEquals('md')"
+      class="overflow-x-auto w-full"
+    >
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-gray-700"
+        style="table-layout: fixed"
+      >
         <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>
             <th
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 60px"
             >
               <button
+                class="flex items-center space-x-1 transition-colors"
                 :class="[
-                  'flex items-center space-x-1 transition-colors',
                   sortBy === 'personalNumber'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'hover:text-gray-700 dark:hover:text-gray-200',
@@ -348,15 +399,19 @@
                 @click="handleSort('personalNumber')"
               >
                 <span>#</span>
-                <Icon :name="getSortIcon('personalNumber')" class="w-6 h-6" />
+                <Icon
+                  :name="getSortIcon('personalNumber')"
+                  class="w-4 h-4"
+                />
               </button>
             </th>
             <th
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 200px"
             >
               <button
+                class="flex items-center space-x-1 transition-colors"
                 :class="[
-                  'flex items-center space-x-1 transition-colors',
                   sortBy === 'firstName'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'hover:text-gray-700 dark:hover:text-gray-200',
@@ -364,15 +419,19 @@
                 @click="handleSort('firstName')"
               >
                 <span>Name</span>
-                <Icon :name="getSortIcon('firstName')" class="w-6 h-6" />
+                <Icon
+                  :name="getSortIcon('firstName')"
+                  class="w-4 h-4"
+                />
               </button>
             </th>
             <th
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 100px"
             >
               <button
+                class="flex items-center space-x-1 transition-colors"
                 :class="[
-                  'flex items-center space-x-1 transition-colors',
                   sortBy === 'category'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'hover:text-gray-700 dark:hover:text-gray-200',
@@ -380,15 +439,19 @@
                 @click="handleSort('category')"
               >
                 <span>Category</span>
-                <Icon :name="getSortIcon('category')" class="w-6 h-6" />
+                <Icon
+                  :name="getSortIcon('category')"
+                  class="w-4 h-4"
+                />
               </button>
             </th>
             <th
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 80px"
             >
               <button
+                class="flex items-center space-x-1 transition-colors"
                 :class="[
-                  'flex items-center space-x-1 transition-colors',
                   sortBy === 'gender'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'hover:text-gray-700 dark:hover:text-gray-200',
@@ -396,16 +459,20 @@
                 @click="handleSort('gender')"
               >
                 <span>Gender</span>
-                <Icon :name="getSortIcon('gender')" class="w-6 h-6" />
+                <Icon
+                  :name="getSortIcon('gender')"
+                  class="w-4 h-4"
+                />
               </button>
             </th>
             <th
               v-if="showTeam"
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 120px"
             >
               <button
+                class="flex items-center space-x-1 transition-colors"
                 :class="[
-                  'flex items-center space-x-1 transition-colors',
                   sortBy === 'team'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'hover:text-gray-700 dark:hover:text-gray-200',
@@ -413,16 +480,20 @@
                 @click="handleSort('team')"
               >
                 <span>Team</span>
-                <Icon :name="getSortIcon('team')" class="w-6 h-6" />
+                <Icon
+                  :name="getSortIcon('team')"
+                  class="w-4 h-4"
+                />
               </button>
             </th>
             <th
               v-if="isAuthenticated"
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 100px"
             >
               <button
+                class="flex items-center space-x-1 transition-colors"
                 :class="[
-                  'flex items-center space-x-1 transition-colors',
                   sortBy === 'playerAcceptanceStatus'
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'hover:text-gray-700 dark:hover:text-gray-200',
@@ -432,40 +503,38 @@
                 <span>Status</span>
                 <Icon
                   :name="getSortIcon('playerAcceptanceStatus')"
-                  class="w-6 h-6"
+                  class="w-4 h-4"
                 />
               </button>
             </th>
             <th
               v-if="isAuthenticated"
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 120px"
             >
               Document
             </th>
             <th
               v-if="isAuthenticated"
-              class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              style="width: 150px"
             >
               Actions
             </th>
           </tr>
         </thead>
-        <tbody
-          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-        >
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
           <tr
             v-for="competitor in paginatedCompetitors"
             :key="competitor.id"
             class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             <td
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
+              class="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white text-center"
             >
               {{ competitor.personalNumber }}
             </td>
-            <td
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
-            >
+            <td class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
               <div class="flex flex-col">
                 <button
                   class="font-medium hover:text-blue-600 dark:hover:text-blue-400 hover:underline cursor-pointer text-left"
@@ -475,126 +544,116 @@
                 </button>
               </div>
             </td>
-            <td
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
-            >
+            <td class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
               <span
-                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
+                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
               >
                 {{ competitor.category }}
               </span>
             </td>
-            <td
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
-            >
-              <span class="inline-flex items-center">
-                <Icon
-                  :name="
-                    competitor.gender === 'MALE'
-                      ? 'i-heroicons-user'
-                      : 'i-heroicons-user'
-                  "
-                  class="w-6 h-6 mr-2"
-                  :class="
-                    competitor.gender === 'MALE'
-                      ? 'text-blue-500'
-                      : 'text-pink-500'
-                  "
-                />
-                {{ competitor.gender }}
-              </span>
+            <td class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+              <UiStatusBadge
+                :status="competitor.gender"
+                variant="soft"
+                size="xs"
+              />
             </td>
             <td
               v-if="showTeam"
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
+              class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
             >
               {{ competitor.team || '-' }}
             </td>
             <td
               v-if="isAuthenticated"
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
+              class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
             >
-              <span
-                :class="getStatusBadgeClass(competitor.playerAcceptanceStatus)"
-                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium"
-              >
-                <Icon
-                  :name="getStatusIcon(competitor.playerAcceptanceStatus)"
-                  class="w-3 h-3 mx-1 mr-2"
-                />
-                {{ getStatusLabel(competitor.playerAcceptanceStatus) }}
-              </span>
+              <UiStatusBadge
+                :status="competitor.playerAcceptanceStatus"
+                variant="soft"
+                size="xs"
+              />
             </td>
             <td
               v-if="isAuthenticated"
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
+              class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
             >
-              <div class="flex items-center gap-2">
-                <Icon
-                  :name="
-                    competitor.tournamentDocumentUrl
-                      ? 'i-heroicons-document-check'
-                      : 'i-heroicons-document'
-                  "
-                  :class="
-                    competitor.tournamentDocumentUrl
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-gray-400 dark:text-gray-500'
-                  "
-                  class="w-5 h-5"
-                />
-                <a
+              <div class="flex items-center gap-1">
+                <UButton
                   v-if="competitor.tournamentDocumentUrl"
                   :href="competitor.tournamentDocumentUrl"
                   target="_blank"
                   rel="noopener"
-                  class="text-primary hover:underline"
-                  >View</a
+                  variant="soft"
+                  color="info"
+                  size="xs"
                 >
-                <span v-else class="text-gray-400 dark:text-gray-500"
-                  >No file</span
+                  <Icon
+                    name="i-heroicons-document-check"
+                    class="w-4 h-4"
+                  />
+                  <span class="hidden lg:inline">View</span>
+                </UButton>
+                <UButton
+                  v-else
+                  variant="soft"
+                  color="neutral"
+                  size="xs"
+                  disabled
                 >
+                  <Icon
+                    name="i-heroicons-document"
+                    class="w-4 h-4"
+                  />
+                  <span class="hidden lg:inline">No Doc</span>
+                </UButton>
               </div>
             </td>
             <td
               v-if="isAuthenticated"
-              class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
+              class="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"
             >
               <div class="flex gap-1">
-                <!-- View Details/Edit/Delete Actions (icon buttons) -->
+                <!-- View Details/Edit/Delete Actions (compact buttons) -->
                 <UButton
                   size="xs"
-                  variant="ghost"
-                  class="p-1 hover:bg-green-50 dark:hover:bg-green-900/20"
+                  variant="soft"
+                  color="info"
+                  class="flex items-center gap-1"
                   @click="$emit('view-details', competitor)"
                 >
                   <Icon
                     name="i-heroicons-eye"
-                    class="w-6 h-6 text-green-600 dark:text-green-400"
+                    class="w-4 h-4"
                   />
+                  <span class="hidden lg:inline">View</span>
                 </UButton>
                 <UButton
-                  v-if="canEditParticipant"
+                  v-if="isAdmin && canEditParticipant"
                   size="xs"
-                  variant="ghost"
-                  class="p-1 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  variant="soft"
+                  color="primary"
+                  class="flex items-center gap-1"
                   @click="$emit('edit', competitor)"
                 >
                   <Icon
                     name="i-heroicons-pencil"
-                    class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                    class="w-4 h-4"
                   />
+                  <span class="hidden lg:inline">Edit</span>
                 </UButton>
                 <UButton
                   size="xs"
-                  variant="ghost"
-                  class="p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  variant="soft"
+                  color="error"
+                  class="flex items-center gap-1"
                   @click="handleDeleteCompetitor(competitor)"
                 >
                   <Icon
                     name="i-heroicons-trash"
-                    class="w-6 h-6 text-red-600 dark:text-red-400"
+                    class="w-4 h-4"
                   />
+                  <span class="hidden lg:inline">Delete</span>
                 </UButton>
               </div>
             </td>
@@ -614,20 +673,19 @@
           class="text-sm text-gray-700 dark:text-gray-300"
         >
           Showing
-          <span class="font-medium text-gray-900 dark:text-white">{{
-            startIndex + 1
-          }}</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ startIndex + 1 }}</span>
           to
-          <span class="font-medium text-gray-900 dark:text-white">{{
-            endIndex
-          }}</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ endIndex }}</span>
           of
           <span class="font-medium text-gray-900 dark:text-white">{{
             filteredCompetitors.length
           }}</span>
           results
         </p>
-        <p v-else class="text-sm text-gray-700 dark:text-gray-300">
+        <p
+          v-else
+          class="text-sm text-gray-700 dark:text-gray-300"
+        >
           Showing all
           <span class="font-medium text-gray-900 dark:text-white">{{
             filteredCompetitors.length
@@ -640,9 +698,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center gap-4">
         <!-- Page Size Control -->
         <div class="flex items-center gap-2">
-          <label
-            class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
-          >
+          <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
             Show per page:
           </label>
           <USelect
@@ -661,12 +717,16 @@
           <!-- Previous Button -->
           <UButton
             :disabled="currentPage === 1 || pageSize === -1"
-            variant="outline"
+            variant="soft"
+            color="neutral"
             size="sm"
-            class="flex items-center h-8"
+            class="flex items-center gap-2"
             @click="goToPage(currentPage - 1)"
           >
-            <Icon name="i-heroicons-chevron-left" class="w-6 h-6 mr-1" />
+            <Icon
+              name="i-heroicons-chevron-left"
+              class="w-4 h-4"
+            />
             Previous
           </UButton>
 
@@ -675,10 +735,13 @@
             v-if="pageSize !== -1"
             class="hidden sm:flex items-center space-x-1"
           >
-            <template v-for="page in visiblePages" :key="page">
+            <template
+              v-for="page in visiblePages"
+              :key="page"
+            >
               <UButton
                 v-if="page !== '...'"
-                :variant="currentPage === page ? 'solid' : 'outline'"
+                :variant="currentPage === page ? 'solid' : 'soft'"
                 :color="currentPage === page ? 'primary' : 'neutral'"
                 size="sm"
                 class="w-8 h-8 p-0 flex items-center justify-center"
@@ -688,7 +751,8 @@
               </UButton>
               <UButton
                 v-else
-                variant="ghost"
+                variant="soft"
+                color="neutral"
                 size="sm"
                 class="w-8 h-8 p-0 cursor-default flex items-center justify-center"
                 disabled
@@ -703,21 +767,23 @@
             v-if="pageSize === -1"
             class="hidden sm:flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-md"
           >
-            <span class="text-sm text-gray-600 dark:text-gray-400"
-              >Showing all</span
-            >
+            <span class="text-sm text-gray-600 dark:text-gray-400">Showing all</span>
           </div>
 
           <!-- Next Button -->
           <UButton
             :disabled="currentPage === totalPages || pageSize === -1"
-            variant="outline"
+            variant="soft"
+            color="neutral"
             size="sm"
-            class="flex items-center h-8"
+            class="flex items-center gap-2"
             @click="goToPage(currentPage + 1)"
           >
             Next
-            <Icon name="i-heroicons-chevron-right" class="w-6 h-6 ml-1" />
+            <Icon
+              name="i-heroicons-chevron-right"
+              class="w-4 h-4"
+            />
           </UButton>
         </div>
       </div>
@@ -729,26 +795,31 @@
       title="Delete Participant"
       description="Are you sure you want to delete this participant? This action cannot be undone."
       :ui="{
-        wrapper: 'max-w-md',
+        wrapper: 'w-full',
+        close: 'absolute end-0 top-0',
       }"
     >
       <template #footer>
         <div class="flex justify-end space-x-3">
           <UButton
             color="neutral"
-            variant="outline"
+            variant="soft"
             :disabled="isDeleting"
             @click="cancelDelete"
           >
             Cancel
           </UButton>
-          <UButton 
-            color="error" 
+          <UButton
+            color="error"
             :loading="isDeleting"
             :disabled="isDeleting"
             @click="confirmDelete"
           >
-            <Icon v-if="!isDeleting" name="i-heroicons-trash" class="w-6 h-6 mr-2" />
+            <Icon
+              v-if="!isDeleting"
+              name="i-heroicons-trash"
+              class="w-4 h-4 mr-2"
+            />
             {{ isDeleting ? 'Deleting...' : 'Delete Participant' }}
           </UButton>
         </div>
@@ -765,13 +836,12 @@ import type { CompetitorWithDetails } from '../../../types'
 const viewport = useViewport()
 
 // Notification store
-const { addNotification } = useUIStore()
+const { showNotification } = useUIStore()
 
 interface Props {
   competitors: CompetitorWithDetails[]
   isAuthenticated: boolean
   showTeam?: boolean
-  showSchool?: boolean
   loading?: boolean
   categories: string[]
   canAddParticipant?: boolean
@@ -779,14 +849,14 @@ interface Props {
   isAdmin?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  showTeam: false,
-  showSchool: false,
-  loading: false,
-  canAddParticipant: false,
-  canEditParticipant: false,
-  isAdmin: false,
-})
+const {
+  competitors,
+  showTeam = false,
+  categories,
+  canAddParticipant = false,
+  canEditParticipant = false,
+  isAdmin = false,
+} = defineProps<Props>()
 
 const emit = defineEmits<{
   'add-participant': []
@@ -831,7 +901,7 @@ const pageSizeOptions = [
 // Filter options
 const categoryOptions = computed(() => [
   { label: 'All Categories', value: 'all' },
-  ...props.categories.map((cat) => ({ label: cat, value: cat })),
+  ...categories.map(cat => ({ label: cat, value: cat })),
 ])
 
 const genderOptions = [
@@ -849,21 +919,17 @@ const statusOptions = [
 
 const teamOptions = computed(() => {
   const teams = [
-    ...new Set(
-      props.competitors
-        .map((c) => c.team)
-        .filter((team) => team && team.trim() !== '')
-    ),
+    ...new Set(competitors.map(c => c.team).filter(team => team && team.trim() !== '')),
   ]
   return [
     { label: 'All Teams', value: 'all' },
-    ...teams.map((team) => ({ label: team as string, value: team as string })),
+    ...teams.map(team => ({ label: team as string, value: team as string })),
   ]
 })
 
 // Filtered and sorted competitors
 const filteredCompetitors = computed(() => {
-  const filtered = props.competitors.filter((competitor) => {
+  const filtered = competitors.filter(competitor => {
     const matchesSearch =
       !filters.value.search ||
       `${competitor.firstName} ${competitor.lastName}`
@@ -886,23 +952,14 @@ const filteredCompetitors = computed(() => {
       filters.value.team === 'all' ||
       (competitor.team && competitor.team === filters.value.team)
 
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesGender &&
-      matchesStatus &&
-      matchesTeam
-    )
+    return matchesSearch && matchesCategory && matchesGender && matchesStatus && matchesTeam
   })
 
   // Apply sorting
   if (sortBy.value) {
     filtered.sort((a, b) => {
       // Type-safe property access using a helper function
-      const getSortValue = (
-        item: CompetitorWithDetails,
-        key: string
-      ): string | number => {
+      const getSortValue = (item: CompetitorWithDetails, key: string): string | number => {
         switch (key) {
           case 'firstName':
           case 'lastName':
@@ -957,10 +1014,7 @@ const startIndex = computed(() => {
 
 const endIndex = computed(() => {
   if (pageSize.value === -1) return filteredCompetitors.value.length
-  return Math.min(
-    startIndex.value + pageSize.value,
-    filteredCompetitors.value.length
-  )
+  return Math.min(startIndex.value + pageSize.value, filteredCompetitors.value.length)
 })
 
 const paginatedCompetitors = computed(() => {
@@ -1077,62 +1131,7 @@ const handleSort = (column: string) => {
 
 const getSortIcon = (column: string) => {
   if (sortBy.value !== column) return 'i-heroicons-bars-arrow-up'
-  return sortOrder.value === 'asc'
-    ? 'i-heroicons-bars-arrow-up'
-    : 'i-heroicons-bars-arrow-down'
-}
-
-// Status helper functions
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case 'PENDING':
-      return 'Pending'
-    case 'APPROVED':
-      return 'Approved'
-    case 'REJECTED':
-      return 'Rejected'
-    default:
-      return status
-  }
-}
-
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case 'PENDING':
-      return 'i-heroicons-clock'
-    case 'APPROVED':
-      return 'i-heroicons-check-circle'
-    case 'REJECTED':
-      return 'i-heroicons-x-circle'
-    default:
-      return 'i-heroicons-question-mark-circle'
-  }
-}
-
-const getStatusBadgeClass = (status: string) => {
-  switch (status) {
-    case 'PENDING':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200'
-    case 'APPROVED':
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
-    case 'REJECTED':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200'
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-  }
-}
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'PENDING':
-      return 'warning'
-    case 'APPROVED':
-      return 'success'
-    case 'REJECTED':
-      return 'error'
-    default:
-      return 'neutral'
-  }
+  return sortOrder.value === 'asc' ? 'i-heroicons-bars-arrow-up' : 'i-heroicons-bars-arrow-down'
 }
 
 // Delete functions
@@ -1157,12 +1156,12 @@ const confirmDelete = async () => {
 
     if (response.success) {
       // Show success notification
-      addNotification({
+      showNotification({
         title: 'Participant Deleted',
         message: `"${competitorName}" has been successfully deleted.`,
         type: 'success',
       })
-      
+
       // Emit delete event to parent
       emit('delete', competitorToDelete.value.id)
       showDeleteConfirmation.value = false
@@ -1171,11 +1170,10 @@ const confirmDelete = async () => {
       throw new Error('Failed to delete participant')
     }
   } catch (error: unknown) {
-    if (process.env.NODE_ENV === 'development')
-      console.error('Error deleting participant:', error)
-    
+    if (process.env.NODE_ENV === 'development') console.error('Error deleting participant:', error)
+
     // Show error notification
-    addNotification({
+    showNotification({
       title: 'Delete Failed',
       message: `Failed to delete "${competitorName}". Please try again.`,
       type: 'error',

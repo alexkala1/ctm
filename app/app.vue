@@ -2,7 +2,7 @@
   <UApp>
     <!-- Nuxt Loading Indicator -->
     <NuxtLoadingIndicator />
-    
+
     <!-- Main App -->
     <NuxtLayout>
       <NuxtPage />
@@ -23,7 +23,7 @@ onMounted(async () => {
   try {
     // Initialize UI first
     initializeUI()
-    
+
     // Check authentication
     await checkUserAuth()
   } catch (error) {

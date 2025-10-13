@@ -4,7 +4,10 @@
       <UPageCard>
         <div class="text-center">
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20">
-            <UIcon name="i-heroicons-cog-6-tooth" class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <UIcon
+              name="i-heroicons-cog-6-tooth"
+              class="h-6 w-6 text-blue-600 dark:text-blue-400"
+            />
           </div>
           <h2 class="mt-6 text-2xl font-bold text-neutral-900 dark:text-white">
             Google OAuth Setup Required

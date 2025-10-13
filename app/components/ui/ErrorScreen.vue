@@ -21,7 +21,10 @@
         </p>
         
         <!-- Error Details (if provided) -->
-        <div v-if="details" class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+        <div
+          v-if="details"
+          class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
+        >
           <h3 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
             Error Details:
           </h3>
@@ -34,22 +37,28 @@
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <UButton
             color="primary"
-            size="lg"
+            size="md"
             :loading="isRetrying"
             class="w-full sm:w-auto"
             @click="handleRetry"
           >
-            <Icon name="i-heroicons-arrow-path" class="w-4 h-4 mr-2" />
+            <Icon
+              name="i-heroicons-arrow-path"
+              class="w-4 h-4 mr-2"
+            />
             {{ retryText || 'Try Again' }}
           </UButton>
           
           <UButton
             variant="outline"
-            size="lg"
+            size="md"
             class="w-full sm:w-auto"
             @click="handleGoHome"
           >
-            <Icon name="i-heroicons-home" class="w-4 h-4 mr-2" />
+            <Icon
+              name="i-heroicons-home"
+              class="w-4 h-4 mr-2"
+            />
             Go Home
           </UButton>
         </div>

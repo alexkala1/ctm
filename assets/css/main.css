@@ -10,7 +10,7 @@
     /* Greek font support */
     --font-greek: 'Noto Sans Greek', 'Inter', system-ui, sans-serif;
 
-    /* Enhanced shadows */
+    /* Modern Enhanced Shadows */
     --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-strong: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -19,6 +19,28 @@
     --shadow-glow-green: 0 0 20px rgba(34, 197, 94, 0.3);
     --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    /* Modern Glassmorphism Effects */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-bg-dark: rgba(0, 0, 0, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-border-dark: rgba(255, 255, 255, 0.1);
+    --glass-blur: blur(10px);
+    --glass-blur-strong: blur(20px);
+    
+    /* Neumorphism Shadows */
+    --neu-inset: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+    --neu-outset: 2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px rgba(255, 255, 255, 0.1);
+    --neu-outset-strong: 4px 4px 8px rgba(0, 0, 0, 0.15), -4px -4px 8px rgba(255, 255, 255, 0.15);
+    
+    /* Modern Gradients */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-warning: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --gradient-error: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    --gradient-glass-dark: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
 }
 
 @theme static {
@@ -28,13 +50,13 @@
     --color-primary-200: #bfdbfe;
     --color-primary-300: #93c5fd;
     --color-primary-400: #60a5fa;
-    --color-primary-500: #3b82f6;
-    /* Vibrant blue */
-    --color-primary-600: #2563eb;
-    --color-primary-700: #1d4ed8;
-    --color-primary-800: #1e40af;
-    --color-primary-900: #1e3a8a;
-    --color-primary-950: #172554;
+    --color-primary-500: #2563eb;
+    /* Vibrant indigo blue */
+    --color-primary-600: #1d4ed8;
+    --color-primary-700: #1e40af;
+    --color-primary-800: #1e3a8a;
+    --color-primary-900: #172554;
+    --color-primary-950: #0f172a;
 
     /* Secondary Colors */
     --color-secondary-50: #f8fafc;
@@ -63,19 +85,19 @@
     --color-accent-900: #581c87;
     --color-accent-950: #3b0764;
 
-    /* Success Colors - Enhanced */
-    --color-success-50: #f0fdf4;
-    --color-success-100: #dcfce7;
-    --color-success-200: #bbf7d0;
-    --color-success-300: #86efac;
-    --color-success-400: #4ade80;
-    --color-success-500: #22c55e;
-    /* Vibrant green */
-    --color-success-600: #16a34a;
-    --color-success-700: #15803d;
-    --color-success-800: #166534;
-    --color-success-900: #14532d;
-    --color-success-950: #052e16;
+    /* Success Colors - Enhanced Emerald */
+    --color-success-50: #ecfdf5;
+    --color-success-100: #d1fae5;
+    --color-success-200: #a7f3d0;
+    --color-success-300: #6ee7b7;
+    --color-success-400: #34d399;
+    --color-success-500: #10b981;
+    /* Vibrant emerald */
+    --color-success-600: #059669;
+    --color-success-700: #047857;
+    --color-success-800: #065f46;
+    --color-success-900: #064e3b;
+    --color-success-950: #022c22;
 
     /* Warning Colors - Enhanced Orange */
     --color-warning-50: #fff7ed;
@@ -137,3 +159,140 @@
     --color-chess-piece: #2d3748;
     --color-chess-highlight: #fbbf24;
 }
+
+/* Modern UButton Styling */
+[data-headlessui-state] button,
+button[data-headlessui-state],
+button:not([data-headlessui-state]) {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect for all buttons */
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.dark button::before {
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+}
+
+button:hover::before {
+  transform: translateX(100%);
+}
+
+/* Enhanced button hover effects */
+button:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark button:hover:not(:disabled) {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Apply same animations to anchor tags that are UButton components (for UButton with href) */
+/* Target UButton components by excluding footer links and targeting button-like anchors */
+a:not([class*="text-gray-"]):not([class*="hover:text-"]) {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+a:not([class*="text-gray-"]):not([class*="hover:text-"])::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.dark a:not([class*="text-gray-"]):not([class*="hover:text-"])::before {
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+}
+
+a:not([class*="text-gray-"]):not([class*="hover:text-"]):hover::before {
+  transform: translateX(100%);
+}
+
+/* Enhanced anchor hover effects for UButton components */
+a:not([class*="text-gray-"]):not([class*="hover:text-"]):hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark a:not([class*="text-gray-"]):not([class*="hover:text-"]):hover:not(:disabled) {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+a:not([class*="text-gray-"]):not([class*="hover:text-"]):active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Enhanced solid button styling */
+button[data-variant="solid"] {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+}
+
+button[data-variant="solid"]:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark button[data-variant="solid"]:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced outline button styling */
+button[data-variant="outline"] {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border-width: 2px;
+}
+
+button[data-variant="outline"]:hover {
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced soft button styling */
+button[data-variant="soft"] {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+button[data-variant="soft"]:hover {
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced ghost button styling */
+button[data-variant="ghost"] {
+  border-radius: 0.75rem;
+  font-weight: 600;
+}
+
+button[data-variant="ghost"]:hover {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Tournament background theme removed - back to original design */

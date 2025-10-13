@@ -6,41 +6,38 @@
     @submit="handleSubmit"
   >
     <!-- Basic Information -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-information-circle"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Basic Information
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Essential tournament details
-            </p>
-          </div>
+    <div class="space-y-6">
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+          <Icon
+            name="i-heroicons-information-circle"
+            class="w-4 h-4 text-blue-600 dark:text-blue-400"
+          />
         </div>
-      </template>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
+      </div>
 
       <div class="space-y-6">
-        <UFormField label="Tournament Name" name="name" required>
+        <UFormField
+          label="Tournament Name"
+          name="name"
+          required
+        >
           <UInput
             v-model="formData.name"
             placeholder="Enter tournament name"
             :disabled="isSubmitting"
-            size="lg"
+            size="md"
             icon="i-heroicons-trophy"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField label="Status" name="status" required>
+        <UFormField
+          label="Status"
+          name="status"
+          required
+        >
           <USelect
             v-model="formData.status"
             :items="statusOptions"
@@ -48,401 +45,272 @@
             value-attribute="value"
             placeholder="Select status"
             :disabled="isSubmitting"
-            size="lg"
+            size="md"
             icon="i-heroicons-flag"
             class="w-full"
           />
         </UFormField>
       </div>
-    </UCard>
+    </div>
 
     <!-- Tournament Schedule -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-calendar-days"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Tournament Schedule
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Set tournament and registration dates
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-6">
-        <UFormField label="Tournament Dates" name="tournamentStart" required>
-          <UPopover
-            :open="tournamentPopoverOpen"
-            @update:open="tournamentPopoverOpen = $event"
-          >
-            <UButton
-              color="neutral"
-              variant="subtle"
-              icon="i-heroicons-calendar-days"
-              :disabled="isSubmitting"
-              size="lg"
-              class="w-full justify-start"
-            >
-              <template v-if="tournamentDateRange.start">
-                <template v-if="tournamentDateRange.end">
-                  {{
-                    df.format(
-                      (tournamentDateRange.start as CalendarDate).toDate(
-                        getLocalTimeZone()
-                      )
-                    )
-                  }}
-                  -
-                  {{
-                    df.format(
-                      (tournamentDateRange.end as CalendarDate).toDate(
-                        getLocalTimeZone()
-                      )
-                    )
-                  }}
-                </template>
-                <template v-else>
-                  {{
-                    df.format(
-                      (tournamentDateRange.start as CalendarDate).toDate(
-                        getLocalTimeZone()
-                      )
-                    )
-                  }}
-                </template>
-              </template>
-              <template v-else> Select tournament dates </template>
-            </UButton>
-            <template #content>
-              <UCalendar
-                v-model="tournamentDateRange"
-                class="p-2"
-                :number-of-months="2"
-                :min-value="today"
-                range
-              />
-            </template>
-          </UPopover>
-        </UFormField>
-
-        <UFormField
-          label="Registration Period"
-          name="tournamentRegistrationStart"
-          required
+    <div class="space-y-6">
+      <UFormField
+        label="Tournament Dates"
+        name="tournamentStart"
+        required
+      >
+        <UPopover
+          :open="tournamentPopoverOpen"
+          @update:open="tournamentPopoverOpen = $event"
         >
-          <UPopover
-            :open="registrationPopoverOpen"
-            @update:open="registrationPopoverOpen = $event"
+          <UButton
+            color="neutral"
+            variant="subtle"
+            icon="i-heroicons-calendar-days"
+            :disabled="isSubmitting"
+            size="md"
+            class="w-full justify-start"
           >
-            <UButton
-              color="neutral"
-              variant="subtle"
-              icon="i-heroicons-calendar-days"
-              :disabled="isSubmitting"
-              size="lg"
-              class="w-full justify-start"
-            >
-              <template v-if="registrationDateRange.start">
-                <template v-if="registrationDateRange.end">
-                  {{
-                    df.format(
-                      (registrationDateRange.start as CalendarDate).toDate(
-                        getLocalTimeZone()
-                      )
+            <template v-if="tournamentDateRange.start">
+              <template v-if="tournamentDateRange.end">
+                {{
+                  df.format(
+                    (tournamentDateRange.start as CalendarDate).toDate(
+                      getLocalTimeZone()
                     )
-                  }}
-                  -
-                  {{
-                    df.format(
-                      (registrationDateRange.end as CalendarDate).toDate(
-                        getLocalTimeZone()
-                      )
+                  )
+                }}
+                -
+                {{
+                  df.format(
+                    (tournamentDateRange.end as CalendarDate).toDate(
+                      getLocalTimeZone()
                     )
-                  }}
-                </template>
-                <template v-else>
-                  {{
-                    df.format(
-                      (registrationDateRange.start as CalendarDate).toDate(
-                        getLocalTimeZone()
-                      )
-                    )
-                  }}
-                </template>
+                  )
+                }}
               </template>
-              <template v-else> Select registration dates </template>
-            </UButton>
-            <template #content>
-              <UCalendar
-                v-model="registrationDateRange"
-                class="p-2"
-                :number-of-months="2"
-                :min-value="today"
-                range
-              />
+              <template v-else>
+                {{
+                  df.format(
+                    (tournamentDateRange.start as CalendarDate).toDate(
+                      getLocalTimeZone()
+                    )
+                  )
+                }}
+              </template>
             </template>
-          </UPopover>
-        </UFormField>
-      </div>
-    </UCard>
+            <template v-else> Select tournament dates </template>
+          </UButton>
+          <template #content>
+            <UCalendar
+              v-model="tournamentDateRange"
+              class="p-2"
+              :number-of-months="2"
+              :min-value="today"
+              range
+            />
+          </template>
+        </UPopover>
+      </UFormField>
+
+      <UFormField
+        label="Registration Period"
+        name="tournamentRegistrationStart"
+        required
+      >
+        <UPopover
+          :open="registrationPopoverOpen"
+          @update:open="registrationPopoverOpen = $event"
+        >
+          <UButton
+            color="neutral"
+            variant="subtle"
+            icon="i-heroicons-calendar-days"
+            :disabled="isSubmitting"
+            size="md"
+            class="w-full justify-start"
+          >
+            <template v-if="registrationDateRange.start">
+              <template v-if="registrationDateRange.end">
+                {{
+                  df.format(
+                    (registrationDateRange.start as CalendarDate).toDate(
+                      getLocalTimeZone()
+                    )
+                  )
+                }}
+                -
+                {{
+                  df.format(
+                    (registrationDateRange.end as CalendarDate).toDate(
+                      getLocalTimeZone()
+                    )
+                  )
+                }}
+              </template>
+              <template v-else>
+                {{
+                  df.format(
+                    (registrationDateRange.start as CalendarDate).toDate(
+                      getLocalTimeZone()
+                    )
+                  )
+                }}
+              </template>
+            </template>
+            <template v-else> Select registration dates </template>
+          </UButton>
+          <template #content>
+            <UCalendar
+              v-model="registrationDateRange"
+              class="p-2"
+              :number-of-months="2"
+              :min-value="today"
+              range
+            />
+          </template>
+        </UPopover>
+      </UFormField>
+    </div>
 
     <!-- Tournament Categories -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-tag"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Categories
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Define tournament categories
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-4">
-        <div
-          v-for="(category, index) in formData.categories"
-          :key="index"
-          class="flex items-center gap-3"
-        >
-          <UInput
-            v-model="formData.categories[index]"
-            :placeholder="`Category ${index + 1}`"
-            :disabled="isSubmitting"
-            size="lg"
-            icon="i-heroicons-tag"
-            class="flex-1"
-            @keydown.enter="handleCategoryEnter(index, $event)"
-          />
-          <UButton
-            v-if="formData.categories.length > 1"
-            color="error"
-            variant="ghost"
-            icon="i-heroicons-trash"
-            size="sm"
-            :disabled="isSubmitting"
-            @click="removeCategory(index)"
-          />
-        </div>
+    <div class="space-y-6">
+      <div
+        v-for="(category, index) in formData.categories"
+        :key="index"
+        class="flex items-center gap-3"
+      >
+        <UInput
+          v-model="formData.categories[index]"
+          :placeholder="`Category ${index + 1}`"
+          :disabled="isSubmitting"
+          size="md"
+          icon="i-heroicons-tag"
+          class="flex-1"
+          @keydown.enter="handleCategoryEnter(index, $event)"
+        />
         <UButton
-          color="primary"
-          variant="outline"
-          icon="i-heroicons-plus"
+          v-if="formData.categories.length > 1"
+          color="error"
+          variant="ghost"
+          icon="i-heroicons-trash"
           size="sm"
           :disabled="isSubmitting"
-          @click="addCategory"
-        >
-          Add Category
-        </UButton>
+          @click="removeCategory(index)"
+        />
       </div>
-    </UCard>
+      <UButton
+        color="primary"
+        variant="soft"
+        icon="i-heroicons-plus"
+        size="sm"
+        :disabled="isSubmitting"
+        @click="addCategory"
+      >
+        Add Category
+      </UButton>
+    </div>
 
     <!-- Team Settings -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
+    <div class="space-y-6">
+      <UFormField name="hasTeams">
+        <div class="relative">
           <div
-            class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center shadow-lg"
+            class="flex items-start space-x-4 p-4 rounded-xl bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 transition-all duration-200 hover:from-purple-50/70 hover:to-pink-50/70 dark:hover:from-purple-900/30 dark:hover:to-pink-900/30"
           >
-            <Icon
-              name="i-heroicons-cog-6-tooth"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Team Settings
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Configure team participation (optional)
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-4">
-        <UFormField name="hasTeams">
-          <div class="relative">
-            <div
-              class="flex items-start space-x-4 p-4 rounded-xl bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 transition-all duration-200 hover:from-purple-50/70 hover:to-pink-50/70 dark:hover:from-purple-900/30 dark:hover:to-pink-900/30"
-            >
-              <div class="flex-shrink-0">
-                <UCheckbox
-                  v-model="formData.hasTeams"
-                  :disabled="isSubmitting"
-                  size="lg"
-                  class="mt-1"
+            <div class="flex-shrink-0">
+              <UCheckbox
+                v-model="formData.hasTeams"
+                :disabled="isSubmitting"
+                size="md"
+                class="mt-1"
+              />
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center space-x-2 mb-1">
+                <Icon
+                  name="i-heroicons-users"
+                  class="w-6 h-6 text-purple-600 dark:text-purple-400"
                 />
-              </div>
-              <div class="flex-1">
-                <div class="flex items-center space-x-2 mb-1">
-                  <Icon
-                    name="i-heroicons-users"
-                    class="w-6 h-6 text-purple-600 dark:text-purple-400"
-                  />
-                  <p
-                    class="text-sm font-semibold text-gray-900 dark:text-white"
-                  >
-                    Enable team participation
-                  </p>
-                </div>
                 <p
-                  class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed"
+                  class="text-sm font-semibold text-gray-900 dark:text-white"
                 >
-                  Allow teams to participate in this tournament (optional)
+                  Enable team participation
                 </p>
               </div>
-            </div>
-            <!-- Subtle accent line -->
-            <div
-              class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400 to-pink-500 rounded-l-xl opacity-60"
-            />
-          </div>
-        </UFormField>
-      </div>
-    </UCard>
-
-    <!-- Team Management (when teams are enabled) -->
-    <UCard v-if="formData.hasTeams" class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-users"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Team Management
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Manage teams for this tournament
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-4">
-        <div
-          class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
-        >
-          <div class="flex items-start space-x-3">
-            <Icon
-              name="i-heroicons-information-circle"
-              class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5"
-            />
-            <div>
-              <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100">
-                How Teams Work
-              </h4>
-              <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                When teams are enabled, competitors can join existing teams or
-                create new ones during registration. Teams will be automatically
-                created as competitors register with team names.
+              <p
+                class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed"
+              >
+                Allow teams to participate in this tournament (optional)
               </p>
             </div>
           </div>
-        </div>
-      </div>
-    </UCard>
-
-    <!-- External Links -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
+          <!-- Subtle accent line -->
           <div
-            class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-link"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
+            class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400 to-pink-500 rounded-l-xl opacity-60"
+          />
+        </div>
+      </UFormField>
+    </div>
+
+    <!-- Team Management (when teams are enabled) -->
+    <div
+      v-if="formData.hasTeams"
+      class="space-y-6"
+    >
+      <div
+        class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
+      >
+        <div class="flex items-start space-x-3">
+          <Icon
+            name="i-heroicons-information-circle"
+            class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5"
+          />
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              External Links
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Add relevant URLs and resources
+            <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100">
+              How Teams Work
+            </h4>
+            <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">
+              When teams are enabled, competitors can join existing teams or
+              create new ones during registration. Teams will be automatically
+              created as competitors register with team names.
             </p>
           </div>
         </div>
-      </template>
-
-      <div class="space-y-6">
-        <UFormField label="Proclamations URL" name="proclamations">
-          <UInput
-            v-model="formData.proclamations"
-            placeholder="https://example.com/proclamations"
-            :disabled="isSubmitting"
-            size="lg"
-            icon="i-heroicons-document-text"
-            class="w-full"
-          />
-        </UFormField>
-
-        <UFormField label="Chess Results URL" name="chessResults">
-          <UInput
-            v-model="formData.chessResults"
-            placeholder="https://example.com/results"
-            :disabled="isSubmitting"
-            size="lg"
-            icon="i-heroicons-chart-bar"
-            class="w-full"
-          />
-        </UFormField>
       </div>
-    </UCard>
+    </div>
 
-    <!-- Actions -->
-    <UCard class="overflow-hidden">
-      <div class="flex flex-col sm:flex-row justify-end gap-3">
-        <UButton
-          color="neutral"
-          variant="outline"
+    <!-- External Links -->
+    <div class="space-y-6">
+      <UFormField
+        label="Proclamations URL"
+        name="proclamations"
+      >
+        <UInput
+          v-model="formData.proclamations"
+          placeholder="https://example.com/proclamations"
           :disabled="isSubmitting"
-          size="lg"
-          class="w-full sm:w-auto"
-          icon="i-heroicons-x-mark"
-          @click="emit('close')"
-        >
-          Cancel
-        </UButton>
-        <UButton
-          type="submit"
-          :loading="isSubmitting"
+          size="md"
+          icon="i-heroicons-document-text"
+          class="w-full"
+        />
+      </UFormField>
+
+      <UFormField
+        label="Chess Results URL"
+        name="chessResults"
+      >
+        <UInput
+          v-model="formData.chessResults"
+          placeholder="https://example.com/results"
           :disabled="isSubmitting"
-          size="lg"
-          class="w-full sm:w-auto"
-          icon="i-heroicons-pencil"
-        >
-          Update Tournament
-        </UButton>
-      </div>
-    </UCard>
+          size="md"
+          icon="i-heroicons-chart-bar"
+          class="w-full"
+        />
+      </UFormField>
+    </div>
   </UForm>
 </template>
 
@@ -777,4 +645,20 @@ const handleSubmit = async (
     isSubmitting.value = false
   }
 }
+
+// Method for programmatic submission from parent component
+const submitForm = async () => {
+  // Trigger the form submission manually
+  const form = document.querySelector('form') as HTMLFormElement
+  if (form) {
+    form.dispatchEvent(new Event('submit', { cancelable: true }))
+  }
+}
+
+// Expose methods and state for parent component
+defineExpose({
+  handleSubmit,
+  submitForm,
+  isSubmitting: readonly(isSubmitting)
+})
 </script>

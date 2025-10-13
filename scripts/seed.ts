@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
-import { hashPassword } from '../server/utils/password'
 
 const prisma = new PrismaClient()
 
@@ -9,14 +8,12 @@ async function main() {
     console.log('🌱 Starting database seeding...')
 
   // Create super admin user
-  const superAdminPassword = await hashPassword('admin123')
   const superAdmin = await prisma.user.upsert({
     where: { email: 'admin@chess-tournament.com' },
     update: {},
     create: {
       email: 'admin@chess-tournament.com',
       name: 'Super Admin',
-      hashedPassword: superAdminPassword,
       role: 'SUPER_ADMIN',
       status: 'APPROVED',
       provider: 'EMAIL',
@@ -26,14 +23,12 @@ async function main() {
   })
 
   // Create regular admin user
-  const adminPassword = await hashPassword('admin123')
   const admin = await prisma.user.upsert({
     where: { email: 'tournament@chess-tournament.com' },
     update: {},
     create: {
       email: 'tournament@chess-tournament.com',
       name: 'Tournament Admin',
-      hashedPassword: adminPassword,
       role: 'ADMIN',
       status: 'APPROVED',
       provider: 'EMAIL',
@@ -43,14 +38,12 @@ async function main() {
   })
 
   // Create a regular user account for you
-  const userPassword = await hashPassword('user123')
   const _regularUser = await prisma.user.upsert({
     where: { email: 'user@chess-tournament.com' },
     update: {},
     create: {
       email: 'user@chess-tournament.com',
       name: 'Regular User',
-      hashedPassword: userPassword,
       role: 'USER',
       status: 'APPROVED',
       provider: 'EMAIL',

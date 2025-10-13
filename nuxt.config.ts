@@ -135,7 +135,8 @@ export default defineNuxtConfig({
         '/privacy',
         '/terms',
         '/auth',
-        '/auth/**'
+        '/auth/**',
+        '/ui-demo'
       ],
     },
   },

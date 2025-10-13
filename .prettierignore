@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-.pnpm-store/
 
 # Build outputs
 .nuxt/
@@ -8,42 +7,35 @@ node_modules/
 dist/
 build/
 
-# Generated files
-.nitro/
-.cache/
+# Logs
+logs/
+*.log
 
 # Environment files
-.env
-.env.*
+.env*
 
 # Database
 *.db
 *.sqlite
 
-# Logs
-*.log
-logs/
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Testing
+coverage/
+.nyc_output/
 
 # IDE
 .vscode/
 .idea/
 
-# Package manager
+# OS
+.DS_Store
+Thumbs.db
+
+# Package manager files
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Prisma
-prisma/migrations/
-
-# Auto-generated files
-.eslintrc-auto-import.json
+# Generated files
+.nuxt/
+coverage/
+*.tsbuildinfo

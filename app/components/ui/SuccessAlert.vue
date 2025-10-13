@@ -9,11 +9,17 @@
     :ui="ui"
     class="success-alert"
   >
-    <template v-if="$slots.default" #default>
+    <template
+      v-if="$slots.default"
+      #default
+    >
       <slot />
     </template>
     
-    <template v-if="$slots.actions" #actions>
+    <template
+      v-if="$slots.actions"
+      #actions
+    >
       <slot name="actions" />
     </template>
   </UAlert>
@@ -42,21 +48,21 @@ withDefaults(defineProps<Props>(), {
 })
 
 const ui = computed(() => ({
-  wrapper: 'rounded-lg border border-green-200 dark:border-green-800',
-  container: 'flex',
+  wrapper: 'group relative rounded-2xl border-2 shadow-[0_8px_32px_0_rgba(34,197,94,0.2)] backdrop-blur-sm transition-all duration-200 hover:shadow-[0_12px_40px_0_rgba(34,197,94,0.3)] hover:scale-[1.02] bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700 overflow-hidden',
+  container: 'flex p-6 relative z-10',
   icon: {
-    base: 'flex-shrink-0 w-5 h-5 text-green-600 dark:text-green-400',
+    base: 'flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4 shadow-[0_4px_12px_rgba(34,197,94,0.3)]',
     color: 'green'
   },
-  title: 'text-sm font-medium text-green-800 dark:text-green-200',
-  description: 'mt-1 text-sm text-green-700 dark:text-green-300',
+  title: 'text-lg font-bold text-green-800 dark:text-green-200 mb-2',
+  description: 'text-green-700 dark:text-green-300 opacity-90',
   actions: 'mt-2 flex space-x-2'
 }))
 </script>
 
 <style scoped>
 .success-alert {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s;
 }
 
 .success-alert:hover {

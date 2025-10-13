@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 import prisma from '../../../lib/prisma'
 import { getCurrentUser } from '../../utils/auth'
@@ -95,23 +96,6 @@ export default defineEventHandler(async (event) => {
 
     const nextPersonalNumber = (lastCompetitor?.personalNumber ?? 0) + 1
 
-    // Check if name combination is unique within the tournament
-    const existingName = await prisma.competitor.findFirst({
-      where: {
-        tournamentId: validatedData.tournamentId,
-        firstName: validatedData.firstName,
-        lastName: validatedData.lastName,
-        deletedAt: null,
-      },
-    })
-
-    if (existingName) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: `A participant with the name "${validatedData.firstName} ${validatedData.lastName}" already exists in this tournament`,
-      })
-    }
-
     // Create competitor
     const competitor = await prisma.competitor.create({
       data: {
@@ -147,8 +131,26 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Validation error',
-        data: error.errors,
+        data: error.issues,
       })
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        // Handle unique constraint violations
+        if (error.meta?.target && Array.isArray(error.meta.target) && error.meta.target.includes('personalNumber')) {
+          throw createError({
+            statusCode: 400,
+            statusMessage: 'A participant with this personal number already exists in this tournament.',
+          })
+        }
+        if (error.meta?.target && Array.isArray(error.meta.target) && error.meta.target.includes('firstName') && error.meta.target.includes('lastName')) {
+          throw createError({
+            statusCode: 400,
+            statusMessage: 'A participant with this name already exists in this tournament.',
+          })
+        }
+      }
     }
 
     throw createError({

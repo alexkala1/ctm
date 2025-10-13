@@ -112,7 +112,10 @@
         variant="outline"
         @click="logout"
       >
-        <Icon name="i-heroicons-arrow-right-on-rectangle" class="w-4 h-4 mr-2" />
+        <Icon
+          name="i-heroicons-arrow-right-on-rectangle"
+          class="w-4 h-4 mr-2"
+        />
         Logout
       </UButton>
     </div>

@@ -1,15 +1,18 @@
 <template>
-  <div class="loading-state" :class="containerClass">
+  <div
+    class="loading-state"
+    :class="containerClass"
+  >
     <div class="flex flex-col items-center justify-center space-y-4">
       <!-- Loading Spinner -->
       <div class="relative">
         <div 
-          class="rounded-full border-4 border-gray-200 dark:border-gray-700"
-          :class="[spinnerClass, 'animate-spin']"
+          class="rounded-full border-4 border-gray-200 dark:border-gray-700 animate-spin"
+          :class="[spinnerClass]"
         />
         <div 
-          class="absolute top-0 left-0 rounded-full border-4 border-transparent border-t-blue-500"
-          :class="[spinnerClass, 'animate-spin']"
+          class="absolute top-0 left-0 rounded-full border-4 border-transparent border-t-blue-500 animate-spin"
+          :class="[spinnerClass]"
         />
       </div>
       
@@ -30,7 +33,10 @@
       </div>
       
       <!-- Progress Bar (if percentage provided) -->
-      <div v-if="percentage !== undefined" class="w-full max-w-xs">
+      <div
+        v-if="percentage !== undefined"
+        class="w-full max-w-xs"
+      >
         <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
           <span>{{ percentage }}%</span>
           <span>{{ statusText }}</span>
@@ -89,6 +95,6 @@ const containerClass = computed(() => {
 
 <style scoped>
 .loading-state {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s;
 }
 </style>

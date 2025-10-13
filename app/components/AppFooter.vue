@@ -4,38 +4,41 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- Brand Section -->
         <div class="col-span-1 md:col-span-2">
-                  <div class="flex items-center space-x-3 mb-4">
-                    <img 
-                      src="/icon.svg" 
-                      alt="Chess Tournament Manager" 
-                      class="h-8 w-8" 
-                    >
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                      Chess Tournament Manager
-                    </h3>
-                  </div>
+          <div class="flex items-center space-x-3 mb-4">
+            <img
+              src="/icon.svg"
+              alt="Chess Tournament Manager"
+              class="h-8 w-8"
+            >
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+              Chess Tournament Manager
+            </h3>
+          </div>
           <p class="text-gray-600 dark:text-gray-400 text-sm max-w-md">
-            A comprehensive platform for managing chess tournaments, participants, and competitions with ease and efficiency.
+            A comprehensive platform for managing chess tournaments, participants, and competitions
+            with ease and efficiency.
           </p>
         </div>
 
         <!-- Quick Links -->
         <div>
-          <h4 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+          <h4
+            class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4"
+          >
             Quick Links
           </h4>
           <ul class="space-y-3">
             <li>
-              <NuxtLink 
-                to="/" 
+              <NuxtLink
+                to="/"
                 class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
               >
                 Tournaments
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink 
-                v-if="!isAuthenticated" 
+              <NuxtLink
+                v-if="!isAuthenticated"
                 to="/auth/login"
                 class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
               >
@@ -43,8 +46,8 @@
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink 
-                v-if="!isAuthenticated" 
+              <NuxtLink
+                v-if="!isAuthenticated"
                 to="/auth/register"
                 class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
               >
@@ -56,29 +59,31 @@
 
         <!-- Support -->
         <div>
-          <h4 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+          <h4
+            class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4"
+          >
             Support
           </h4>
           <ul class="space-y-3">
             <li>
-              <NuxtLink 
-                to="/support" 
+              <NuxtLink
+                to="/support"
                 class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
               >
                 Help Center
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink 
-                to="/support" 
+              <NuxtLink
+                to="/support"
                 class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
               >
                 Contact Us
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink 
-                to="/support" 
+              <NuxtLink
+                to="/support"
                 class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
               >
                 Documentation
@@ -96,16 +101,16 @@
               © {{ currentYear }} Chess Tournament Manager. All rights reserved.
             </p>
           </div>
-          
+
           <div class="flex items-center space-x-6">
-            <NuxtLink 
-              to="/privacy" 
+            <NuxtLink
+              to="/privacy"
               class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
             >
               Privacy Policy
             </NuxtLink>
-            <NuxtLink 
-              to="/terms" 
+            <NuxtLink
+              to="/terms"
               class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
             >
               Terms of Service

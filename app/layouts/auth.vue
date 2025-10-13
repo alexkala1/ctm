@@ -5,8 +5,14 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-6">
           <!-- Logo -->
-          <NuxtLink to="/" class="flex items-center space-x-3">
-            <Icon name="i-heroicons-trophy" class="h-8 w-8 text-primary-600" />
+          <NuxtLink
+            to="/"
+            class="flex items-center space-x-3"
+          >
+            <Icon
+              name="i-heroicons-trophy"
+              class="h-8 w-8 text-primary-600"
+            />
             <span class="text-xl font-bold text-neutral-900 dark:text-white">
               Chess Tournament Manager
             </span>
@@ -19,7 +25,10 @@
             color="neutral"
             size="sm"
           >
-            <Icon name="heroicons:arrow-left" class="w-4 h-4 mr-2" />
+            <Icon
+              name="heroicons:arrow-left"
+              class="w-4 h-4 mr-2"
+            />
             Back to Home
           </UButton>
         </div>

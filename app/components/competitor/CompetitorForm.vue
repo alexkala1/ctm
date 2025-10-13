@@ -2,9 +2,7 @@
   <div class="max-w-2xl mx-auto">
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
       <div class="px-4 py-5 sm:p-6">
-        <h3
-          class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-6"
-        >
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-6">
           {{ isEdit ? 'Edit Competitor' : 'Register for Tournament' }}
         </h3>
 
@@ -16,8 +14,15 @@
         >
           <!-- Personal Information -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <VeeField v-slot="{ field, errorMessage }" name="firstName">
-              <UFormGroup label="First Name" :error="errorMessage" required>
+            <VeeField
+              v-slot="{ field, errorMessage }"
+              name="firstName"
+            >
+              <UFormGroup
+                label="First Name"
+                :error="errorMessage"
+                required
+              >
                 <UInput
                   v-bind="field"
                   placeholder="Enter first name"
@@ -26,8 +31,15 @@
               </UFormGroup>
             </VeeField>
 
-            <VeeField v-slot="{ field, errorMessage }" name="lastName">
-              <UFormGroup label="Last Name" :error="errorMessage" required>
+            <VeeField
+              v-slot="{ field, errorMessage }"
+              name="lastName"
+            >
+              <UFormGroup
+                label="Last Name"
+                :error="errorMessage"
+                required
+              >
                 <UInput
                   v-bind="field"
                   placeholder="Enter last name"
@@ -38,8 +50,15 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <VeeField v-slot="{ field, errorMessage }" name="gender">
-              <UFormGroup label="Gender" :error="errorMessage" required>
+            <VeeField
+              v-slot="{ field, errorMessage }"
+              name="gender"
+            >
+              <UFormGroup
+                label="Gender"
+                :error="errorMessage"
+                required
+              >
                 <USelect
                   v-bind="field"
                   :items="genderOptions"
@@ -49,8 +68,15 @@
               </UFormGroup>
             </VeeField>
 
-            <VeeField v-slot="{ field, errorMessage }" name="category">
-              <UFormGroup label="Category" :error="errorMessage" required>
+            <VeeField
+              v-slot="{ field, errorMessage }"
+              name="category"
+            >
+              <UFormGroup
+                label="Category"
+                :error="errorMessage"
+                required
+              >
                 <USelect
                   v-bind="field"
                   :items="categoryOptions"
@@ -66,8 +92,14 @@
             v-if="tournament?.hasTeams"
             class="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
-            <VeeField v-slot="{ field, errorMessage }" name="team">
-              <UFormGroup label="Team" :error="errorMessage">
+            <VeeField
+              v-slot="{ field, errorMessage }"
+              name="team"
+            >
+              <UFormGroup
+                label="Team"
+                :error="errorMessage"
+              >
                 <USelect
                   v-bind="field"
                   :items="teamOptions"
@@ -81,8 +113,14 @@
           </div>
 
           <!-- Document Upload -->
-          <VeeField v-slot="{ errorMessage }" name="tournamentDocument">
-            <UFormGroup label="Tournament Document" :error="errorMessage">
+          <VeeField
+            v-slot="{ errorMessage }"
+            name="tournamentDocument"
+          >
+            <UFormGroup
+              label="Tournament Document"
+              :error="errorMessage"
+            >
               <div
                 class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
               >
@@ -129,7 +167,10 @@
             v-slot="{ field, errorMessage }"
             name="adminNotes"
           >
-            <UFormGroup label="Admin Notes" :error="errorMessage">
+            <UFormGroup
+              label="Admin Notes"
+              :error="errorMessage"
+            >
               <UTextarea
                 v-bind="field"
                 placeholder="Add any admin notes..."
@@ -145,7 +186,10 @@
             v-slot="{ field, errorMessage }"
             name="playerAcceptanceStatus"
           >
-            <UFormGroup label="Status" :error="errorMessage">
+            <UFormGroup
+              label="Status"
+              :error="errorMessage"
+            >
               <USelect
                 v-bind="field"
                 :items="statusOptions"
@@ -161,7 +205,7 @@
           >
             <UButton
               type="button"
-              variant="outline"
+              variant="soft"
               :disabled="isSubmitting"
               @click="$emit('cancel')"
             >
@@ -188,25 +232,20 @@ import { object, string, mixed } from 'yup'
 import type { Tournament, Competitor } from '../../../types/tournament'
 
 interface Props {
-  tournament?: Tournament
-  competitor?: Competitor
+  tournament: Tournament
+  competitor: Competitor
   isAdmin?: boolean
   isSubmitting?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  tournament: undefined,
-  competitor: undefined,
-  isAdmin: false,
-  isSubmitting: false,
-})
+const { tournament, competitor, isAdmin = false, isSubmitting = false } = defineProps<Props>()
 
 const emit = defineEmits<{
   submit: [data: Record<string, unknown>]
   cancel: []
 }>()
 
-const isEdit = computed(() => !!props.competitor)
+const isEdit = computed(() => !!competitor)
 const selectedFile = ref<File | null>(null)
 
 const genderOptions = [
@@ -215,22 +254,20 @@ const genderOptions = [
 ]
 
 const categoryOptions = computed(() => {
-  if (!props.tournament?.categories) return []
-  return props.tournament.categories.map((cat) => ({ label: cat, value: cat }))
+  if (!tournament?.categories) return []
+  return tournament.categories.map(cat => ({ label: cat, value: cat }))
 })
 
 const teamOptions = computed(() => {
   // Get existing teams from tournament competitors if available
   const existingTeams =
-    props.tournament?.competitors
-      ?.map((c) => c.team)
-      .filter((team) => team && team.trim() !== '') || []
+    tournament?.competitors?.map(c => c.team).filter(team => team && team.trim() !== '') || []
 
   const uniqueTeams = [...new Set(existingTeams)]
 
   return [
     { label: 'No Team', value: '' },
-    ...uniqueTeams.map((team) => ({ label: team, value: team })),
+    ...uniqueTeams.map(team => ({ label: team, value: team })),
   ]
 })
 
@@ -241,14 +278,14 @@ const statusOptions = [
 ]
 
 const initialValues = computed(() => ({
-  firstName: props.competitor?.firstName || '',
-  lastName: props.competitor?.lastName || '',
-  gender: props.competitor?.gender || '',
-  category: props.competitor?.category || '',
-  team: props.competitor?.team || '',
+  firstName: competitor?.firstName || '',
+  lastName: competitor?.lastName || '',
+  gender: competitor?.gender || '',
+  category: competitor?.category || '',
+  team: competitor?.team || '',
   tournamentDocument: null,
-  adminNotes: props.competitor?.adminNotes || '',
-  playerAcceptanceStatus: props.competitor?.playerAcceptanceStatus || 'PENDING',
+  adminNotes: competitor?.adminNotes || '',
+  playerAcceptanceStatus: competitor?.playerAcceptanceStatus || 'PENDING',
 }))
 
 const schema = object({
@@ -258,9 +295,7 @@ const schema = object({
   lastName: string()
     .required('Last name is required')
     .min(2, 'Last name must be at least 2 characters'),
-  gender: string()
-    .oneOf(['MALE', 'FEMALE'], 'Invalid gender')
-    .required('Gender is required'),
+  gender: string().oneOf(['MALE', 'FEMALE'], 'Invalid gender').required('Gender is required'),
   category: string().required('Category is required'),
   team: string().nullable(),
   tournamentDocument: mixed().nullable(),
@@ -279,7 +314,7 @@ const handleSubmit = (values: Record<string, unknown>) => {
   emit('submit', data)
 }
 
-const handleFileChange = (_event: Event) => {
+const handleFileChange = (event: Event) => {
   if (event.target && 'files' in event.target) {
     const target = event.target as { files: FileList | null }
     if (target.files && target.files[0]) {

@@ -1,86 +1,67 @@
 <template>
-  <UForm
-    :state="formData"
-    :schema="validationSchema"
-    class="space-y-8"
-    @submit="handleSubmit"
-  >
-    <!-- Basic Information -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
+    
+  <div class="p-6 max-h-[70vh] overflow-y-auto">
+    <UForm
+      :state="formData"
+      :schema="validationSchema"
+      class="space-y-8"
+      @submit="handleSubmit"
+    >
+      <!-- Basic Information -->
+      <div class="space-y-6">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
             <Icon
               name="i-heroicons-information-circle"
-              class="w-6 h-6 dark:text-white text-grey-900"
+              class="w-4 h-4 text-blue-600 dark:text-blue-400"
             />
           </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Basic Information
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Essential tournament details
-            </p>
-          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
         </div>
-      </template>
 
-      <div class="space-y-6">
-        <UFormField label="Tournament Name" name="name" required>
-          <UInput
-            v-model="formData.name"
-            placeholder="Enter tournament name"
-            :disabled="isSubmitting"
-            size="lg"
-            icon="i-heroicons-trophy"
-            class="w-full"
-          />
-        </UFormField>
-
-        <UFormField label="Status" name="status" required>
-          <USelect
-            v-model="formData.status"
-            :items="statusOptions"
-            placeholder="Select status"
-            :disabled="isSubmitting"
-            size="lg"
-            icon="i-heroicons-flag"
-            class="w-full"
-            option-attribute="label"
-            value-attribute="value"
-          />
-        </UFormField>
-      </div>
-    </UCard>
-
-    <!-- Tournament Schedule -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg"
+        <div class="space-y-6">
+          <UFormField
+            label="Tournament Name"
+            name="name"
+            required
           >
-            <Icon
-              name="i-heroicons-calendar-days"
-              class="w-6 h-6 dark:text-white text-grey-900"
+            <UInput
+              v-model="formData.name"
+              placeholder="Enter tournament name"
+              :disabled="isSubmitting"
+              size="md"
+              icon="i-heroicons-trophy"
+              class="w-full"
             />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Tournament Schedule
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              When the tournament takes place
-            </p>
-          </div>
-        </div>
-      </template>
+          </UFormField>
 
+          <UFormField
+            label="Status"
+            name="status"
+            required
+          >
+            <USelect
+              v-model="formData.status"
+              :items="statusOptions"
+              option-attribute="label"
+              value-attribute="value"
+              placeholder="Select status"
+              :disabled="isSubmitting"
+              size="md"
+              icon="i-heroicons-flag"
+              class="w-full"
+            />
+          </UFormField>
+        </div>
+      </div>
+
+      <!-- Tournament Schedule -->
       <div class="space-y-6">
-        <UFormField label="Tournament Dates" name="tournamentDates" required>
+        <UFormField
+          label="Tournament Dates"
+          name="tournamentStart"
+          required
+        >
           <UPopover
             :open="tournamentPopoverOpen"
             @update:open="tournamentPopoverOpen = $event"
@@ -90,7 +71,7 @@
               variant="subtle"
               icon="i-heroicons-calendar-days"
               :disabled="isSubmitting"
-              size="lg"
+              size="md"
               class="w-full justify-start"
             >
               <template v-if="tournamentDateRange.start">
@@ -136,35 +117,12 @@
           </UPopover>
         </UFormField>
       </div>
-    </UCard>
 
-    <!-- Registration Period -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-violet-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-user-plus"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Registration Period
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              When players can register
-            </p>
-          </div>
-        </div>
-      </template>
-
+      <!-- Registration Period -->
       <div class="space-y-6">
         <UFormField
           label="Registration Period"
-          name="registrationPeriod"
+          name="tournamentRegistrationStart"
           required
         >
           <UPopover
@@ -176,7 +134,7 @@
               variant="subtle"
               icon="i-heroicons-calendar-days"
               :disabled="isSubmitting"
-              size="lg"
+              size="md"
               class="w-full justify-start"
             >
               <template v-if="registrationDateRange.start">
@@ -222,106 +180,57 @@
           </UPopover>
         </UFormField>
       </div>
-    </UCard>
 
-    <!-- Categories -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-tag"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Tournament Categories
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Define competition categories
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <UFormField label="Categories" name="categories" required>
-        <div class="space-y-4">
-          <div
-            v-for="(category, index) in formData.categories"
-            :key="index"
-            class="flex items-center space-x-3"
-          >
-            <UInput
-              v-model="formData.categories[index]"
-              :placeholder="`Category ${index + 1}`"
-              :disabled="isSubmitting"
-              size="lg"
-              icon="i-heroicons-tag"
-              class="flex-1"
-              @keydown.enter="handleCategoryEnter(index, $event)"
-            />
-            <UButton
-              v-if="formData.categories.length > 1"
-              color="error"
-              variant="ghost"
-              icon="i-heroicons-trash"
-              :disabled="isSubmitting"
-              size="lg"
-              @click="removeCategory(index)"
-            />
-          </div>
-          <UButton
-            color="primary"
-            variant="outline"
-            icon="i-heroicons-plus"
+      <!-- Tournament Categories -->
+      <div class="space-y-6">
+        <div
+          v-for="(_category, index) in formData.categories"
+          :key="index"
+          class="flex items-center gap-3"
+        >
+          <UInput
+            v-model="formData.categories[index]"
+            :placeholder="`Category ${index + 1}`"
             :disabled="isSubmitting"
-            size="lg"
-            class="w-full"
-            @click="addCategory"
-          >
-            Add Category
-          </UButton>
+            size="md"
+            icon="i-heroicons-tag"
+            class="flex-1"
+            @keydown.enter="handleCategoryEnter(index, $event)"
+          />
+          <UButton
+            v-if="formData.categories.length > 1"
+            color="error"
+            variant="ghost"
+            icon="i-heroicons-trash"
+            size="sm"
+            :disabled="isSubmitting"
+            @click="removeCategory(index)"
+          />
         </div>
-      </UFormField>
-    </UCard>
+        <UButton
+          color="primary"
+          variant="soft"
+          icon="i-heroicons-plus"
+          size="sm"
+          :disabled="isSubmitting"
+          @click="addCategory"
+        >
+          Add Category
+        </UButton>
+      </div>
 
-    <!-- Team Settings -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-cog-6-tooth"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Team Settings
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Configure team participation (optional)
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-4">
+      <!-- Team Settings -->
+      <div class="space-y-6">
         <UFormField name="hasTeams">
           <div class="relative">
             <div
-              class="flex items-start space-x-4 p-4 rounded-xl bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-900/20 dark:to-indigo-900/20 transition-all duration-200 hover:from-blue-50/70 hover:to-indigo-50/70 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30"
+              class="flex items-start space-x-4 p-4 rounded-xl bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 transition-all duration-200 hover:from-purple-50/70 hover:to-pink-50/70 dark:hover:from-purple-900/30 dark:hover:to-pink-900/30"
             >
               <div class="flex-shrink-0">
                 <UCheckbox
                   v-model="formData.hasTeams"
                   :disabled="isSubmitting"
-                  size="lg"
+                  size="md"
                   class="mt-1"
                 />
               </div>
@@ -329,7 +238,7 @@
                 <div class="flex items-center space-x-2 mb-1">
                   <Icon
                     name="i-heroicons-users"
-                    class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                    class="w-6 h-6 text-purple-600 dark:text-purple-400"
                   />
                   <p
                     class="text-sm font-semibold text-gray-900 dark:text-white"
@@ -340,43 +249,23 @@
                 <p
                   class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed"
                 >
-                  Allow teams to register for this tournament (optional)
+                  Allow teams to participate in this tournament (optional)
                 </p>
               </div>
             </div>
             <!-- Subtle accent line -->
             <div
-              class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-indigo-500 rounded-l-xl opacity-60"
+              class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400 to-pink-500 rounded-l-xl opacity-60"
             />
           </div>
         </UFormField>
       </div>
-    </UCard>
 
-    <!-- Team Management (when teams are enabled) -->
-    <UCard v-if="formData.hasTeams" class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-users"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Team Management
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Manage teams for this tournament
-            </p>
-          </div>
-        </div>
-      </template>
-
-      <div class="space-y-4">
+      <!-- Team Management (when teams are enabled) -->
+      <div
+        v-if="formData.hasTeams"
+        class="space-y-6"
+      >
         <div
           class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
         >
@@ -398,85 +287,39 @@
           </div>
         </div>
       </div>
-    </UCard>
 
-    <!-- External Links -->
-    <UCard class="overflow-hidden">
-      <template #header>
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center shadow-lg"
-          >
-            <Icon
-              name="i-heroicons-link"
-              class="w-6 h-6 dark:text-white text-grey-900"
-            />
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              External Links
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              Optional external resources
-            </p>
-          </div>
-        </div>
-      </template>
-
+      <!-- External Links -->
       <div class="space-y-6">
-        <UFormField label="Proclamations URL" name="proclamations">
+        <UFormField
+          label="Proclamations URL"
+          name="proclamations"
+        >
           <UInput
             v-model="formData.proclamations"
-            type="url"
             placeholder="https://example.com/proclamations"
             :disabled="isSubmitting"
-            size="lg"
+            size="md"
             icon="i-heroicons-document-text"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField label="Chess Results URL" name="chessResults">
+        <UFormField
+          label="Chess Results URL"
+          name="chessResults"
+        >
           <UInput
             v-model="formData.chessResults"
-            type="url"
             placeholder="https://example.com/results"
             :disabled="isSubmitting"
-            size="lg"
+            size="md"
             icon="i-heroicons-chart-bar"
             class="w-full"
           />
         </UFormField>
       </div>
-    </UCard>
-
-    <!-- Actions -->
-    <UCard class="overflow-hidden">
-      <div class="flex flex-col sm:flex-row justify-end gap-3">
-        <UButton
-          color="neutral"
-          variant="outline"
-          :disabled="isSubmitting"
-          size="lg"
-          class="w-full sm:w-auto"
-          icon="i-heroicons-x-mark"
-          @click="emit('close')"
-        >
-          Cancel
-        </UButton>
-        <UButton
-          type="submit"
-          :loading="isSubmitting"
-          :disabled="isSubmitting"
-          size="lg"
-          class="w-full sm:w-auto"
-          icon="i-heroicons-plus"
-        >
-          Create Tournament
-        </UButton>
-      </div>
-    </UCard>
-  </UForm>
+    </UForm>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -717,7 +560,7 @@ const removeCategory = (index: number) => {
 const handleCategoryEnter = (index: number, event: KeyboardEvent) => {
   event.preventDefault()
   // Add new empty category if current one has content
-  if (formData.value.categories[index].trim()) {
+  if (formData.value.categories[index]?.trim()) {
     addCategory()
     // Focus the next input after a short delay
     nextTick(() => {
@@ -791,6 +634,19 @@ const resetForm = () => {
   registrationDateRange.value = { start: undefined, end: undefined }
 }
 
-// Expose resetForm for parent component
-defineExpose({ resetForm })
+// Method for programmatic submission from parent component
+const submitForm = async () => {
+  // Trigger the form submission manually
+  const form = document.querySelector('form') as HTMLFormElement
+  if (form) {
+    form.dispatchEvent(new Event('submit', { cancelable: true }))
+  }
+}
+
+// Expose methods and state for parent component
+defineExpose({ 
+  resetForm,
+  submitForm,
+  isSubmitting: readonly(isSubmitting) 
+})
 </script>
