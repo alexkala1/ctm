@@ -5,34 +5,21 @@
         <!-- Brand Section -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-3 mb-4">
-            <img
-              src="/icon.svg"
-              alt="Chess Tournament Manager"
-              class="h-8 w-8"
-            >
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-              Chess Tournament Manager
-            </h3>
+            <img src="/icon.svg" alt="Chess Tournament Manager" class="h-8 w-8" />
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chess Tournament Manager</h3>
           </div>
           <p class="text-gray-600 dark:text-gray-400 text-sm max-w-md">
-            A comprehensive platform for managing chess tournaments, participants, and competitions
-            with ease and efficiency.
+            A comprehensive platform for managing chess tournaments, participants, and competitions with ease and
+            efficiency.
           </p>
         </div>
 
         <!-- Quick Links -->
         <div>
-          <h4
-            class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4"
-          >
-            Quick Links
-          </h4>
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Quick Links</h4>
           <ul class="space-y-3">
             <li>
-              <NuxtLink
-                to="/"
-                class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
-              >
+              <NuxtLink to="/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
                 Tournaments
               </NuxtLink>
             </li>
@@ -59,11 +46,7 @@
 
         <!-- Support -->
         <div>
-          <h4
-            class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4"
-          >
-            Support
-          </h4>
+          <h4 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Support</h4>
           <ul class="space-y-3">
             <li>
               <NuxtLink
@@ -109,10 +92,7 @@
             >
               Privacy Policy
             </NuxtLink>
-            <NuxtLink
-              to="/terms"
-              class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-            >
+            <NuxtLink to="/terms" class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">
               Terms of Service
             </NuxtLink>
           </div>
@@ -126,9 +106,9 @@
 // Auto-imports: storeToRefs (from Pinia), useAuthStore (from Pinia)
 
 // Auth store
-const authStore = useAuthStore()
-const { isAuthenticated } = storeToRefs(authStore)
+const authStore = useAuthStore();
+const { isAuthenticated } = storeToRefs(authStore);
 
 // Current year
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 </script>

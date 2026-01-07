@@ -1,4 +1,4 @@
-import winston from 'winston'
+import winston from 'winston';
 
 // Create logger instance
 const logger = winston.createLogger({
@@ -13,24 +13,23 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
     new winston.transports.File({ filename: 'logs/combined.log' }),
   ],
-})
+});
 
 // Add console transport in development
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
-  }))
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    })
+  );
 }
 
 export const log = {
-  error: (message: string, meta?: any) => logger.error(message, meta),
-  warn: (message: string, meta?: any) => logger.warn(message, meta),
-  info: (message: string, meta?: any) => logger.info(message, meta),
-  debug: (message: string, meta?: any) => logger.debug(message, meta),
-  
+  error: (message: string, meta?: Record<string, unknown>) => logger.error(message, meta),
+  warn: (message: string, meta?: Record<string, unknown>) => logger.warn(message, meta),
+  info: (message: string, meta?: Record<string, unknown>) => logger.info(message, meta),
+  debug: (message: string, meta?: Record<string, unknown>) => logger.debug(message, meta),
+
   // Auth-specific logging
   auth: {
     login: (email: string, success: boolean, ip?: string) => {
@@ -38,36 +37,36 @@ export const log = {
         email,
         success,
         ip,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+      });
     },
-    
+
     register: (email: string, success: boolean, ip?: string) => {
       logger.info('User registration attempt', {
         email,
         success,
         ip,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+      });
     },
-    
+
     logout: (userId: string, ip?: string) => {
       logger.info('User logout', {
         userId,
         ip,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+      });
     },
-    
+
     failedAttempt: (email: string, reason: string, ip?: string) => {
       logger.warn('Failed authentication attempt', {
         email,
         reason,
         ip,
-        timestamp: new Date().toISOString()
-      })
-    }
-  }
-}
+        timestamp: new Date().toISOString(),
+      });
+    },
+  },
+};
 
-export default logger
+export default logger;

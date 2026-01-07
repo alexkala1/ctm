@@ -4,20 +4,11 @@
       <div class="flex justify-between items-center">
         <div>
           <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Users</h3>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-            {{ users.length }} registered users
-          </p>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">{{ users.length }} registered users</p>
         </div>
         <div class="flex space-x-2">
-          <UButton
-            color="primary"
-            size="sm"
-            @click="$emit('add-user')"
-          >
-            <Icon
-              name="i-heroicons-plus"
-              class="w-6 h-6 mr-1"
-            />
+          <UButton color="primary" size="sm" @click="$emit('addUser')">
+            <Icon name="i-heroicons-plus" class="w-6 h-6 mr-1" />
             Add User
           </UButton>
         </div>
@@ -48,23 +39,13 @@
       </div>
     </div>
 
-    <UTable
-      :data="users || []"
-      :columns="columns"
-      :loading="loading"
-      empty="No users found"
-    >
+    <UTable :data="users || []" :columns="columns" :loading="loading" empty="No users found">
       <template #name-cell="{ row }">
         <div class="flex items-center">
           <div class="flex-shrink-0 h-10 w-10">
-            <div
-              class="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center"
-            >
+            <div class="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
               <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{
-                  row.original.name?.charAt(0)?.toUpperCase() ||
-                    row.original.email.charAt(0).toUpperCase()
-                }}
+                {{ row.original.name?.charAt(0)?.toUpperCase() || row.original.email.charAt(0).toUpperCase() }}
               </span>
             </div>
           </div>
@@ -98,11 +79,7 @@
 
       <template #actions-cell="{ row }">
         <div class="flex space-x-2">
-          <UButton
-            size="xs"
-            variant="soft"
-            @click="$emit('edit', row.original)"
-          > Edit </UButton>
+          <UButton size="xs" variant="soft" @click="$emit('edit', row.original)"> Edit </UButton>
           <UButton
             v-if="row.original.role !== 'SUPER_ADMIN'"
             size="xs"
@@ -117,7 +94,7 @@
             size="xs"
             color="primary"
             variant="soft"
-            @click="$emit('change-role', row.original)"
+            @click="$emit('changeRole', row.original)"
           >
             Change Role
           </UButton>
@@ -135,7 +112,7 @@
           :disabled="!pagination.hasPrev"
           variant="soft"
           size="sm"
-          @click="$emit('change-page', pagination.page - 1)"
+          @click="$emit('changePage', pagination.page - 1)"
         >
           Previous
         </UButton>
@@ -143,7 +120,7 @@
           :disabled="!pagination.hasNext"
           variant="soft"
           size="sm"
-          @click="$emit('change-page', pagination.page + 1)"
+          @click="$emit('changePage', pagination.page + 1)"
         >
           Next
         </UButton>
@@ -154,25 +131,20 @@
             Showing
             <span class="font-medium">{{ (pagination.page - 1) * pagination.limit + 1 }}</span>
             to
-            <span class="font-medium">{{
-              Math.min(pagination.page * pagination.limit, pagination.total)
-            }}</span>
+            <span class="font-medium">{{ Math.min(pagination.page * pagination.limit, pagination.total) }}</span>
             of
             <span class="font-medium">{{ pagination.total }}</span>
             results
           </p>
         </div>
         <div>
-          <nav
-            class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-            aria-label="Pagination"
-          >
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             <UButton
               :disabled="!pagination.hasPrev"
               variant="soft"
               size="sm"
               class="rounded-l-md"
-              @click="$emit('change-page', pagination.page - 1)"
+              @click="$emit('changePage', pagination.page - 1)"
             >
               Previous
             </UButton>
@@ -181,7 +153,7 @@
               variant="soft"
               size="sm"
               class="rounded-r-md"
-              @click="$emit('change-page', pagination.page + 1)"
+              @click="$emit('changePage', pagination.page + 1)"
             >
               Next
             </UButton>
@@ -193,41 +165,41 @@
 </template>
 
 <script setup lang="ts">
-import { format } from 'date-fns'
-import type { UserWithDetails } from '../../../types'
+import { format } from 'date-fns';
+import type { UserWithDetails } from '~/types';
 
 interface Pagination {
-  page: number
-  limit: number
-  total: number
-  totalPages: number
-  hasNext: boolean
-  hasPrev: boolean
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
 }
 
 interface Props {
-  users: UserWithDetails[]
-  loading?: boolean
-  pagination: Pagination
+  users: UserWithDetails[];
+  loading?: boolean;
+  pagination: Pagination;
 }
 
-const { loading = false } = defineProps<Props>()
+const { loading = false } = defineProps<Props>();
 
 const emit = defineEmits<{
-  'add-user': []
-  edit: [user: UserWithDetails]
-  delete: [id: string]
-  'change-role': [user: UserWithDetails]
-  'change-page': [page: number]
-  'filter-change': [filters: Record<string, unknown>]
-  sort: [sortBy: string, sortOrder: 'asc' | 'desc']
-}>()
+  addUser: [];
+  edit: [user: UserWithDetails];
+  delete: [id: string];
+  changeRole: [user: UserWithDetails];
+  changePage: [page: number];
+  filterChange: [filters: Record<string, unknown>];
+  sort: [sortBy: string, sortOrder: 'asc' | 'desc'];
+}>();
 
 const filters = ref({
   search: '',
   role: '',
   status: '',
-})
+});
 
 const columns = [
   { accessorKey: 'name', header: 'User' },
@@ -235,45 +207,45 @@ const columns = [
   { accessorKey: 'createdAt', header: 'Created' },
   { accessorKey: 'updatedAt', header: 'Updated' },
   { accessorKey: 'actions', header: 'Actions' },
-]
+];
 
 const roleOptions = [
   { label: 'Super Admin', value: 'SUPER_ADMIN' },
   { label: 'Admin', value: 'ADMIN' },
   { label: 'User', value: 'USER' },
-]
+];
 
 const statusOptions = [
   { label: 'Active', value: 'active' },
   { label: 'Inactive', value: 'inactive' },
-]
+];
 
-let searchTimeout: NodeJS.Timeout | null = null
+let searchTimeout: NodeJS.Timeout | null = null;
 const debouncedSearch = () => {
-  if (searchTimeout) clearTimeout(searchTimeout)
+  if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    handleFilterChange()
-  }, 300)
-}
+    handleFilterChange();
+  }, 300);
+};
 
 const handleFilterChange = () => {
-  emit('filter-change', { ...filters })
-}
+  emit('filterChange', { ...filters });
+};
 
 const formatDate = (dateString: string) => {
-  return format(new Date(dateString), 'MMM dd, yyyy')
-}
+  return format(new Date(dateString), 'MMM dd, yyyy');
+};
 
 const getRoleBadgeClass = (role: string) => {
   switch (role) {
     case 'SUPER_ADMIN':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200'
+      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200';
     case 'ADMIN':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200';
     case 'USER':
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
   }
-}
+};
 </script>

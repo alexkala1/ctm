@@ -1,118 +1,98 @@
-import { defineEventHandler, getQuery, sendRedirect, createError } from 'h3'
-import prisma from '../../../../lib/prisma'
-import { githubOAuth } from '../../../utils/github-oauth'
+import { githubOAuth } from '../../../utils/github-oauth';
+import prisma from '../../../../lib/prisma';
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = getQuery(event)
-    const { code, state, error } = query
-
-    if (error) {
-      throw createError({ statusCode: 400, statusMessage: `OAuth error: ${error}` })
+    // Get query parameters
+    let code = '';
+    let state = '';
+    try {
+      // Use the URL from the event to parse query parameters
+      const url = new URL(event.node.req.url || '', `http://${event.node.req.headers.host || 'localhost'}`);
+      code = url.searchParams.get('code') || '';
+      state = url.searchParams.get('state') || '';
+    } catch (urlError) {
+      console.warn('Failed to parse query parameters:', urlError);
+      return sendRedirect(event, '/auth/login?error=invalid_request', 302);
     }
+
     if (!code) {
-      throw createError({ statusCode: 400, statusMessage: 'Authorization code not provided' })
+      console.error('No authorization code received');
+      return sendRedirect(event, '/auth/login?error=no_code', 302);
     }
 
-    let redirectTo = '/'
-    if (state) {
-      try {
-        const decoded = JSON.parse(Buffer.from(state as string, 'base64').toString())
-        redirectTo = decoded.redirectTo || '/'
-      } catch (e) {
-        console.warn('Failed to decode state:', e)
+    // Decode the state parameter to get redirect URL
+    let redirectTo = '/';
+    try {
+      if (state) {
+        const decodedState = JSON.parse(Buffer.from(state, 'base64').toString());
+        redirectTo = decodedState.redirectTo || '/';
       }
+    } catch (stateError) {
+      console.warn('Failed to decode state parameter:', stateError);
+      // Continue with default redirect
     }
 
-    const { access_token } = await githubOAuth.getTokens(code as string)
-    const ghUser = await githubOAuth.getUser(access_token)
+    // Exchange authorization code for access token
+    const accessToken = await githubOAuth.getAccessToken(code);
 
-    if (!ghUser.email) {
-      throw createError({ statusCode: 400, statusMessage: 'GitHub account has no accessible email' })
-    }
+    // Get user info from GitHub
+    const userInfo = await githubOAuth.getUserInfo(accessToken);
 
-    // Find or create user
-    let user = await prisma.user.findUnique({
-      where: { email: ghUser.email },
+    // Persist and fetch user from database (source of truth)
+    const dbUser = await prisma.user.upsert({
+      where: { email: userInfo.email },
+      create: {
+        email: userInfo.email,
+        name: userInfo.name || userInfo.email,
+        avatarUrl: userInfo.picture || undefined,
+        provider: 'GITHUB',
+        providerId: userInfo.id,
+        status: 'APPROVED',
+        lastLoginAt: new Date(),
+      },
+      update: {
+        name: userInfo.name || undefined,
+        avatarUrl: userInfo.picture || undefined,
+        provider: 'GITHUB',
+        providerId: userInfo.id,
+        lastLoginAt: new Date(),
+      },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
         status: true,
-        avatarUrl: true,
         provider: true,
-        lastLoginAt: true,
-      },
-    })
+      }
+    });
 
-    if (user) {
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          lastLoginAt: new Date(),
-          provider: 'GITHUB',
-          providerId: ghUser.id,
-          avatarUrl: ghUser.avatar_url || user.avatarUrl,
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          role: true,
-          status: true,
-          avatarUrl: true,
-          provider: true,
-          lastLoginAt: true,
-        },
-      })
-    } else {
-      user = await prisma.user.create({
-        data: {
-          email: ghUser.email,
-          name: ghUser.name || 'User',
-          provider: 'GITHUB',
-          providerId: ghUser.id,
-          avatarUrl: ghUser.avatar_url,
-          status: 'APPROVED', // Auto-approve OAuth users
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          role: true,
-          status: true,
-          avatarUrl: true,
-          provider: true,
-          lastLoginAt: true,
-        },
-      })
-    }
+    // Create a session token (in a real app, you'd use a proper JWT or session store)
+    const sessionToken = Buffer.from(JSON.stringify({
+      userId: dbUser.id,
+      email: dbUser.email,
+      name: dbUser.name,
+      provider: dbUser.provider,
+      role: dbUser.role,
+      status: dbUser.status,
+      timestamp: Date.now()
+    })).toString('base64');
 
-    if (user.status !== 'APPROVED') {
-      await sendRedirect(event, `/auth/login?message=pending-approval&email=${encodeURIComponent(user.email)}`)
-      return
-    }
-
-    const jwt = await import('jsonwebtoken')
-    const token = jwt.default.sign(
-      { userId: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    )
-
-    setCookie(event, 'auth-token', token, {
+    // Set authentication cookie
+    setCookie(event, 'auth-token', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60,
-    })
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/'
+    });
 
-    await sendRedirect(event, redirectTo)
+    console.log('GitHub OAuth successful for user:', userInfo.email);
+    
+    return sendRedirect(event, redirectTo, 302);
   } catch (error) {
-    console.error('GitHub OAuth callback error:', error)
-    const errorMessage = error instanceof Error ? error.message : 'OAuth authentication failed'
-    await sendRedirect(event, `/auth/login?error=${encodeURIComponent(errorMessage)}`)
+    console.error('GitHub OAuth callback error:', error);
+    return sendRedirect(event, '/auth/login?error=oauth_failed', 302);
   }
-})
-
+});

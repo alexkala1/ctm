@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw';
 
 export const handlers = [
   // Tournaments API
@@ -32,7 +32,7 @@ export const handlers = [
           hasPrev: false,
         },
       },
-    })
+    });
   }),
 
   http.get('/api/tournaments/:id', ({ params }) => {
@@ -57,7 +57,7 @@ export const handlers = [
           email: 'admin@test.com',
         },
       },
-    })
+    });
   }),
 
   // Competitors API
@@ -87,7 +87,7 @@ export const handlers = [
         hasNext: false,
         hasPrev: false,
       },
-    })
+    });
   }),
 
   // Auth API
@@ -100,11 +100,11 @@ export const handlers = [
         name: 'Test Admin',
         role: 'ADMIN',
       },
-    })
+    });
   }),
 
   http.post('/api/auth/login', async ({ request }) => {
-    const body = (await request.json()) as { email: string; password: string }
+    const body = (await request.json()) as { email: string; password: string };
     if (body.email === 'admin@test.com' && body.password === 'password') {
       return HttpResponse.json({
         success: true,
@@ -120,7 +120,7 @@ export const handlers = [
             refresh_token: 'mock-refresh-token',
           },
         },
-      })
+      });
     }
     return HttpResponse.json(
       {
@@ -128,7 +128,7 @@ export const handlers = [
         error: 'Invalid credentials',
       },
       { status: 401 }
-    )
+    );
   }),
 
   // Error handlers
@@ -139,6 +139,6 @@ export const handlers = [
         error: 'Not found',
       },
       { status: 404 }
-    )
+    );
   }),
-]
+];

@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
   try {
@@ -25,21 +25,18 @@ async function main() {
           },
         },
       },
-    })
+    });
 
-    if (process.env.NODE_ENV === 'development')
-      console.log('Tournaments in database:')
-    if (process.env.NODE_ENV === 'development')
-      console.log(JSON.stringify(tournaments, null, 2))
+    if (process.env.NODE_ENV === 'development') console.log('Tournaments in database:');
+    if (process.env.NODE_ENV === 'development') console.log(JSON.stringify(tournaments, null, 2));
 
-    const count = await prisma.tournament.count()
-    if (process.env.NODE_ENV === 'development')
-      console.log(`\nTotal tournaments: ${count}`)
+    const count = await prisma.tournament.count();
+    if (process.env.NODE_ENV === 'development') console.log(`\nTotal tournaments: ${count}`);
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') console.error('Error:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Error:', error);
   } finally {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   }
 }
 
-main()
+main();

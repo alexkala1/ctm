@@ -1,18 +1,18 @@
-import prisma from '../../../lib/prisma'
-import { getCurrentUser, requireAuth, requireAdmin } from '../../utils/auth'
+import prisma from '../../../lib/prisma';
+import { getCurrentUser, requireAuth, requireAdmin } from '../../utils/auth';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
-    const user = await getCurrentUser(event)
-    requireAuth(user)
-    requireAdmin(user!)
+    const user = await getCurrentUser(event);
+    requireAuth(user);
+    requireAdmin(user!);
 
-    const tournamentId = getRouterParam(event, 'id')
+    const tournamentId = getRouterParam(event, 'id');
     if (!tournamentId) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Tournament ID is required',
-      })
+      });
     }
 
     // Check if tournament exists and is not already soft deleted
@@ -21,13 +21,13 @@ export default defineEventHandler(async (event) => {
         id: tournamentId,
         deletedAt: null, // Only find non-deleted tournaments
       },
-    })
+    });
 
     if (!existingTournament) {
       throw createError({
         statusCode: 404,
         statusMessage: 'Tournament not found',
-      })
+      });
     }
 
     // Soft delete tournament by setting deletedAt timestamp
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
       data: {
         deletedAt: new Date(),
       },
-    })
+    });
 
     // Create audit log for the soft delete
     await prisma.auditLog.create({
@@ -56,23 +56,22 @@ export default defineEventHandler(async (event) => {
         },
         changedBy: user!.id,
       },
-    })
+    });
 
     return {
       success: true,
       message: 'Tournament deleted successfully',
       deletedAt: deletedTournament.deletedAt,
-    }
+    };
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'statusCode' in error) {
-      throw error
+      throw error;
     }
 
-    if (process.env.NODE_ENV === 'development')
-      console.error('Delete tournament error:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Delete tournament error:', error);
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to delete tournament',
-    })
+    });
   }
-})
+});

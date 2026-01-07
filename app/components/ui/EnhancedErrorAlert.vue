@@ -1,16 +1,17 @@
 <template>
   <div class="enhanced-error-alert">
     <!-- Main Error Card -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl border border-red-200 dark:border-red-800 shadow-lg overflow-hidden">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl border border-red-200 dark:border-red-800 shadow-lg overflow-hidden"
+    >
       <!-- Header -->
-      <div class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 px-6 py-4 border-b border-red-200 dark:border-red-700">
+      <div
+        class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 px-6 py-4 border-b border-red-200 dark:border-red-700"
+      >
         <div class="flex items-center">
           <div class="flex-shrink-0">
             <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-              <Icon 
-                :name="errorIcon" 
-                class="w-6 h-6 text-red-600 dark:text-red-400"
-              />
+              <Icon :name="errorIcon" class="w-6 h-6 text-red-600 dark:text-red-400" />
             </div>
           </div>
           <div class="ml-4 flex-1">
@@ -21,17 +22,8 @@
               {{ subtitle }}
             </p>
           </div>
-          <div
-            v-if="dismissible"
-            class="flex-shrink-0"
-          >
-            <UButton
-              variant="ghost"
-              size="sm"
-              color="error"
-              icon="i-heroicons-x-mark"
-              @click="_emit('dismiss')"
-            />
+          <div v-if="dismissible" class="flex-shrink-0">
+            <UButton variant="ghost" size="sm" color="error" icon="i-heroicons-x-mark" @click="_emit('dismiss')" />
           </div>
         </div>
       </div>
@@ -46,10 +38,7 @@
         </div>
 
         <!-- Error Details (if provided) -->
-        <div
-          v-if="showDetails && errorDetails"
-          class="mb-4"
-        >
+        <div v-if="showDetails && errorDetails" class="mb-4">
           <UButton
             variant="ghost"
             size="sm"
@@ -60,33 +49,23 @@
           >
             {{ showDetailsExpanded ? 'Hide' : 'Show' }} Technical Details
           </UButton>
-          
+
           <div
             v-if="showDetailsExpanded"
             class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
           >
-            <pre class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap overflow-x-auto">{{ errorDetails }}</pre>
+            <pre class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap overflow-x-auto">{{
+              errorDetails
+            }}</pre>
           </div>
         </div>
 
         <!-- Suggested Actions -->
-        <div
-          v-if="suggestions && suggestions.length > 0"
-          class="mb-4"
-        >
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            What you can try:
-          </h4>
+        <div v-if="suggestions && suggestions.length > 0" class="mb-4">
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">What you can try:</h4>
           <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <li
-              v-for="(suggestion, index) in suggestions"
-              :key="index"
-              class="flex items-start"
-            >
-              <Icon
-                name="i-heroicons-light-bulb"
-                class="w-4 h-4 text-yellow-500 mt-0.5 mr-2 flex-shrink-0"
-              />
+            <li v-for="(suggestion, index) in suggestions" :key="index" class="flex items-start">
+              <Icon name="i-heroicons-light-bulb" class="w-4 h-4 text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
               {{ suggestion }}
             </li>
           </ul>
@@ -105,11 +84,7 @@
             class="flex-1 sm:flex-none"
             @click="action.click"
           >
-            <Icon
-              v-if="action.icon"
-              :name="action.icon"
-              class="w-4 h-4 mr-2"
-            />
+            <Icon v-if="action.icon" :name="action.icon" class="w-4 h-4 mr-2" />
             {{ action.label }}
           </UButton>
         </div>
@@ -131,66 +106,73 @@
 
 <script setup lang="ts">
 interface ErrorAction {
-  label: string
-  click: () => void
-  color?: 'error' | 'warning' | 'info' | 'primary' | 'secondary' | 'success' | 'neutral'
-  variant?: 'link' | 'ghost' | 'solid' | 'outline' | 'soft' | 'subtle'
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  icon?: string
-  loading?: boolean
-  disabled?: boolean
+  label: string;
+  click: () => void;
+  color?: 'error' | 'warning' | 'info' | 'primary' | 'secondary' | 'success' | 'neutral';
+  variant?: 'link' | 'ghost' | 'solid' | 'outline' | 'soft' | 'subtle';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  icon?: string;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
 interface Props {
-  title: string
-  subtitle?: string
-  description: string
-  errorDetails?: string
-  suggestions?: string[]
-  actions?: ErrorAction[]
-  errorId?: string
-  dismissible?: boolean
-  showDetails?: boolean
-  showFooter?: boolean
-  type?: 'error' | 'warning' | 'info' | 'network' | 'permission' | 'validation'
+  title: string;
+  subtitle?: string;
+  description: string;
+  errorDetails?: string;
+  suggestions?: string[];
+  actions?: ErrorAction[];
+  errorId?: string;
+  dismissible?: boolean;
+  showDetails?: boolean;
+  showFooter?: boolean;
+  type?: 'error' | 'warning' | 'info' | 'network' | 'permission' | 'validation';
 }
 
 interface Emits {
-  (e: 'dismiss'): void
+  (e: 'dismiss'): void;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  subtitle: 'Something went wrong',
-  suggestions: () => [],
-  actions: () => [],
-  errorId: () => Math.random().toString(36).substr(2, 9),
-  dismissible: false,
-  showDetails: false,
-  showFooter: true,
-  type: 'error',
-  errorDetails: undefined
-})
+const {
+  subtitle = 'Something went wrong',
+  suggestions = [],
+  actions = [],
+  errorId = Math.random().toString(36).substr(2, 9),
+  dismissible = false,
+  showDetails = false,
+  showFooter = true,
+  type = 'error',
+  errorDetails = undefined,
+} = defineProps<Props>();
 
-const _emit = defineEmits<Emits>()
+const _emit = defineEmits<Emits>();
 
-const showDetailsExpanded = ref(false)
-const timestamp = computed(() => new Date().toLocaleString())
+const showDetailsExpanded = ref(false);
+const timestamp = computed(() => new Date().toLocaleString());
 
 const errorIcon = computed(() => {
-  switch (props.type) {
-    case 'error': return 'i-heroicons-exclamation-triangle'
-    case 'warning': return 'i-heroicons-exclamation-circle'
-    case 'info': return 'i-heroicons-information-circle'
-    case 'network': return 'i-heroicons-wifi'
-    case 'permission': return 'i-heroicons-lock-closed'
-    case 'validation': return 'i-heroicons-document-text'
-    default: return 'i-heroicons-exclamation-triangle'
+  switch (type) {
+    case 'error':
+      return 'i-heroicons-exclamation-triangle';
+    case 'warning':
+      return 'i-heroicons-exclamation-circle';
+    case 'info':
+      return 'i-heroicons-information-circle';
+    case 'network':
+      return 'i-heroicons-wifi';
+    case 'permission':
+      return 'i-heroicons-lock-closed';
+    case 'validation':
+      return 'i-heroicons-document-text';
+    default:
+      return 'i-heroicons-exclamation-triangle';
   }
-})
+});
 
 const toggleDetails = () => {
-  showDetailsExpanded.value = !showDetailsExpanded.value
-}
+  showDetailsExpanded.value = !showDetailsExpanded.value;
+};
 </script>
 
 <style scoped>

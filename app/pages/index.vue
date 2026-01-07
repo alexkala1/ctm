@@ -11,7 +11,7 @@
         :suggestions="errorSuggestions"
         :actions="errorActions"
         :type="errorType"
-        :show-details="true"
+        show-details
         @dismiss="handleErrorDismiss"
       />
 
@@ -29,10 +29,18 @@
       <UiEmptyState
         v-else-if="!tournaments || tournaments.length === 0"
         :title="isAdmin ? 'No Tournaments Found' : 'No Active Tournaments'"
-        :description="isAdmin ? 'There are no tournaments available at the moment. Create your first tournament to get started!' : 'There are no active tournaments available for viewing. Only open and in-progress tournaments are visible to the public.'"
+        :description="
+          isAdmin
+            ? 'There are no tournaments available at the moment. Create your first tournament to get started!'
+            : 'There are no active tournaments available for viewing. Only open and in-progress tournaments are visible to the public.'
+        "
         icon="i-heroicons-trophy"
         :actions="emptyStateActions"
-        :additional-info="isAdmin ? 'Tournaments will appear here once they are created.' : 'Sign in as an admin to see all tournaments including drafts and finished ones.'"
+        :additional-info="
+          isAdmin
+            ? 'Tournaments will appear here once they are created.'
+            : 'Sign in as an admin to see all tournaments including drafts and finished ones.'
+        "
       />
 
       <!-- Tournaments Table -->
@@ -49,154 +57,149 @@
 </template>
 
 <script setup lang="ts">
-// Auto-imports: storeToRefs (from Pinia), useAuthStore, useTournamentsStore (from Pinia)
-import type { TournamentApiResponse } from '~/types'
+import type { TournamentApiResponse } from '~/types';
 
-console.log('🔧 Index page initializing...')
 // Meta
 useHead({
   title: 'Chess Tournament Manager',
-  meta: [
-    { name: 'description', content: 'Manage chess tournaments with ease' },
-  ],
-})
+  meta: [{ name: 'description', content: 'Manage chess tournaments with ease' }],
+});
 
-const authStore = useAuthStore()
-const { isAdmin } = storeToRefs(authStore)
-console.log('🔧 Index page stores initialized')
+const authStore = useAuthStore();
+const { isAdmin } = storeToRefs(authStore);
 
 // Use tournaments store
-const tournamentsStore = useTournamentsStore()
-const { tournaments, isLoading, error } = storeToRefs(tournamentsStore)
+const tournamentsStore = useTournamentsStore();
+const { tournaments, isLoading, error } = storeToRefs(tournamentsStore);
 
 // Enhanced error handling
 const errorTitle = computed(() => {
-  if (!error.value) return ''
-  
+  if (!error.value) return '';
+
   if (error.value.includes('Failed to fetch')) {
-    return 'Connection Problem'
+    return 'Connection Problem';
   }
   if (error.value.includes('permission') || error.value.includes('unauthorized')) {
-    return 'Access Denied'
+    return 'Access Denied';
   }
   if (error.value.includes('validation') || error.value.includes('invalid')) {
-    return 'Invalid Data'
+    return 'Invalid Data';
   }
-  return 'Error Loading Tournaments'
-})
+  return 'Error Loading Tournaments';
+});
 
 const errorSubtitle = computed(() => {
-  if (!error.value) return ''
-  
+  if (!error.value) return '';
+
   if (error.value.includes('Failed to fetch')) {
-    return 'Unable to connect to the server'
+    return 'Unable to connect to the server';
   }
   if (error.value.includes('permission') || error.value.includes('unauthorized')) {
-    return 'You don\'t have permission to access this resource'
+    return "You don't have permission to access this resource";
   }
   if (error.value.includes('validation') || error.value.includes('invalid')) {
-    return 'The data provided is not valid'
+    return 'The data provided is not valid';
   }
-  return 'Something went wrong while loading tournaments'
-})
+  return 'Something went wrong while loading tournaments';
+});
 
 const errorDescription = computed(() => {
-  if (!error.value) return ''
-  
+  if (!error.value) return '';
+
   if (error.value.includes('Failed to fetch')) {
-    return 'It looks like there\'s a network issue. Please check your internet connection and try again.'
+    return "It looks like there's a network issue. Please check your internet connection and try again.";
   }
   if (error.value.includes('permission') || error.value.includes('unauthorized')) {
-    return 'It seems you don\'t have the necessary permissions to view tournaments. Please contact an administrator if you believe this is an error.'
+    return "It seems you don't have the necessary permissions to view tournaments. Please contact an administrator if you believe this is an error.";
   }
   if (error.value.includes('validation') || error.value.includes('invalid')) {
-    return 'There seems to be an issue with the data being processed. Please check your input and try again.'
+    return 'There seems to be an issue with the data being processed. Please check your input and try again.';
   }
-  return 'We encountered an error while loading tournaments. Please try again or contact support if the problem persists.'
-})
+  return 'We encountered an error while loading tournaments. Please try again or contact support if the problem persists.';
+});
 
-const errorDetails = computed(() => error.value || '')
+const errorDetails = computed(() => error.value || '');
 
 const errorSuggestions = computed(() => {
-  if (!error.value) return []
-  
+  if (!error.value) return [];
+
   if (error.value.includes('Failed to fetch')) {
     return [
       'Check your internet connection',
       'Try refreshing the page',
       'Check if the server is running',
-      'Try again in a few moments'
-    ]
+      'Try again in a few moments',
+    ];
   }
   if (error.value.includes('permission') || error.value.includes('unauthorized')) {
     return [
-      'Check if you\'re logged in',
+      "Check if you're logged in",
       'Contact an administrator',
       'Try logging out and back in',
-      'Verify your account permissions'
-    ]
+      'Verify your account permissions',
+    ];
   }
   if (error.value.includes('validation') || error.value.includes('invalid')) {
     return [
       'Check your input for errors',
       'Make sure all required fields are filled',
       'Verify the format of your data',
-      'Try again with corrected information'
-    ]
+      'Try again with corrected information',
+    ];
   }
   return [
     'Try refreshing the page',
     'Clear your browser cache',
     'Check if the server is running',
-    'Contact support if the problem persists'
-  ]
-})
+    'Contact support if the problem persists',
+  ];
+});
 
 const errorType = computed(() => {
-  if (!error.value) return 'error'
-  
+  if (!error.value) return 'error';
+
   if (error.value.includes('Failed to fetch')) {
-    return 'network'
+    return 'network';
   }
   if (error.value.includes('permission') || error.value.includes('unauthorized')) {
-    return 'permission'
+    return 'permission';
   }
   if (error.value.includes('validation') || error.value.includes('invalid')) {
-    return 'validation'
+    return 'validation';
   }
-  return 'error'
-})
+  return 'error';
+});
 
 const errorActions = computed(() => [
   {
     label: 'Try Again',
     click: () => tournamentsStore.fetchTournaments(),
     color: 'primary' as const,
-    icon: 'heroicons:arrow-path'
+    icon: 'i-heroicons-arrow-path',
   },
   {
     label: 'Go Home',
     click: () => navigateTo('/'),
     color: 'neutral' as const,
     variant: 'outline' as const,
-    icon: 'heroicons:home'
+    icon: 'i-heroicons-home',
   },
   {
     label: 'Report Issue',
     click: () => {
-      const issueUrl = `https://github.com/your-repo/issues/new?title=Tournament Loading Error&body=Error: ${error.value}`
-      window.open(issueUrl, '_blank')
+      const issueUrl = `https://github.com/your-repo/issues/new?title=Tournament Loading Error&body=Error: ${error.value}`;
+      window.open(issueUrl, '_blank');
     },
     color: 'error' as const,
     variant: 'outline' as const,
-    icon: 'heroicons:exclamation-triangle'
-  }
-])
+    icon: 'i-heroicons-exclamation-triangle',
+  },
+]);
 
 const handleErrorDismiss = () => {
   // Clear the error
-  tournamentsStore.$patch({ error: null })
-}
+  tournamentsStore.$patch({ error: null });
+};
 
 // Enhanced loading state
 
@@ -206,40 +209,39 @@ const emptyStateActions = computed(() => [
     label: 'Create Tournament',
     click: () => {
       // This would open a create tournament modal
-      console.log('Create tournament clicked')
     },
     color: 'primary' as const,
-    icon: 'heroicons:plus'
+    icon: 'i-heroicons-plus',
   },
   {
     label: 'Refresh',
     click: () => tournamentsStore.fetchTournaments(),
     color: 'neutral' as const,
     variant: 'outline' as const,
-    icon: 'heroicons:arrow-path'
-  }
-])
+    icon: 'i-heroicons-arrow-path',
+  },
+]);
 
 // Fetch tournaments on mount
 onMounted(async () => {
-  await tournamentsStore.fetchTournaments()
-})
+  await tournamentsStore.fetchTournaments();
+});
 
 // Handle tournament created
 const handleTournamentCreated = (tournament: TournamentApiResponse) => {
   // Add tournament to the store
-  tournamentsStore.addTournament(tournament)
-}
+  tournamentsStore.addTournament(tournament);
+};
 
 // Handle tournament updated
 const handleTournamentUpdated = (tournament: TournamentApiResponse) => {
   // Update tournament in the store
-  tournamentsStore.updateTournamentInList(tournament)
-}
+  tournamentsStore.updateTournamentInList(tournament);
+};
 
 // Handle tournament deleted
 const handleTournamentDeleted = (tournamentId: string) => {
   // Remove tournament from the store
-  tournamentsStore.removeTournamentFromList(tournamentId)
-}
+  tournamentsStore.removeTournamentFromList(tournamentId);
+};
 </script>

@@ -49,34 +49,31 @@ export const config = {
     nodeEnv: process.env.NODE_ENV || 'development',
     port: parseInt(process.env.PORT || '3000'),
   },
-}
+};
 
 /**
  * Validate required environment variables
  */
 export function validateConfig(): void {
-  const requiredVars = [
-    'DATABASE_URL',
-    'JWT_SECRET',
-  ]
+  const requiredVars = ['DATABASE_URL', 'JWT_SECRET'];
 
-  const missingVars = requiredVars.filter(varName => !process.env[varName])
-  
+  const missingVars = requiredVars.filter(varName => !process.env[varName]);
+
   if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`)
+    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
   }
 
   // Warn about insecure defaults in production
   if (config.app.nodeEnv === 'production') {
     if (config.jwt.secret === 'your-super-secret-jwt-key-change-in-production') {
-      console.warn('WARNING: Using default JWT secret in production!')
+      console.warn('WARNING: Using default JWT secret in production!');
     }
-    
+
     if (config.database.url.includes('localhost')) {
-      console.warn('WARNING: Using localhost database in production!')
+      console.warn('WARNING: Using localhost database in production!');
     }
   }
 }
 
 // Validate configuration on startup
-validateConfig()
+validateConfig();

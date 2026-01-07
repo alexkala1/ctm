@@ -1,34 +1,23 @@
-import { getCurrentUser } from '../../utils/auth'
-import { log } from '../../utils/logger'
-import { setCookie } from 'h3'
-
 export default defineEventHandler(async (event) => {
   try {
-    // Get current user for logging
-    const user = await getCurrentUser(event)
-    
-    // Clear the auth cookie
+    // Clear the authentication cookie
     setCookie(event, 'auth-token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 0,
-    })
-
-    // Log logout
-    if (user) {
-      log.auth.logout(user.id)
-    }
+      path: '/'
+    });
 
     return {
       success: true,
-      message: 'Logged out successfully',
-    }
+      message: 'Logged out successfully'
+    };
   } catch (error) {
-    log.error('Logout error', { error })
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal server error',
-    })
+    console.error('Logout error:', error);
+    return {
+      success: false,
+      message: 'Logout failed'
+    };
   }
-})
+});

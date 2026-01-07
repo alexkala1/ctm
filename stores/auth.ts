@@ -1,155 +1,135 @@
-import { defineStore } from 'pinia'
-import type { 
-  User, 
-  LoginCredentials, 
-  RegisterData, 
-  AuthApiResponse, 
-  AuthResult,
-  ApiErrorWithMessage 
-} from '~/types'
+import { defineStore } from 'pinia';
+import type { User, LoginCredentials, RegisterData, AuthResult } from '~/types';
 
 export const useAuthStore = defineStore('auth', () => {
   // State
-  const user = ref<User | null>(null)
-  const isAuthenticated = computed(() => !!user.value)
-  const isLoading = ref(false)
-  const isAdmin = computed(() => user.value?.role === 'ADMIN' || user.value?.role === 'SUPER_ADMIN')
+  const user = ref<User | null>(null);
+  const isAuthenticated = computed(() => !!user.value);
+  const isLoading = ref(false);
+  const isAdmin = computed(() => user.value?.role === 'ADMIN' || user.value?.role === 'SUPER_ADMIN');
 
-  // Actions
+  // Actions - using direct API calls (no h3, no sidebase/nuxt-auth)
   const login = async (credentials: LoginCredentials): Promise<AuthResult> => {
-    isLoading.value = true
+    isLoading.value = true;
     try {
-      const response = await $fetch<AuthApiResponse>('/api/auth/login', {
+      const response = (await $fetch('/api/auth/login', {
         method: 'POST',
-        body: credentials
-      })
-      
+        body: credentials,
+      })) as { success: boolean; data?: { user: User; token: string }; error?: string };
+
       if (response.success && response.data?.user) {
-        user.value = response.data.user
-        return { success: true }
+        user.value = response.data.user;
+        return { success: true };
       } else {
-        return { success: false, error: response.error || 'Login failed' }
+        return { success: false, error: response.error || 'Login failed' };
       }
     } catch (error: unknown) {
-      const apiError = error as ApiErrorWithMessage
-      console.error('Login error:', apiError)
-      return { 
-        success: false, 
-        error: apiError.data?.message || apiError.statusMessage || 'Login failed' 
-      }
+      console.error('Login error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Login failed',
+      };
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
+  };
 
   const register = async (credentials: RegisterData): Promise<AuthResult> => {
-    isLoading.value = true
+    isLoading.value = true;
     try {
-      const response = await $fetch<AuthApiResponse>('/api/auth/register', {
+      const response = (await $fetch('/api/auth/register', {
         method: 'POST',
-        body: credentials
-      })
-      
+        body: credentials,
+      })) as { success: boolean; data?: { user: User }; error?: string };
+
       if (response.success && response.data?.user) {
-        user.value = response.data.user
-        await navigateTo('/')
-        return { success: true }
+        user.value = response.data.user;
+        await navigateTo('/');
+        return { success: true };
       } else {
-        return { success: false, error: response.error || 'Registration failed' }
+        return { success: false, error: response.error || 'Registration failed' };
       }
     } catch (error: unknown) {
-      const apiError = error as ApiErrorWithMessage
-      console.error('Registration error:', apiError)
-      return { 
-        success: false, 
-        error: apiError.data?.message || apiError.statusMessage || 'Registration failed' 
-      }
+      console.error('Registration error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Registration failed',
+      };
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
+  };
 
   const logout = async (): Promise<void> => {
     try {
-      await $fetch('/api/auth/logout', { method: 'POST' })
+      await $fetch('/api/auth/logout', { method: 'POST' });
     } catch (error: unknown) {
-      console.error('Logout error:', error)
+      console.error('Logout error:', error);
     } finally {
-      user.value = null
-      await navigateTo('/auth/login')
+      user.value = null;
+      await navigateTo('/auth/login');
     }
-  }
+  };
 
   const checkAuth = async (): Promise<void> => {
     try {
-      const response = await $fetch<AuthApiResponse>('/api/auth/me')
-      
-      if (response.success && response.data?.user) {
-        user.value = response.data.user
-      } else {
-        user.value = null
-      }
-    } catch (error: unknown) {
-      console.error('Auth check error:', error)
-      user.value = null
-    }
-  }
+      const response = (await $fetch('/api/auth/me')) as { success: boolean; data?: { user: any } };
 
-  // OAuth methods
-  const signInWithGoogle = async (): Promise<AuthResult> => {
-    isLoading.value = true
-    try {
-      const response = await $fetch<AuthApiResponse>('/api/auth/oauth-callback', {
-        method: 'POST',
-        body: { provider: 'google' }
-      })
-      
       if (response.success && response.data?.user) {
-        user.value = response.data.user
-        await navigateTo('/')
-        return { success: true }
+        // Trust server-provided role/status, don't override SUPER_ADMIN
+        user.value = {
+          id: response.data.user.id,
+          email: response.data.user.email,
+          name: response.data.user.name || response.data.user.email,
+          role: (response.data.user as any).role || 'USER',
+          status: (response.data.user as any).status || 'APPROVED',
+          provider: (response.data.user as any).provider,
+        } as User;
       } else {
-        return { success: false, error: response.error || 'Google sign-in failed' }
+        user.value = null;
       }
     } catch (error: unknown) {
-      const apiError = error as ApiErrorWithMessage
-      console.error('Google sign-in error:', apiError)
-      return { 
-        success: false, 
-        error: apiError.data?.message || apiError.statusMessage || 'Google sign-in failed' 
-      }
-    } finally {
-      isLoading.value = false
+      console.error('Auth check error:', error);
+      user.value = null;
     }
-  }
+  };
+
+  // OAuth methods - using direct browser redirects
+  const signInWithGoogle = async (): Promise<AuthResult> => {
+    isLoading.value = true;
+    try {
+      // Redirect to OAuth endpoint using browser navigation
+      const currentPath = useRoute().path;
+      window.location.href = `/api/auth/google/redirect?redirectTo=${encodeURIComponent(currentPath)}`;
+      return { success: true };
+    } catch (error: unknown) {
+      console.error('Google sign-in error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Google sign-in failed',
+      };
+    } finally {
+      isLoading.value = false;
+    }
+  };
 
   const signInWithGitHub = async (): Promise<AuthResult> => {
-    isLoading.value = true
+    isLoading.value = true;
     try {
-      const response = await $fetch<AuthApiResponse>('/api/auth/oauth-callback', {
-        method: 'POST',
-        body: { provider: 'github' }
-      })
-      
-      if (response.success && response.data?.user) {
-        user.value = response.data.user
-        await navigateTo('/')
-        return { success: true }
-      } else {
-        return { success: false, error: response.error || 'GitHub sign-in failed' }
-      }
+      // Redirect to OAuth endpoint using browser navigation
+      const currentPath = useRoute().path;
+      window.location.href = `/api/auth/github/redirect?redirectTo=${encodeURIComponent(currentPath)}`;
+      return { success: true };
     } catch (error: unknown) {
-      const apiError = error as ApiErrorWithMessage
-      console.error('GitHub sign-in error:', apiError)
-      return { 
-        success: false, 
-        error: apiError.data?.message || apiError.statusMessage || 'GitHub sign-in failed' 
-      }
+      console.error('GitHub sign-in error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'GitHub sign-in failed',
+      };
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
-
+  };
 
   return {
     // State
@@ -163,9 +143,6 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     checkAuth,
     signInWithGoogle,
-    signInWithGitHub
-  }
-})
-
-// Export for compatibility
-// Do not re-export `useAuth` to avoid clashing with @sidebase/nuxt-auth composable
+    signInWithGitHub,
+  };
+});

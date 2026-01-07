@@ -1,22 +1,22 @@
 // Store-specific types
-import type { User, TournamentApiResponse, CompetitorApiResponse } from './index'
-import type { ApiResponse, ApiError, PaginatedResponse, Pagination } from './api'
+import type { User, TournamentApiResponse, CompetitorApiResponse } from './index';
+import type { ApiResponse, ApiError, PaginatedResponse, Pagination } from './api';
 
 // ============================================================================
 // AUTH STORE TYPES
 // ============================================================================
 
 export interface AuthUserResponse {
-  user: User
+  user: User;
 }
 
 export interface AuthResult {
-  success: boolean
-  error?: string
+  success: boolean;
+  error?: string;
 }
 
 export interface AuthUserResult extends AuthResult {
-  user?: User
+  user?: User;
 }
 
 // ============================================================================
@@ -24,15 +24,15 @@ export interface AuthUserResult extends AuthResult {
 // ============================================================================
 
 export interface TournamentsListData {
-  tournaments: TournamentApiResponse[]
+  tournaments: TournamentApiResponse[];
 }
 
 export interface TournamentData {
-  tournament: TournamentApiResponse
+  tournament: TournamentApiResponse;
 }
 
 export interface TournamentResult extends AuthResult {
-  tournament?: TournamentApiResponse
+  tournament?: TournamentApiResponse;
 }
 
 // ============================================================================
@@ -40,15 +40,15 @@ export interface TournamentResult extends AuthResult {
 // ============================================================================
 
 export interface CompetitorsListData {
-  competitors: CompetitorApiResponse[]
+  competitors: CompetitorApiResponse[];
 }
 
 export interface CompetitorData {
-  competitor: CompetitorApiResponse
+  competitor: CompetitorApiResponse;
 }
 
 export interface CompetitorResult extends AuthResult {
-  competitor?: CompetitorApiResponse
+  competitor?: CompetitorApiResponse;
 }
 
 // ============================================================================
@@ -56,40 +56,40 @@ export interface CompetitorResult extends AuthResult {
 // ============================================================================
 
 export interface UserData {
-  user: User
+  user: User;
 }
 
 export interface UserResult extends AuthResult {
-  user?: User
+  user?: User;
 }
 
 export interface BulkActionResult extends AuthResult {
-  results?: BulkActionResultItem[]
+  results?: BulkActionResultItem[];
 }
 
 export interface BulkActionResultItem {
-  userId: string
-  email: string
-  success: boolean
-  action: 'delete' | 'approve' | 'reject' | 'suspend' | 'activate'
+  userId: string;
+  email: string;
+  success: boolean;
+  action: 'delete' | 'approve' | 'reject' | 'suspend' | 'activate';
 }
 
 export interface BulkActionError {
-  userId: string
-  email: string
-  error: string
+  userId: string;
+  email: string;
+  error: string;
 }
 
 export interface BulkActionSummary {
-  total: number
-  successful: number
-  failed: number
+  total: number;
+  successful: number;
+  failed: number;
 }
 
 export interface BulkActionData {
-  results: BulkActionResultItem[]
-  errors: BulkActionError[]
-  summary: BulkActionSummary
+  results: BulkActionResultItem[];
+  errors: BulkActionError[];
+  summary: BulkActionSummary;
 }
 
 // ============================================================================
@@ -103,11 +103,11 @@ export interface BulkActionData {
 // ============================================================================
 
 export interface ErrorWithMessage {
-  message?: string
+  message?: string;
 }
 
 export interface ApiErrorWithMessage extends ApiError {
-  data?: ErrorWithMessage
+  data?: ErrorWithMessage;
 }
 
 // ============================================================================
@@ -115,28 +115,28 @@ export interface ApiErrorWithMessage extends ApiError {
 // ============================================================================
 
 export interface BaseStoreState {
-  isLoading: boolean
-  error: string | null
+  isLoading: boolean;
+  error: string | null;
 }
 
 export interface ListStoreState<T> extends BaseStoreState {
-  items: T[]
+  items: T[];
 }
 
 export interface PaginatedStoreState<T> extends ListStoreState<T> {
-  pagination: Pagination
+  pagination: Pagination;
 }
 
 // ============================================================================
 // API RESPONSE TYPES
 // ============================================================================
 
-export type AuthApiResponse = ApiResponse<AuthUserResponse>
-export type TournamentsApiResponse = ApiResponse<TournamentsListData>
-export type SingleTournamentApiResponse = ApiResponse<TournamentData>
-export type CompetitorsApiResponse = ApiResponse<CompetitorsListData>
-export type SingleCompetitorApiResponse = ApiResponse<CompetitorData>
-export type UsersApiResponse = PaginatedResponse<User>
-export type UserApiResponseData = ApiResponse<UserData>
-export type BulkActionApiResponse = ApiResponse<BulkActionData>
-export type EmptyApiResponse = ApiResponse<Record<string, never>>
+export type AuthApiResponse = ApiResponse<AuthUserResponse>;
+export type TournamentsApiResponse = ApiResponse<TournamentsListData>;
+export type SingleTournamentApiResponse = ApiResponse<TournamentData>;
+export type CompetitorsApiResponse = ApiResponse<CompetitorsListData>;
+export type SingleCompetitorApiResponse = ApiResponse<CompetitorData>;
+export type UsersApiResponse = PaginatedResponse<User>;
+export type UserApiResponseData = ApiResponse<UserData>;
+export type BulkActionApiResponse = ApiResponse<BulkActionData>;
+export type EmptyApiResponse = ApiResponse<Record<string, never>>;

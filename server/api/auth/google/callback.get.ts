@@ -1,153 +1,105 @@
-import { defineEventHandler, getQuery, createError } from 'h3'
-import { googleOAuth } from '../../../utils/google-oauth'
-import prisma from '../../../../lib/prisma'
+import { googleOAuth } from '../../../utils/google-oauth';
+import prisma from '../../../../lib/prisma';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
-    const query = getQuery(event)
-    const { code, state, error } = query
-    
-    // Handle OAuth errors
-    if (error) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: `OAuth error: ${error}`
-      })
+    // Get query parameters
+    let code = '';
+    let state = '';
+    try {
+      // Use the URL from the event to parse query parameters
+      const url = new URL(event.node.req.url || '', `http://${event.node.req.headers.host || 'localhost'}`);
+      code = url.searchParams.get('code') || '';
+      state = url.searchParams.get('state') || '';
+    } catch (urlError) {
+      console.warn('Failed to parse query parameters:', urlError);
+      return sendRedirect(event, '/auth/login?error=invalid_request', 302);
     }
-    
+
     if (!code) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Authorization code not provided'
-      })
+      console.error('No authorization code received');
+      return sendRedirect(event, '/auth/login?error=no_code', 302);
     }
-    
-    // Decode state to get redirect URL
-    let redirectTo = '/'
-    if (state) {
-      try {
-        const decodedState = JSON.parse(Buffer.from(state as string, 'base64').toString())
-        redirectTo = decodedState.redirectTo || '/'
-      } catch (e) {
-        console.warn('Failed to decode state:', e)
+
+    // Decode the state parameter to get redirect URL
+    let redirectTo = '/';
+    try {
+      if (state) {
+        const decodedState = JSON.parse(Buffer.from(state, 'base64').toString());
+        redirectTo = decodedState.redirectTo || '/';
       }
+    } catch (stateError) {
+      console.warn('Failed to decode state parameter:', stateError);
+      // Continue with default redirect
     }
-    
-    // Exchange code for tokens
-    const tokens = await googleOAuth.getTokens(code as string)
-    
-    if (!tokens.id_token) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'No ID token received from Google'
-      })
+
+    // Exchange authorization code for access token
+    const { tokens } = await googleOAuth.client.getToken(code);
+    googleOAuth.client.setCredentials(tokens);
+
+    // Get user info from Google
+    const userInfo = await googleOAuth.verifyToken(tokens.id_token!);
+    if (!userInfo.email) {
+      console.error('Google user has no email in token payload');
+      return sendRedirect(event, '/auth/login?error=no_email', 302);
     }
-    
-    // Verify the ID token and get user info
-    const googleUser = await googleOAuth.verifyToken(tokens.id_token)
-    
-    if (!googleUser.email || !googleUser.verified) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Google account email not verified'
-      })
-    }
-    
-    // Check if user already exists
-    let user = await prisma.user.findUnique({
-      where: { email: googleUser.email },
+
+    // Persist and fetch user from database (source of truth)
+    const dbUser = await prisma.user.upsert({
+      where: { email: userInfo.email },
+      create: {
+        email: userInfo.email,
+        name: userInfo.name || userInfo.email,
+        avatarUrl: userInfo.picture || undefined,
+        provider: 'GOOGLE',
+        providerId: userInfo.id,
+        status: 'APPROVED',
+        lastLoginAt: new Date(),
+      },
+      update: {
+        name: userInfo.name || undefined,
+        avatarUrl: userInfo.picture || undefined,
+        provider: 'GOOGLE',
+        providerId: userInfo.id,
+        lastLoginAt: new Date(),
+      },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
         status: true,
-        avatarUrl: true,
         provider: true,
-        lastLoginAt: true,
       },
-    })
-    
-    if (user) {
-      // Update existing user
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          lastLoginAt: new Date(),
-          provider: 'GOOGLE',
-          providerId: googleUser.id,
-          avatarUrl: googleUser.picture || user.avatarUrl,
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          role: true,
-          status: true,
-          avatarUrl: true,
-          provider: true,
-          lastLoginAt: true,
-        },
+    });
+
+    // Create a session token (in a real app, you'd use a proper JWT or session store)
+    const sessionToken = Buffer.from(
+      JSON.stringify({
+        userId: dbUser.id,
+        email: dbUser.email,
+        name: dbUser.name,
+        provider: dbUser.provider,
+        role: dbUser.role,
+        status: dbUser.status,
+        timestamp: Date.now(),
       })
-    } else {
-      // Create new user
-      user = await prisma.user.create({
-        data: {
-          email: googleUser.email,
-          name: googleUser.name || 'User',
-          provider: 'GOOGLE',
-          providerId: googleUser.id,
-          avatarUrl: googleUser.picture,
-          status: 'APPROVED', // Auto-approve OAuth users
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          role: true,
-          status: true,
-          avatarUrl: true,
-          provider: true,
-          lastLoginAt: true,
-        },
-      })
-    }
-    
-    // Check if user is approved
-    if (user.status !== 'APPROVED') {
-      // Redirect to login page with pending message
-      await sendRedirect(event, `/auth/login?message=pending-approval&email=${encodeURIComponent(user.email)}`)
-      return
-    }
-    
-    // Create JWT token for authenticated user
-    const jwt = await import('jsonwebtoken')
-    const token = jwt.default.sign(
-      { 
-        userId: user.id, 
-        email: user.email, 
-        role: user.role 
-      },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    )
-    
+    ).toString('base64');
+
     // Set authentication cookie
-    setCookie(event, 'auth-token', token, {
+    setCookie(event, 'auth-token', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 days
-    })
-    
-    // Redirect to intended page
-    await sendRedirect(event, redirectTo)
-    
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    });
+
+    console.log('Google OAuth successful for user:', userInfo.email);
+
+    return sendRedirect(event, redirectTo, 302);
   } catch (error) {
-    console.error('Google OAuth callback error:', error)
-    
-    // Redirect to login page with error
-    const errorMessage = error instanceof Error ? error.message : 'OAuth authentication failed'
-    await sendRedirect(event, `/auth/login?error=${encodeURIComponent(errorMessage)}`)
+    console.error('Google OAuth callback error:', error);
+    return sendRedirect(event, '/auth/login?error=oauth_failed', 302);
   }
-})
+});

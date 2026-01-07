@@ -1,15 +1,28 @@
-import jwt from 'jsonwebtoken'
-import type { AuthUser } from '../../types'
+import jwt from 'jsonwebtoken';
+import type { AuthUser } from '../../types';
 
-const JWT_SECRET = process.env.JWT_SECRET as string
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+// Validate JWT secret
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+
+if (JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be at least 32 characters long');
+}
+
+if (JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
+  throw new Error('JWT_SECRET must be changed from default value');
+}
 
 export interface JWTPayload {
-  userId: string
-  email: string
-  role: string
-  iat?: number
-  exp?: number
+  userId: string;
+  email: string;
+  role: string;
+  iat?: number;
+  exp?: number;
 }
 
 /**
@@ -19,10 +32,10 @@ export function generateToken(user: AuthUser): string {
   const payload: JWTPayload = {
     userId: user.id,
     email: user.email,
-    role: user.role
-  }
-  
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions)
+    role: user.role,
+  };
+
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions);
 }
 
 /**
@@ -30,11 +43,11 @@ export function generateToken(user: AuthUser): string {
  */
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload
-    return decoded
-  } catch (error) {
+    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return decoded;
+  } catch (_error) {
     // Silently fail for invalid tokens - this is expected for unauthenticated users
-    return null
+    return null;
   }
 }
 
@@ -42,12 +55,12 @@ export function verifyToken(token: string): JWTPayload | null {
  * Extract token from Authorization header
  */
 export function extractTokenFromHeader(authHeader: string | undefined): string | null {
-  if (!authHeader) return null
-  
-  const parts = authHeader.split(' ')
+  if (!authHeader) return null;
+
+  const parts = authHeader.split(' ');
   if (parts.length !== 2 || parts[0] !== 'Bearer') {
-    return null
+    return null;
   }
-  
-  return parts[1] || null
+
+  return parts[1] || null;
 }

@@ -4,22 +4,10 @@
       <!-- Header -->
       <div class="text-center mb-12">
         <div class="flex justify-center mb-6">
-          <img 
-            src="/icon.svg" 
-            alt="Chess Tournament Manager" 
-            class="h-16 w-16" 
-          >
+          <img src="/icon.svg" alt="Chess Tournament Manager" class="h-16 w-16" />
         </div>
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Privacy Policy
-        </h1>
-        <UBadge
-          color="neutral"
-          variant="subtle"
-          size="lg"
-        >
-          Last updated: {{ lastUpdated }}
-        </UBadge>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Privacy Policy</h1>
+        <UBadge color="neutral" variant="subtle" size="lg"> Last updated: {{ lastUpdated }} </UBadge>
       </div>
 
       <!-- Content -->
@@ -27,14 +15,16 @@
         <div class="prose prose-lg max-w-none dark:prose-invert">
           <h2>1. Information We Collect</h2>
           <p>
-            We collect information you provide directly to us, such as when you create an account, 
-            create or manage tournaments, or contact us for support.
+            We collect information you provide directly to us, such as when you create an account, create or manage
+            tournaments, or contact us for support.
           </p>
-          
+
           <h3>1.1 Personal Information</h3>
           <ul>
             <li><strong>Account Information:</strong> Email address, username, and password</li>
-            <li><strong>Profile Information:</strong> Name, profile picture, and other information you choose to provide</li>
+            <li>
+              <strong>Profile Information:</strong> Name, profile picture, and other information you choose to provide
+            </li>
             <li><strong>Tournament Data:</strong> Tournament names, participant information, results, and settings</li>
             <li><strong>Communication Data:</strong> Messages you send to us for support or feedback</li>
           </ul>
@@ -42,8 +32,13 @@
           <h3>1.2 Automatically Collected Information</h3>
           <ul>
             <li><strong>Usage Data:</strong> How you interact with our service, pages visited, and features used</li>
-            <li><strong>Device Information:</strong> Browser type, operating system, IP address, and device identifiers</li>
-            <li><strong>Cookies and Similar Technologies:</strong> We use cookies to enhance your experience and analyze usage</li>
+            <li>
+              <strong>Device Information:</strong> Browser type, operating system, IP address, and device identifiers
+            </li>
+            <li>
+              <strong>Cookies and Similar Technologies:</strong> We use cookies to enhance your experience and analyze
+              usage
+            </li>
           </ul>
 
           <h2>2. How We Use Your Information</h2>
@@ -68,8 +63,8 @@
 
           <h2>4. Data Security</h2>
           <p>
-            We implement appropriate technical and organizational measures to protect your personal information 
-            against unauthorized access, alteration, disclosure, or destruction. This includes:
+            We implement appropriate technical and organizational measures to protect your personal information
+            unauthorized access, alteration, disclosure, or destruction. This includes:
           </p>
           <ul>
             <li>Encryption of data in transit and at rest</li>
@@ -80,9 +75,8 @@
 
           <h2>5. Data Retention</h2>
           <p>
-            We retain your personal information for as long as necessary to provide our services and 
-            fulfill the purposes outlined in this privacy policy. Tournament data is retained until you 
-            delete your account or specific tournaments.
+            We retain your personal information for as long as necessary to provide our services and purposes outlined
+            in this privacy policy. Tournament data is retained until you delete your account or specific tournaments.
           </p>
 
           <h2>6. Your Rights and Choices</h2>
@@ -97,38 +91,37 @@
 
           <h2>7. Cookies and Tracking Technologies</h2>
           <p>
-            We use cookies and similar technologies to enhance your experience, analyze usage patterns, 
-            and provide personalized content. You can control cookie settings through your browser preferences.
+            We use cookies and similar technologies to enhance your experience, analyze usage patterns, and provide
+            personalized content. You can control cookie settings through your browser preferences.
           </p>
 
           <h2>8. International Data Transfers</h2>
           <p>
-            Your information may be transferred to and processed in countries other than your own. 
-            We ensure appropriate safeguards are in place to protect your information in accordance 
-            with applicable data protection laws.
+            Your information may be transferred to and processed in countries other than your own. We ensure appropriate
+            safeguards are in place to protect your information in accordance with applicable data protection laws.
           </p>
 
           <h2>9. Children's Privacy</h2>
           <p>
-            Our service is not intended for children under 13 years of age. We do not knowingly collect 
-            personal information from children under 13. If you are a parent or guardian and believe your 
-            child has provided us with personal information, please contact us.
+            Our service is not intended for children under 13 years of age. We do not knowingly collect information from
+            children under 13. If you are a parent or guardian and believe your child has provided us with personal
+            information, please contact us.
           </p>
 
           <h2>10. Changes to This Privacy Policy</h2>
           <p>
-            We may update this privacy policy from time to time. We will notify you of any changes by 
-            posting the new privacy policy on this page and updating the "Last updated" date. Your continued 
-            use of our service after any changes constitutes acceptance of the updated policy.
+            We may update this privacy policy from time to time. We will notify you of any changes by posting the new
+            privacy policy on this page and updating the "Last updated" date. Your continued use of our service after
+            any changes constitutes acceptance of the updated policy.
           </p>
 
           <h2>11. Contact Us</h2>
-          <p>
-            If you have any questions about this privacy policy or our data practices, please contact us at:
-          </p>
+          <p>If you have any questions about this privacy policy or our data practices, please contact us at:</p>
           <ul>
             <li><strong>Email:</strong> privacy@chesstournament.com</li>
-            <li><strong>Address:</strong> Chess Tournament Manager, Privacy Team, 123 Chess Street, Game City, GC 12345</li>
+            <li>
+              <strong>Address:</strong> Chess Tournament Manager, Privacy Team, 123 Chess Street, Game City, GC 12345
+            </li>
           </ul>
         </div>
       </UCard>
@@ -138,11 +131,12 @@
 
 <script setup lang="ts">
 // Page metadata
-const lastUpdated = 'January 15, 2025'
+const lastUpdated = 'January 15, 2025';
 
 definePageMeta({
   title: 'Privacy Policy - Chess Tournament Manager',
-  description: 'Learn how Chess Tournament Manager collects, uses, and protects your personal information and tournament data.',
-  auth: false
-})
+  description:
+    'Learn how Chess Tournament Manager collects, uses, and protects your personal information and tournament data.',
+  auth: false,
+});
 </script>

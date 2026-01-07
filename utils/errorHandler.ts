@@ -4,42 +4,38 @@
  * Centralized error handling utility that converts console logs to toast notifications
  */
 
-let uiStore: ReturnType<typeof useUIStore> | null = null
+let uiStore: ReturnType<typeof useUIStore> | null = null;
 
 function getUIStore() {
   if (!uiStore) {
-    uiStore = useUIStore()
+    uiStore = useUIStore();
   }
-  return uiStore
+  return uiStore;
 }
 
 /**
  * Handle errors with toast notifications instead of console logs
  */
-export function handleError(
-  error: unknown,
-  context?: string,
-  title?: string
-): void {
-  const store = getUIStore()
+export function handleError(error: unknown, context?: string, title?: string): void {
+  const store = getUIStore();
 
   // Extract error message
-  let message = 'An unexpected error occurred'
+  let message = 'An unexpected error occurred';
   if (error instanceof Error) {
-    message = error.message
+    message = error.message;
   } else if (typeof error === 'string') {
-    message = error
+    message = error;
   } else if (error && typeof error === 'object' && 'message' in error) {
-    message = String(error.message)
+    message = String(error.message);
   }
 
   // Add context if provided
   if (context) {
-    message = `${context}: ${message}`
+    message = `${context}: ${message}`;
   }
 
   // Show error toast
-  store.showError(message, title)
+  store.showError(message, title);
 
   // Still log to console in development for debugging
 }
@@ -47,18 +43,14 @@ export function handleError(
 /**
  * Handle warnings with toast notifications
  */
-export function handleWarning(
-  message: string,
-  context?: string,
-  title?: string
-): void {
-  const store = getUIStore()
+export function handleWarning(message: string, context?: string, title?: string): void {
+  const store = getUIStore();
 
   if (context) {
-    message = `${context}: ${message}`
+    message = `${context}: ${message}`;
   }
 
-  store.showWarning(message, title)
+  store.showWarning(message, title);
 
   // Still log to console in development
 }
@@ -66,18 +58,14 @@ export function handleWarning(
 /**
  * Handle info messages with toast notifications
  */
-export function handleInfo(
-  message: string,
-  context?: string,
-  title?: string
-): void {
-  const store = getUIStore()
+export function handleInfo(message: string, context?: string, title?: string): void {
+  const store = getUIStore();
 
   if (context) {
-    message = `${context}: ${message}`
+    message = `${context}: ${message}`;
   }
 
-  store.showInfo(message, title)
+  store.showInfo(message, title);
 
   // Still log to console in development
 }
@@ -85,18 +73,14 @@ export function handleInfo(
 /**
  * Handle success messages with toast notifications
  */
-export function handleSuccess(
-  message: string,
-  context?: string,
-  title?: string
-): void {
-  const store = getUIStore()
+export function handleSuccess(message: string, context?: string, title?: string): void {
+  const store = getUIStore();
 
   if (context) {
-    message = `${context}: ${message}`
+    message = `${context}: ${message}`;
   }
 
-  store.showSuccess(message, title)
+  store.showSuccess(message, title);
 
   // Still log to console in development
 }
@@ -110,25 +94,21 @@ export async function safeAsync<T>(
   fallbackValue?: T
 ): Promise<T | undefined> {
   try {
-    return await asyncFn()
+    return await asyncFn();
   } catch (error) {
-    handleError(error, context)
-    return fallbackValue
+    handleError(error, context);
+    return fallbackValue;
   }
 }
 
 /**
  * Create a safe function wrapper that handles errors automatically
  */
-export function safe<T>(
-  fn: () => T,
-  context?: string,
-  fallbackValue?: T
-): T | undefined {
+export function safe<T>(fn: () => T, context?: string, fallbackValue?: T): T | undefined {
   try {
-    return fn()
+    return fn();
   } catch (error) {
-    handleError(error, context)
-    return fallbackValue
+    handleError(error, context);
+    return fallbackValue;
   }
 }

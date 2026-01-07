@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 
-import prisma from '../../../lib/prisma'
-import { getCurrentUser } from '../../utils/auth'
+import prisma from '../../../lib/prisma';
+import { getCurrentUser } from '../../utils/auth';
 
 // Validation schema
 const createCompetitorSchema = z.object({
@@ -15,32 +15,25 @@ const createCompetitorSchema = z.object({
   tournamentDocumentUrl: z
     .string()
     .optional()
-    .refine(
-      (val) => !val || val === '' || z.string().url().safeParse(val).success,
-      {
-        message: 'Must be a valid URL or empty',
-      }
-    )
+    .refine(val => !val || val === '' || z.string().url().safeParse(val).success, {
+      message: 'Must be a valid URL or empty',
+    })
     .or(z.null()),
-  playerAcceptanceStatus: z
-    .enum(['PENDING', 'APPROVED', 'REJECTED'])
-    .default('PENDING'),
+  playerAcceptanceStatus: z.enum(['PENDING', 'APPROVED', 'REJECTED']).default('PENDING'),
   adminNotes: z.string().optional().or(z.null()),
   tournamentId: z.string().min(1, 'Tournament ID is required'),
-})
+});
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
-    const body = await readBody(event)
+    const body = await readBody(event);
 
     // Validate input
-    const validatedData = createCompetitorSchema.parse(body)
+    const validatedData = createCompetitorSchema.parse(body);
 
     // Check if user is authenticated (optional for participant registration)
-    const user = await getCurrentUser(event)
-    const isAdmin = user
-      ? user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
-      : false
+    const user = await getCurrentUser(event);
+    const isAdmin = user ? user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' : false;
 
     // Verify tournament exists and is not deleted
     const tournament = await prisma.tournament.findUnique({
@@ -55,13 +48,13 @@ export default defineEventHandler(async (event) => {
         categories: true,
         hasTeams: true,
       },
-    })
+    });
 
     if (!tournament) {
       throw createError({
         statusCode: 404,
         statusMessage: 'Tournament not found',
-      })
+      });
     }
 
     // Check if tournament is open for registration (admins can bypass this)
@@ -69,7 +62,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Tournament is not open for registration',
-      })
+      });
     }
 
     // Validate category is in tournament categories
@@ -77,7 +70,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: `Category "${validatedData.category}" is not available for this tournament`,
-      })
+      });
     }
 
     // Get the next personal number for this tournament
@@ -92,9 +85,9 @@ export default defineEventHandler(async (event) => {
       select: {
         personalNumber: true,
       },
-    })
+    });
 
-    const nextPersonalNumber = (lastCompetitor?.personalNumber ?? 0) + 1
+    const nextPersonalNumber = (lastCompetitor?.personalNumber ?? 0) + 1;
 
     // Create competitor
     const competitor = await prisma.competitor.create({
@@ -115,16 +108,16 @@ export default defineEventHandler(async (event) => {
           },
         },
       },
-    })
+    });
 
     return {
       success: true,
       data: competitor,
       message: 'Participant added successfully',
-    }
+    };
   } catch (error) {
     if (error && typeof error === 'object' && 'statusCode' in error) {
-      throw error
+      throw error;
     }
 
     if (error instanceof z.ZodError) {
@@ -132,7 +125,7 @@ export default defineEventHandler(async (event) => {
         statusCode: 400,
         statusMessage: 'Validation error',
         data: error.issues,
-      })
+      });
     }
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -142,13 +135,18 @@ export default defineEventHandler(async (event) => {
           throw createError({
             statusCode: 400,
             statusMessage: 'A participant with this personal number already exists in this tournament.',
-          })
+          });
         }
-        if (error.meta?.target && Array.isArray(error.meta.target) && error.meta.target.includes('firstName') && error.meta.target.includes('lastName')) {
+        if (
+          error.meta?.target &&
+          Array.isArray(error.meta.target) &&
+          error.meta.target.includes('firstName') &&
+          error.meta.target.includes('lastName')
+        ) {
           throw createError({
             statusCode: 400,
             statusMessage: 'A participant with this name already exists in this tournament.',
-          })
+          });
         }
       }
     }
@@ -156,6 +154,6 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to create participant',
-    })
+    });
   }
-})
+});

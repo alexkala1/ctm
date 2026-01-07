@@ -1,16 +1,16 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-import type { EntityType, AuditAction } from '../../types/tournament'
+import type { EntityType, AuditAction } from '../../types/tournament';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export interface AuditLogData {
-  entityType: EntityType
-  entityId: string
-  action: AuditAction
-  oldValue?: unknown
-  newValue?: unknown
-  changedBy: string
+  entityType: EntityType;
+  entityId: string;
+  action: AuditAction;
+  oldValue?: unknown;
+  newValue?: unknown;
+  changedBy: string;
 }
 
 export async function createAuditLog(data: AuditLogData) {
@@ -25,25 +25,20 @@ export async function createAuditLog(data: AuditLogData) {
         changedBy: data.changedBy,
         changedAt: new Date(),
       },
-    })
+    });
   } catch {
     // Log error in development only
     // Don't throw error to avoid breaking the main operation
   }
 }
 
-export async function getAuditLogs(
-  entityType?: EntityType,
-  entityId?: string,
-  page: number = 1,
-  limit: number = 20
-) {
-  const skip = (page - 1) * limit
+export async function getAuditLogs(entityType?: EntityType, entityId?: string, page: number = 1, limit: number = 20) {
+  const skip = (page - 1) * limit;
 
   const where = {
     ...(entityType && { entityType }),
     ...(entityId && { entityId }),
-  }
+  };
 
   const [logs, total] = await Promise.all([
     prisma.auditLog.findMany({
@@ -62,7 +57,7 @@ export async function getAuditLogs(
       },
     }),
     prisma.auditLog.count({ where }),
-  ])
+  ]);
 
   return {
     data: logs,
@@ -74,7 +69,7 @@ export async function getAuditLogs(
       hasNext: page * limit < total,
       hasPrev: page > 1,
     },
-  }
+  };
 }
 
 export function auditTournamentChange(
@@ -91,7 +86,7 @@ export function auditTournamentChange(
     oldValue: oldData,
     newValue: newData,
     changedBy: userId,
-  })
+  });
 }
 
 export function auditCompetitorChange(
@@ -108,7 +103,7 @@ export function auditCompetitorChange(
     oldValue: oldData,
     newValue: newData,
     changedBy: userId,
-  })
+  });
 }
 
 export function auditUserChange(
@@ -125,7 +120,7 @@ export function auditUserChange(
     oldValue: oldData,
     newValue: newData,
     changedBy,
-  })
+  });
 }
 
 export async function getEntityAuditHistory(
@@ -134,15 +129,11 @@ export async function getEntityAuditHistory(
   page: number = 1,
   limit: number = 20
 ) {
-  return getAuditLogs(entityType, entityId, page, limit)
+  return getAuditLogs(entityType, entityId, page, limit);
 }
 
-export async function getUserActivity(
-  userId: string,
-  page: number = 1,
-  limit: number = 20
-) {
-  const skip = (page - 1) * limit
+export async function getUserActivity(userId: string, page: number = 1, limit: number = 20) {
+  const skip = (page - 1) * limit;
 
   const [logs, total] = await Promise.all([
     prisma.auditLog.findMany({
@@ -161,7 +152,7 @@ export async function getUserActivity(
       },
     }),
     prisma.auditLog.count({ where: { changedBy: userId } }),
-  ])
+  ]);
 
   return {
     data: logs,
@@ -173,7 +164,7 @@ export async function getUserActivity(
       hasNext: page * limit < total,
       hasPrev: page > 1,
     },
-  }
+  };
 }
 
 export async function getRecentActivity(limit: number = 10) {
@@ -189,12 +180,12 @@ export async function getRecentActivity(limit: number = 10) {
         },
       },
     },
-  })
+  });
 }
 
 export async function cleanupOldAuditLogs(daysToKeep: number = 90) {
-  const cutoffDate = new Date()
-  cutoffDate.setDate(cutoffDate.getDate() - daysToKeep)
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
   const result = await prisma.auditLog.deleteMany({
     where: {
@@ -202,7 +193,7 @@ export async function cleanupOldAuditLogs(daysToKeep: number = 90) {
         lt: cutoffDate,
       },
     },
-  })
+  });
 
-  return result.count
+  return result.count;
 }

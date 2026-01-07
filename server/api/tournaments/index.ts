@@ -1,6 +1,5 @@
-export default defineEventHandler(async (_event) => {
+export default defineEventHandler(async _event => {
   try {
-
     return {
       success: true,
       data: {
@@ -12,13 +11,12 @@ export default defineEventHandler(async (_event) => {
           totalPages: 0,
         },
       },
-    }
+    };
   } catch (error: unknown) {
-    if (process.env.NODE_ENV === 'development')
-      console.error('Fetch tournaments error:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Fetch tournaments error:', error);
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to fetch tournaments',
-    })
+    });
   }
-})
+});

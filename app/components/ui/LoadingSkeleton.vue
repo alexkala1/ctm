@@ -42,11 +42,7 @@
       <!-- Mobile Card Layout Skeleton -->
       <div class="block sm:hidden">
         <div class="divide-y divide-gray-200 dark:divide-gray-700">
-          <div
-            v-for="i in 5"
-            :key="i"
-            class="p-4"
-          >
+          <div v-for="i in 5" :key="i" class="p-4">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center space-x-3">
                 <div class="h-4 w-4 bg-gray-200 dark:bg-gray-600 rounded" />
@@ -71,36 +67,46 @@
           <!-- Table Header -->
           <thead class="bg-gray-50 dark:bg-gray-700">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-4" />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-16" />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-20" />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-16" />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-12" />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-16" />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+              >
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-20" />
               </th>
             </tr>
           </thead>
           <!-- Table Body -->
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr
-              v-for="i in 8"
-              :key="i"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
+            <tr v-for="i in 8" :key="i" class="hover:bg-gray-50 dark:hover:bg-gray-700">
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                 <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-4" />
               </td>

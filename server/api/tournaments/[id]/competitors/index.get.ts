@@ -1,14 +1,14 @@
-import prisma from '../../../../../lib/prisma'
+import prisma from '../../../../../lib/prisma';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
-    const tournamentId = getRouterParam(event, 'id')
+    const tournamentId = getRouterParam(event, 'id');
 
     if (!tournamentId) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Tournament ID is required',
-      })
+      });
     }
 
     // Verify tournament exists and is not deleted
@@ -18,13 +18,13 @@ export default defineEventHandler(async (event) => {
         deletedAt: null,
       },
       select: { id: true, name: true },
-    })
+    });
 
     if (!tournament) {
       throw createError({
         statusCode: 404,
         statusMessage: 'Tournament not found',
-      })
+      });
     }
 
     // Get all competitors for the tournament
@@ -44,24 +44,21 @@ export default defineEventHandler(async (event) => {
           },
         },
       },
-    })
+    });
 
     if (process.env.NODE_ENV === 'development')
-      console.log(
-        `Found ${competitors.length} competitors for tournament ${tournamentId}`
-      )
+      console.log(`Found ${competitors.length} competitors for tournament ${tournamentId}`);
 
     return {
       success: true,
       data: competitors,
-    }
+    };
   } catch (error) {
-    if (process.env.NODE_ENV === 'development')
-      console.error('Error fetching competitors:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Error fetching competitors:', error);
 
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to fetch competitors',
-    })
+    });
   }
-})
+});

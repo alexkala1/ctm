@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 
-import type { EmailNotification } from '../../types/tournament'
+import type { EmailNotification } from '../../types/tournament';
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'localhost',
@@ -10,12 +10,12 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-})
+});
 
 export interface EmailTemplate {
-  subject: string
-  html: string
-  text: string
+  subject: string;
+  html: string;
+  text: string;
 }
 
 export const emailTemplates = {
@@ -151,44 +151,33 @@ export const emailTemplates = {
       System Notification
     `,
   },
-}
+};
 
-export function renderTemplate(
-  template: EmailTemplate,
-  data: Record<string, string>
-): EmailTemplate {
+export function renderTemplate(template: EmailTemplate, data: Record<string, string>): EmailTemplate {
   const render = (text: string) => {
     return text.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-      return data[key] || match
-    })
-  }
+      return data[key] || match;
+    });
+  };
 
   return {
     subject: render(template.subject),
     html: render(template.html),
     text: render(template.text),
-  }
+  };
 }
 
-export async function sendEmail(
-  notification: EmailNotification
-): Promise<{ success: boolean; error?: string }> {
+export async function sendEmail(notification: EmailNotification): Promise<{ success: boolean; error?: string }> {
   try {
-    const template =
-      emailTemplates[notification.template as keyof typeof emailTemplates]
+    const template = emailTemplates[notification.template as keyof typeof emailTemplates];
     if (!template) {
-      return { success: false, error: 'Template not found' }
+      return { success: false, error: 'Template not found' };
     }
 
     const rendered = renderTemplate(
       template,
-      Object.fromEntries(
-        Object.entries(notification.data).map(([key, value]) => [
-          key,
-          String(value),
-        ])
-      )
-    )
+      Object.fromEntries(Object.entries(notification.data).map(([key, value]) => [key, String(value)]))
+    );
 
     const mailOptions = {
       from: process.env.SMTP_FROM || 'noreply@tournament.com',
@@ -196,27 +185,26 @@ export async function sendEmail(
       subject: notification.subject ?? rendered.subject,
       html: rendered.html,
       text: rendered.text,
-    }
+    };
 
-    await transporter.sendMail(mailOptions)
-    return { success: true }
+    await transporter.sendMail(mailOptions);
+    return { success: true };
   } catch (error) {
-    if (process.env.NODE_ENV === 'development')
-      console.error('Email sending failed:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Email sending failed:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-    }
+    };
   }
 }
 
 export async function sendCompetitorRegistrationEmail(
   competitor: {
-    firstName: string
-    lastName: string
-    category: string
-    email?: string
-    createdAt: string
+    firstName: string;
+    lastName: string;
+    category: string;
+    email?: string;
+    createdAt: string;
   },
   tournament: { name: string }
 ): Promise<{ success: boolean; error?: string }> {
@@ -226,22 +214,22 @@ export async function sendCompetitorRegistrationEmail(
     tournamentName: tournament.name,
     category: competitor.category,
     registrationDate: new Date(competitor.createdAt).toLocaleDateString(),
-  }
+  };
 
   return sendEmail({
     to: competitor.email || 'competitor@example.com', // In real app, get from user profile
     subject: 'Tournament Registration Confirmation',
     template: 'competitorRegistration',
     data,
-  })
+  });
 }
 
 export async function sendCompetitorApprovalEmail(
   competitor: {
-    firstName: string
-    lastName: string
-    category: string
-    email?: string
+    firstName: string;
+    lastName: string;
+    category: string;
+    email?: string;
   },
   tournament: { name: string; tournamentStart: string; tournamentEnd: string },
   approved: boolean,
@@ -255,26 +243,24 @@ export async function sendCompetitorApprovalEmail(
     tournamentStart: new Date(tournament.tournamentStart).toLocaleDateString(),
     tournamentEnd: new Date(tournament.tournamentEnd).toLocaleDateString(),
     rejectionReason: reason,
-  }
+  };
 
-  const template = approved ? 'competitorApproved' : 'competitorRejected'
+  const template = approved ? 'competitorApproved' : 'competitorRejected';
 
   return sendEmail({
     to: competitor.email || 'competitor@example.com',
-    subject: approved
-      ? 'Tournament Registration Approved'
-      : 'Tournament Registration Update',
+    subject: approved ? 'Tournament Registration Approved' : 'Tournament Registration Update',
     template,
     data,
-  })
+  });
 }
 
 export async function sendAdminNotificationEmail(
   competitor: {
-    firstName: string
-    lastName: string
-    category: string
-    createdAt: string
+    firstName: string;
+    lastName: string;
+    category: string;
+    createdAt: string;
   },
   tournament: { name: string },
   adminEmails: string[]
@@ -285,10 +271,10 @@ export async function sendAdminNotificationEmail(
     tournamentName: tournament.name,
     category: competitor.category,
     registrationDate: new Date(competitor.createdAt).toLocaleDateString(),
-  }
+  };
 
   const results = await Promise.all(
-    adminEmails.map((email) =>
+    adminEmails.map(email =>
       sendEmail({
         to: email,
         subject: 'New Tournament Registration',
@@ -296,17 +282,17 @@ export async function sendAdminNotificationEmail(
         data,
       })
     )
-  )
+  );
 
-  const failed = results.filter((r) => !r.success)
+  const failed = results.filter(r => !r.success);
   if (failed.length > 0) {
     return {
       success: false,
       error: `Failed to send to ${failed.length} admins`,
-    }
+    };
   }
 
-  return { success: true }
+  return { success: true };
 }
 
 export async function sendBulkEmail(
@@ -315,38 +301,38 @@ export async function sendBulkEmail(
   template: string,
   data: Record<string, unknown>
 ): Promise<{
-  success: boolean
-  sent: number
-  failed: number
-  errors: string[]
+  success: boolean;
+  sent: number;
+  failed: number;
+  errors: string[];
 }> {
   const results = await Promise.all(
-    recipients.map(async (email) => {
+    recipients.map(async email => {
       try {
         const result = await sendEmail({
           to: email,
           subject,
           template,
           data,
-        })
-        return { success: result.success, error: result.error }
+        });
+        return { success: result.success, error: result.error };
       } catch (error) {
         return {
           success: false,
           error: error instanceof Error ? error.message : 'Unknown error',
-        }
+        };
       }
     })
-  )
+  );
 
-  const sent = results.filter((r) => r.success).length
-  const failed = results.filter((r) => !r.success)
-  const errors = failed.map((r) => r.error).filter(Boolean) as string[]
+  const sent = results.filter(r => r.success).length;
+  const failed = results.filter(r => !r.success);
+  const errors = failed.map(r => r.error).filter(Boolean) as string[];
 
   return {
     success: failed.length === 0,
     sent,
     failed: failed.length,
     errors,
-  }
+  };
 }

@@ -1,41 +1,25 @@
-# Dependencies
 node_modules/
-
-# Build outputs
 .nuxt/
 .output/
 dist/
 build/
-
-# Logs
+.eslintcache
+*.cache
+.temp/
+.tmp/
 logs/
 *.log
-
-# Environment files
-.env*
-
-# Database
 *.db
 *.sqlite
-
-# Testing
+.env*
+!.env.example
 coverage/
-.nyc_output/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Package manager files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Generated files
-.nuxt/
-coverage/
-*.tsbuildinfo
+.vscode/
+.idea/
+*.swp
+*.swo
+public/
+assets/
+prisma/migrations/

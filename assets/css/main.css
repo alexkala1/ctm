@@ -296,3 +296,49 @@ button[data-variant="ghost"]:hover {
 }
 
 /* Tournament background theme removed - back to original design */
+
+/* Enhanced minimal wallpaper with shapes */
+.app-wallpaper {
+  position: relative;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+    linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-attachment: fixed;
+  background-size: 100% 100vh;
+  background-repeat: no-repeat;
+}
+
+.app-wallpaper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: 
+    /* Very subtle shapes */
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.008) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.008) 0%, transparent 50%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.dark .app-wallpaper {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+    linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background-attachment: fixed;
+  background-size: 100% 100vh;
+  background-repeat: no-repeat;
+}
+
+.dark .app-wallpaper::before {
+  background-image: 
+    /* Very subtle shapes for dark mode */
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.015) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.015) 0%, transparent 50%);
+}

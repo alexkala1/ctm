@@ -1,45 +1,63 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'node:url';
+
+// @ts-expect-error - ignore type errors
 export default defineNuxtConfig({
   ssr: false, // Disable SSR - run as SPA
-  
+
   // Precompilation and loading optimizations
   nitro: {
     prerender: {
-      routes: ['/']
-    }
+      routes: ['/'],
+    },
   },
-  
+
   // Vite optimizations
   vite: {
     resolve: {
       alias: {
-        "~": ".",
-        "@": ".",
-        "~~": ".",
-        "@@": ".",
-      }
+        // Ensure absolute paths and support both with and without trailing slash
+        '~': fileURLToPath(new URL('.', import.meta.url)),
+        '~/': fileURLToPath(new URL('.', import.meta.url)),
+        '@': fileURLToPath(new URL('.', import.meta.url)),
+        '@/': fileURLToPath(new URL('.', import.meta.url)),
+        '~~': fileURLToPath(new URL('.', import.meta.url)),
+        '@@': fileURLToPath(new URL('.', import.meta.url)),
+        '#': fileURLToPath(new URL('.', import.meta.url)),
+        '#/': fileURLToPath(new URL('.', import.meta.url)),
+        // App directory aliases
+        '~/app': fileURLToPath(new URL('./app', import.meta.url)),
+        '~/app/': fileURLToPath(new URL('./app', import.meta.url)),
+      },
     },
     build: {
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: ['vue', 'vue-router']
-          }
-        }
-      }
-    }
+            vendor: ['vue', 'vue-router'],
+          },
+        },
+      },
+    },
   },
-  
-  alias: {
-    "~": ".",
-    "@": ".",
-    "~~": ".",
-    "@@": ".",
+
+  // Auto-imports configuration
+  imports: {
+    dirs: [
+      'composables/**',
+      'utils/**',
+      'stores/**',
+      'types/**',
+      'app/components/**',
+      'app/composables/**',
+      'app/utils/**',
+      'app/stores/**',
+      'app/types/**',
+    ],
   },
-  
+
   modules: [
     '@nuxt/eslint',
-    '@nuxt/image',
     '@nuxt/scripts',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
@@ -47,12 +65,10 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@vee-validate/nuxt',
     '@nuxt/test-utils/module',
-    '@sentry/nuxt/module',
     '@nuxtjs/i18n',
     '@nuxtjs/color-mode',
     '@nuxt/ui',
     'nuxt-viewport',
-    '@sidebase/nuxt-auth',
   ],
 
   // Pinia configuration
@@ -63,10 +79,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Chess Tournament Manager',
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      ],
+      meta: [{ charset: 'utf-8' }, { name: 'viewport', content: 'width=device-width, initial-scale=1' }],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'icon', type: 'image/png', href: '/icon.svg' },
@@ -75,7 +88,10 @@ export default defineNuxtConfig({
         // Google Fonts for multilingual support
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+Greek:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+Greek:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap',
+        },
       ],
     },
   },
@@ -84,7 +100,7 @@ export default defineNuxtConfig({
     preference: 'dark',
     fallback: 'dark',
     classSuffix: '',
-    storageKey: 'ctm-color-mode'
+    storageKey: 'ctm-color-mode',
   },
   runtimeConfig: {
     public: {
@@ -100,7 +116,7 @@ export default defineNuxtConfig({
     height: '4px',
     throttle: 200,
     duration: 5000,
-    continuous: true
+    continuous: true,
   },
 
   // TypeScript configuration
@@ -136,7 +152,7 @@ export default defineNuxtConfig({
         '/terms',
         '/auth',
         '/auth/**',
-        '/ui-demo'
+        '/ui-demo',
       ],
     },
   },
@@ -156,39 +172,4 @@ export default defineNuxtConfig({
     },
     fallbackBreakpoint: 'lg',
   },
-
-  // Auth configuration
-  auth: {
-    // Use same-origin for auth API during dev and prod
-    baseURL: process.env.AUTH_ORIGIN || '',
-    provider: {
-      type: 'local',
-      endpoints: {
-        getSession: { path: '/api/auth/me' },
-        signIn: { path: '/api/auth/login' },
-        signOut: { path: '/api/auth/logout' },
-        getCsrfToken: { path: '/api/auth/csrf' }
-      },
-      pages: {
-        login: '/auth/login'
-      },
-      token: {
-        signInResponseTokenPointer: '/data/token',
-        type: 'Bearer',
-        headerName: 'Authorization',
-        maxAgeInSeconds: 60 * 60 * 24 * 7, // 7 days
-        sameSiteAttribute: 'strict'
-      },
-      sessionDataType: {
-        id: 'string',
-        email: 'string',
-        name: 'string',
-        role: 'string',
-        status: 'string',
-        avatarUrl: 'string',
-        provider: 'string',
-        lastLoginAt: 'string'
-      }
-    }
-  },
-})
+});

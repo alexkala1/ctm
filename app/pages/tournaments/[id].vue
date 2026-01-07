@@ -2,15 +2,8 @@
   <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8">
     <!-- Back Button -->
     <div class="mb-6">
-      <UButton
-        to="/"
-        variant="soft"
-        color="neutral"
-      >
-        <Icon
-          name="i-heroicons-arrow-left"
-          class="w-5 h-5 mr-2"
-        />
+      <UButton to="/" variant="soft" color="neutral">
+        <Icon name="i-heroicons-arrow-left" class="w-5 h-5 mr-2" />
         Back to Tournaments
       </UButton>
     </div>
@@ -20,10 +13,7 @@
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="max-w-2xl mx-auto"
-    >
+    <div v-else-if="error" class="max-w-2xl mx-auto">
       <UiEnhancedErrorAlert
         :title="errorTitle"
         :subtitle="errorSubtitle"
@@ -32,16 +22,13 @@
         :suggestions="errorSuggestions"
         :actions="errorActions"
         :type="errorType"
-        :show-details="true"
+        show-details
         @dismiss="handleErrorDismiss"
       />
     </div>
 
     <!-- Tournament Details -->
-    <div
-      v-else-if="tournament"
-      class="space-y-6"
-    >
+    <div v-else-if="tournament" class="space-y-6">
       <!-- Collapsible Tournament Info -->
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
         <div class="px-4 sm:px-6 py-4">
@@ -51,16 +38,9 @@
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white break-words">
                   {{ tournament.name }}
                 </h1>
-                <UiStatusBadge
-                  :status="tournament.status"
-                  size="lg"
-                  variant="soft"
-                  class="self-start sm:self-auto"
-                />
+                <UiStatusBadge :status="tournament.status" size="lg" variant="soft" class="self-start sm:self-auto" />
               </div>
-              <p class="text-gray-500 dark:text-gray-400">
-                Tournament details and information
-              </p>
+              <p class="text-gray-500 dark:text-gray-400">Tournament details and information</p>
             </div>
             <UButton
               variant="ghost"
@@ -68,30 +48,19 @@
               class="flex items-center space-x-2 self-start sm:self-auto"
               @click="toggleTournamentInfo"
             >
-              <span class="text-sm font-medium">
-                {{ isTournamentInfoExpanded ? 'Hide' : 'Show' }} Details
-              </span>
+              <span class="text-sm font-medium"> {{ isTournamentInfoExpanded ? 'Hide' : 'Show' }} Details </span>
               <Icon
-                :name="
-                  isTournamentInfoExpanded
-                    ? 'i-heroicons-chevron-up'
-                    : 'i-heroicons-chevron-down'
-                "
+                :name="isTournamentInfoExpanded ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
                 class="w-4 h-4"
               />
             </UButton>
           </div>
         </div>
 
-        <div
-          v-if="isTournamentInfoExpanded"
-          class="px-4 sm:px-6 pb-6 border-t border-gray-200 dark:border-gray-700"
-        >
+        <div v-if="isTournamentInfoExpanded" class="px-4 sm:px-6 pb-6 border-t border-gray-200 dark:border-gray-700">
           <!-- Categories -->
           <div class="pt-6 pb-4">
-            <h3
-              class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3"
-            >
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
               Categories
             </h3>
             <div class="flex flex-wrap gap-2">
@@ -108,38 +77,18 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
             <!-- Tournament Schedule -->
             <div class="space-y-4">
-              <h3
-                class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-              >
-                Schedule
-              </h3>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Schedule</h3>
               <div class="space-y-3">
                 <div>
-                  <dt
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    Tournament Start
-                  </dt>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Tournament Start</dt>
                   <dd class="mt-1 text-sm text-gray-900 dark:text-white break-words">
-                    {{
-                      new Date(
-                        tournament.tournamentStart
-                      ).toLocaleDateString()
-                    }}
+                    {{ new Date(tournament.tournamentStart).toLocaleDateString() }}
                   </dd>
                 </div>
                 <div>
-                  <dt
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    Tournament End
-                  </dt>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Tournament End</dt>
                   <dd class="mt-1 text-sm text-gray-900 dark:text-white break-words">
-                    {{
-                      new Date(
-                        tournament.tournamentEnd
-                      ).toLocaleDateString()
-                    }}
+                    {{ new Date(tournament.tournamentEnd).toLocaleDateString() }}
                   </dd>
                 </div>
               </div>
@@ -147,38 +96,18 @@
 
             <!-- Registration -->
             <div class="space-y-4">
-              <h3
-                class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-              >
-                Registration
-              </h3>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Registration</h3>
               <div class="space-y-3">
                 <div>
-                  <dt
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    Registration Start
-                  </dt>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Registration Start</dt>
                   <dd class="mt-1 text-sm text-gray-900 dark:text-white break-words">
-                    {{
-                      new Date(
-                        tournament.tournamentRegistrationStart
-                      ).toLocaleDateString()
-                    }}
+                    {{ new Date(tournament.tournamentRegistrationStart).toLocaleDateString() }}
                   </dd>
                 </div>
                 <div>
-                  <dt
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    Registration End
-                  </dt>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Registration End</dt>
                   <dd class="mt-1 text-sm text-gray-900 dark:text-white break-words">
-                    {{
-                      new Date(
-                        tournament.tournamentRegistrationEnd
-                      ).toLocaleDateString()
-                    }}
+                    {{ new Date(tournament.tournamentRegistrationEnd).toLocaleDateString() }}
                   </dd>
                 </div>
               </div>
@@ -186,24 +115,14 @@
 
             <!-- Tournament Stats -->
             <div class="space-y-4">
-              <h3
-                class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-              >
-                Details
-              </h3>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Details</h3>
               <div class="space-y-3">
                 <div>
-                  <dt
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    Teams Allowed
-                  </dt>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Teams Allowed</dt>
                   <dd class="mt-1 text-sm text-gray-900 dark:text-white">
                     <span
                       :class="
-                        tournament.hasTeams
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-red-600 dark:text-red-400'
+                        tournament.hasTeams ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                       "
                     >
                       {{ tournament.hasTeams ? 'Yes' : 'No' }}
@@ -215,16 +134,9 @@
 
             <!-- Documents & Actions -->
             <div class="space-y-4">
-              <h3
-                class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-              >
-                Resources
-              </h3>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Resources</h3>
               <div class="space-y-3">
-                <div
-                  v-if="tournament.proclamations"
-                  class="flex items-start space-x-3"
-                >
+                <div v-if="tournament.proclamations" class="flex items-start space-x-3">
                   <Icon
                     name="i-heroicons-document-text"
                     class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0 mt-0.5"
@@ -238,14 +150,8 @@
                     Proclamations
                   </a>
                 </div>
-                <div
-                  v-if="tournament.chessResults"
-                  class="flex items-start space-x-3"
-                >
-                  <Icon
-                    name="i-heroicons-trophy"
-                    class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0 mt-0.5"
-                  />
+                <div v-if="tournament.chessResults" class="flex items-start space-x-3">
+                  <Icon name="i-heroicons-trophy" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0 mt-0.5" />
                   <a
                     :href="tournament.chessResults"
                     target="_blank"
@@ -263,10 +169,7 @@
 
       <!-- Participants Section -->
       <div class="mt-8">
-        <div
-          v-if="participantsLoading"
-          class="space-y-4"
-        >
+        <div v-if="participantsLoading" class="space-y-4">
           <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
           <div class="h-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
         </div>
@@ -290,10 +193,7 @@
     </div>
 
     <!-- Not Found State -->
-    <div
-      v-else
-      class="text-center py-12"
-    >
+    <div v-else class="text-center py-12">
       <div class="text-gray-500 dark:text-gray-400">
         <svg
           class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
@@ -308,17 +208,10 @@
             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
           />
         </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-          Tournament not found
-        </h3>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          The tournament you're looking for doesn't exist.
-        </p>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Tournament not found</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">The tournament you're looking for doesn't exist.</p>
         <div class="mt-6">
-          <UButton
-            to="/"
-            color="primary"
-          > Back to Tournaments </UButton>
+          <UButton to="/" color="primary"> Back to Tournaments </UButton>
         </div>
       </div>
     </div>
@@ -441,26 +334,23 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { handleError, handleInfo } from '../../../utils/errorHandler'
-import type {
-  TournamentApiResponse,
-  CompetitorApiResponse,
-  ApiResponse,
-} from '../../../types'
+import { storeToRefs } from 'pinia';
+import { handleError, handleInfo } from '~/utils/errorHandler';
+import type { TournamentApiResponse, CompetitorApiResponse, ApiResponse } from '~/types';
 
 // Import AddParticipantModal for ref typing
-import CompetitorAddParticipantModal from '../../components/competitor/AddParticipantModal.vue'
+import CompetitorAddParticipantModal from '~/app/components/competitor/AddParticipantModal.vue';
 
 // Add participant modal ref
-const addParticipantModalRef = useTemplateRef<InstanceType<typeof CompetitorAddParticipantModal>>('addParticipantModalRef')
+const addParticipantModalRef =
+  useTemplateRef<InstanceType<typeof CompetitorAddParticipantModal>>('addParticipantModalRef');
 
 // Add handleAddParticipant method
 const handleAddParticipant = async () => {
   if (addParticipantModalRef.value) {
-    await addParticipantModalRef.value.submitForm()
+    await addParticipantModalRef.value.submitForm();
   }
-}
+};
 
 // Meta
 useHead({
@@ -471,196 +361,190 @@ useHead({
       content: 'View detailed information about a chess tournament',
     },
   ],
-})
+});
 
 // Get route params
-const route = useRoute()
-const tournamentId = route.params.id as string
+const route = useRoute();
+const tournamentId = route.params.id as string;
 
 // Stores
-const authStore = useAuthStore()
-const { isAuthenticated, isAdmin } = storeToRefs(authStore)
+const authStore = useAuthStore();
+const { isAuthenticated, isAdmin } = storeToRefs(authStore);
 
 // Client-side data fetching for maximum speed
-const tournament = ref<TournamentApiResponse | null>(null)
-const participants = ref<CompetitorApiResponse[]>([])
-const isLoading = ref(true)
-const participantsLoading = ref(true)
-const error = ref<string | null>(null)
-const participantsError = ref<string | null>(null)
+const tournament = ref<TournamentApiResponse | null>(null);
+const participants = ref<CompetitorApiResponse[]>([]);
+const isLoading = ref(true);
+const participantsLoading = ref(true);
+const error = ref<string | null>(null);
+const participantsError = ref<string | null>(null);
 
 // Fetch tournament data
 const loadTournament = async () => {
   try {
-    isLoading.value = true
-    error.value = null
-    const response = await $fetch<ApiResponse<TournamentApiResponse>>(
-      `/api/tournaments/${tournamentId}`
-    )
+    isLoading.value = true;
+    error.value = null;
+    const response = await $fetch<ApiResponse<TournamentApiResponse>>(`/api/tournaments/${tournamentId}`);
     if (response.success && response.data) {
-      tournament.value = response.data
+      tournament.value = response.data;
     } else if (!response.success) {
-      error.value = 'Failed to load tournament'
+      error.value = 'Failed to load tournament';
     }
   } catch (err: unknown) {
     // Avoid global toasts here to prevent duplicate alerts on the page
-    const e = err as { data?: { statusMessage?: string }, statusMessage?: string, message?: string }
-    const msg = e?.data?.statusMessage || e?.statusMessage || e?.message || 'Failed to load tournament'
-    error.value = msg
+    const e = err as { data?: { statusMessage?: string }; statusMessage?: string; message?: string };
+    const msg = e?.data?.statusMessage || e?.statusMessage || e?.message || 'Failed to load tournament';
+    error.value = msg;
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Fetch participants data
 const fetchParticipants = async () => {
   try {
-    participantsLoading.value = true
-    participantsError.value = null
+    participantsLoading.value = true;
+    participantsError.value = null;
     const response = await $fetch<ApiResponse<CompetitorApiResponse[]>>(
       `/api/tournament-competitors?tournamentId=${tournamentId}`
-    )
+    );
     if (response.success && response.data) {
-      participants.value = response.data
+      participants.value = response.data;
     } else if (!response.success) {
-      participantsError.value = 'Failed to load participants'
+      participantsError.value = 'Failed to load participants';
     }
   } catch (err: unknown) {
     // Avoid global toasts here to prevent duplicate alerts
-    const e = err as { data?: { statusMessage?: string }, statusMessage?: string, message?: string }
-    const msg = e?.data?.statusMessage || e?.statusMessage || e?.message || 'Failed to load participants'
-    participantsError.value = msg
+    const e = err as { data?: { statusMessage?: string }; statusMessage?: string; message?: string };
+    const msg = e?.data?.statusMessage || e?.statusMessage || e?.message || 'Failed to load participants';
+    participantsError.value = msg;
   } finally {
-    participantsLoading.value = false
+    participantsLoading.value = false;
   }
-}
+};
 
 // Refresh function for participants
 const refreshParticipants = async () => {
-  await fetchParticipants()
-}
+  await fetchParticipants();
+};
 
 // Fetch data on mount
 onMounted(async () => {
   // Check authentication state first to ensure user data is available
-  await authStore.checkAuth()
-  await loadTournament()
+  await authStore.checkAuth();
+  await loadTournament();
   // Fetch participants in the background so UI doesn't stay in loading state
-  fetchParticipants()
-})
+  fetchParticipants();
+});
 
 // Modals
-const showAddParticipantModal = ref(false)
-const showEditParticipantModal = ref(false)
-const showDetailsModal = ref(false)
-const showModal = ref(false)
-const isImportMode = ref(true)
-const selectedCompetitor = ref<CompetitorApiResponse | null>(null)
+const showAddParticipantModal = ref(false);
+const showEditParticipantModal = ref(false);
+const showDetailsModal = ref(false);
+const showModal = ref(false);
+const isImportMode = ref(true);
+const selectedCompetitor = ref<CompetitorApiResponse | null>(null);
 
 // Role-based access control
 
 const canAddParticipant = computed(() => {
-  if (!tournament.value) return false
-  return tournament.value.status === 'OPEN' || (isAuthenticated.value && isAdmin.value)
-})
+  if (!tournament.value) return false;
+  return tournament.value.status === 'OPEN' || (isAuthenticated.value && isAdmin.value);
+});
 
 const canEditParticipant = computed(() => {
   // Only admins can edit participants
-  return isAdmin.value
-})
+  return isAdmin.value;
+});
 
 // Collapsible state
-const isTournamentInfoExpanded = ref(false)
+const isTournamentInfoExpanded = ref(false);
 
 // Toggle tournament info
 const toggleTournamentInfo = () => {
-  isTournamentInfoExpanded.value = !isTournamentInfoExpanded.value
-}
+  isTournamentInfoExpanded.value = !isTournamentInfoExpanded.value;
+};
 
 // Enhanced error handling
 const errorTitle = computed(() => {
-  if (!error.value) return ''
-  
+  if (!error.value) return '';
+
   if (error.value.includes('404') || error.value.includes('not found')) {
-    return 'Tournament Not Found'
+    return 'Tournament Not Found';
   }
   if (error.value.includes('403') || error.value.includes('unauthorized')) {
-    return 'Access Denied'
+    return 'Access Denied';
   }
   if (error.value.includes('Failed to fetch')) {
-    return 'Connection Problem'
+    return 'Connection Problem';
   }
-  return 'Error Loading Tournament'
-})
+  return 'Error Loading Tournament';
+});
 
 const errorSubtitle = computed(() => {
-  if (!error.value) return ''
-  
+  if (!error.value) return '';
+
   if (error.value.includes('404') || error.value.includes('not found')) {
-    return 'This tournament does not exist or is not available'
+    return 'This tournament does not exist or is not available';
   }
   if (error.value.includes('403') || error.value.includes('unauthorized')) {
-    return 'You don\'t have permission to view this tournament'
+    return "You don't have permission to view this tournament";
   }
   if (error.value.includes('Failed to fetch')) {
-    return 'Unable to connect to the server'
+    return 'Unable to connect to the server';
   }
-  return 'Something went wrong while loading the tournament'
-})
+  return 'Something went wrong while loading the tournament';
+});
 
 const errorDescription = computed(() => {
-  if (!error.value) return ''
-  
+  if (!error.value) return '';
+
   if (error.value.includes('404') || error.value.includes('not found')) {
-    return 'The tournament you\'re looking for may have been deleted, moved, or is not visible to you. Only active tournaments (Open and In Progress) are visible to the public.'
+    return "The tournament you're looking for may have been deleted, moved, or is not visible to you. Only active tournaments (Open and In Progress) are visible to the public.";
   }
   if (error.value.includes('403') || error.value.includes('unauthorized')) {
-    return 'This tournament may be in draft status or finished, which requires admin access to view.'
+    return 'This tournament may be in draft status or finished, which requires admin access to view.';
   }
   if (error.value.includes('Failed to fetch')) {
-    return 'Please check your internet connection and try again.'
+    return 'Please check your internet connection and try again.';
   }
-  return 'We encountered an error while loading the tournament. Please try again or contact support if the problem persists.'
-})
+  return 'We encountered an error while loading the tournament. Please try again or contact support if the problem persists.';
+});
 
 const errorSuggestions = computed(() => {
-  if (!error.value) return []
-  
+  if (!error.value) return [];
+
   if (error.value.includes('404') || error.value.includes('not found')) {
     return [
       'Check if the tournament URL is correct',
       'Verify the tournament exists and is active',
-      'Contact the tournament organizer for more information'
-    ]
+      'Contact the tournament organizer for more information',
+    ];
   }
   if (error.value.includes('403') || error.value.includes('unauthorized')) {
     return [
       'Sign in as an admin to view all tournaments',
       'Contact an administrator for access',
-      'Check if you have the correct permissions'
-    ]
+      'Check if you have the correct permissions',
+    ];
   }
-  return [
-    'Check your internet connection',
-    'Try refreshing the page',
-    'Contact support if the problem persists'
-  ]
-})
+  return ['Check your internet connection', 'Try refreshing the page', 'Contact support if the problem persists'];
+});
 
 const errorType = computed(() => {
-  if (!error.value) return 'error'
-  
+  if (!error.value) return 'error';
+
   if (error.value.includes('404') || error.value.includes('not found')) {
-    return 'warning'
+    return 'warning';
   }
   if (error.value.includes('403') || error.value.includes('unauthorized')) {
-    return 'error'
+    return 'error';
   }
   if (error.value.includes('Failed to fetch')) {
-    return 'network'
+    return 'network';
   }
-  return 'error'
-})
+  return 'error';
+});
 
 const errorActions = computed(() => {
   const actions = [
@@ -668,147 +552,129 @@ const errorActions = computed(() => {
       label: 'Try Again',
       click: loadTournament,
       color: 'primary' as const,
-      icon: 'i-heroicons-arrow-path'
+      icon: 'i-heroicons-arrow-path',
     },
     {
       label: 'Back to Tournaments',
       click: () => navigateTo('/'),
       color: 'neutral' as const,
       variant: 'outline' as const,
-      icon: 'i-heroicons-arrow-left'
-    }
-  ]
-  
+      icon: 'i-heroicons-arrow-left',
+    },
+  ];
+
   if (error.value?.includes('403') || error.value?.includes('unauthorized')) {
     actions.push({
       label: 'Sign In',
-      click: async () => { await navigateTo('/auth/login') },
+      click: async () => {
+        await navigateTo('/auth/login');
+      },
       color: 'primary',
-      icon: 'i-heroicons-arrow-right-on-rectangle'
-    })
+      icon: 'i-heroicons-arrow-right-on-rectangle',
+    });
   }
-  
-  return actions
-})
+
+  return actions;
+});
 
 const handleErrorDismiss = () => {
-  error.value = null
-}
+  error.value = null;
+};
 
 // Data fetching is now handled in onMounted for maximum speed
 
 // Participant actions
 const approveParticipant = async (participantId: string) => {
   try {
-    await $fetch(
-      `/api/tournaments/${tournamentId}/competitors/${participantId}`,
-      {
-        method: 'PUT',
-        body: { playerAcceptanceStatus: 'APPROVED' },
-      }
-    )
-    await refreshParticipants()
+    await $fetch(`/api/tournaments/${tournamentId}/competitors/${participantId}`, {
+      method: 'PUT',
+      body: { playerAcceptanceStatus: 'APPROVED' },
+    });
+    await refreshParticipants();
   } catch (error) {
-    handleError(error, 'Error approving participant', 'Approval Failed')
+    handleError(error, 'Error approving participant', 'Approval Failed');
   }
-}
+};
 
 const rejectParticipant = async (participantId: string) => {
   try {
-    await $fetch(
-      `/api/tournaments/${tournamentId}/competitors/${participantId}`,
-      {
-        method: 'PUT',
-        body: { playerAcceptanceStatus: 'REJECTED' },
-      }
-    )
-    await refreshParticipants()
+    await $fetch(`/api/tournaments/${tournamentId}/competitors/${participantId}`, {
+      method: 'PUT',
+      body: { playerAcceptanceStatus: 'REJECTED' },
+    });
+    await refreshParticipants();
   } catch (error) {
-    handleError(error, 'Error rejecting participant', 'Rejection Failed')
+    handleError(error, 'Error rejecting participant', 'Rejection Failed');
   }
-}
+};
 
 const editParticipant = (participant: CompetitorApiResponse) => {
-  selectedCompetitor.value = participant
-  showEditParticipantModal.value = true
-}
+  selectedCompetitor.value = participant;
+  showEditParticipantModal.value = true;
+};
 
 const deleteParticipant = async (participantId: string) => {
   try {
-    await $fetch(
-      `/api/tournaments/${tournamentId}/competitors/${participantId}`,
-      {
-        method: 'PUT',
-        body: { _delete: true },
-      }
-    )
-    await refreshParticipants()
+    await $fetch(`/api/tournaments/${tournamentId}/competitors/${participantId}`, {
+      method: 'PUT',
+      body: { _delete: true },
+    });
+    await refreshParticipants();
   } catch (error) {
-    handleError(error, 'Error deleting participant', 'Deletion Failed')
+    handleError(error, 'Error deleting participant', 'Deletion Failed');
   }
-}
+};
 
 // Modal event handlers
 const handleAddParticipantClick = () => {
-  showAddParticipantModal.value = true
-}
+  showAddParticipantModal.value = true;
+};
 
 const handleParticipantAdded = async (participant: CompetitorApiResponse) => {
-  console.log('handleParticipantAdded called with:', participant)
-  console.log('Current participants count:', participants.value.length)
-  
   // Show success notification
-  const uiStore = useUIStore()
-  console.log('UI Store:', uiStore)
-  console.log('Calling showInfo...')
-  uiStore.showInfo('Participant added successfully', 'Add Participant Success')
-  console.log('showInfo called')
-  
-  // Close modal
-  showAddParticipantModal.value = false
-  console.log('Modal closed')
-  
-  // Add the new participant to the existing list instead of refetching
-  participants.value.push(participant)
-  console.log('Participant added to list, new count:', participants.value.length)
-}
+  const uiStore = useUIStore();
+  uiStore.showInfo('Participant added successfully', 'Add Participant Success');
 
-const handleParticipantUpdated = async (
-  participant: CompetitorApiResponse
-) => {
-  handleInfo('Participant updated successfully', 'Participant Updated')
+  // Close modal
+  showAddParticipantModal.value = false;
+
+  // Add the new participant to the existing list instead of refetching
+  participants.value.push(participant);
+};
+
+const handleParticipantUpdated = async (participant: CompetitorApiResponse) => {
+  handleInfo('Participant updated successfully', 'Participant Updated');
   // Update the participant in the existing list instead of refetching
-  const index = participants.value.findIndex(p => p.id === participant.id)
+  const index = participants.value.findIndex(p => p.id === participant.id);
   if (index !== -1) {
-    participants.value[index] = participant
+    participants.value[index] = participant;
   }
-}
+};
 
 const viewParticipantDetails = (participant: CompetitorApiResponse) => {
-  selectedCompetitor.value = participant
-  showDetailsModal.value = true
-}
+  selectedCompetitor.value = participant;
+  showDetailsModal.value = true;
+};
 
 // Import/Export handlers
 const handleImportSuccess = async () => {
   // Refresh participants list
-  await fetchParticipants()
-  showModal.value = false
-}
+  await fetchParticipants();
+  showModal.value = false;
+};
 
 const handleExportSuccess = () => {
-  showModal.value = false
-}
+  showModal.value = false;
+};
 
 // Import/Export button handlers
 const handleImportClick = () => {
-  isImportMode.value = true
-  showModal.value = true
-}
+  isImportMode.value = true;
+  showModal.value = true;
+};
 
 const handleExportClick = () => {
-  isImportMode.value = false
-  showModal.value = true
-}
-
+  isImportMode.value = false;
+  showModal.value = true;
+};
 </script>

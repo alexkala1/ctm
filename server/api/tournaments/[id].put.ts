@@ -1,23 +1,23 @@
-import prisma from '../../../lib/prisma'
-import { getCurrentUser, requireAuth, requireAdmin } from '../../utils/auth'
-import { createTournamentSchema } from '../../utils/validation'
+import prisma from '../../../lib/prisma';
+import { getCurrentUser, requireAuth, requireAdmin } from '../../utils/auth';
+import { createTournamentSchema } from '../../utils/validation';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
-    const user = await getCurrentUser(event)
-    requireAuth(user)
-    requireAdmin(user!)
+    const user = await getCurrentUser(event);
+    requireAuth(user);
+    requireAdmin(user!);
 
-    const tournamentId = getRouterParam(event, 'id')
+    const tournamentId = getRouterParam(event, 'id');
     if (!tournamentId) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Tournament ID is required',
-      })
+      });
     }
 
-    const body = await readBody(event)
-    const validatedData = createTournamentSchema.parse(body)
+    const body = await readBody(event);
+    const validatedData = createTournamentSchema.parse(body);
 
     // Check if tournament exists and is not soft deleted
     const existingTournament = await prisma.tournament.findUnique({
@@ -25,13 +25,13 @@ export default defineEventHandler(async (event) => {
         id: tournamentId,
         deletedAt: null, // Only find non-deleted tournaments
       },
-    })
+    });
 
     if (!existingTournament) {
       throw createError({
         statusCode: 404,
         statusMessage: 'Tournament not found',
-      })
+      });
     }
 
     // Check if another tournament with the same name exists (excluding current one and soft-deleted ones)
@@ -41,13 +41,13 @@ export default defineEventHandler(async (event) => {
         id: { not: tournamentId },
         deletedAt: null, // Only check non-deleted tournaments
       },
-    })
+    });
 
     if (duplicateTournament) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Tournament with this name already exists',
-      })
+      });
     }
 
     // Update tournament
@@ -71,22 +71,21 @@ export default defineEventHandler(async (event) => {
           },
         },
       },
-    })
+    });
 
     return {
       success: true,
       data: tournament,
-    }
+    };
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'statusCode' in error) {
-      throw error
+      throw error;
     }
 
-    if (process.env.NODE_ENV === 'development')
-      console.error('Update tournament error:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Update tournament error:', error);
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to update tournament',
-    })
+    });
   }
-})
+});

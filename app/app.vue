@@ -7,7 +7,19 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <NotificationToast />
+    <div>
+      <NotificationToast
+        v-for="n in ui.activeNotifications"
+        :id="n.id"
+        :key="n.id"
+        :type="n.type"
+        :title="n.title"
+        :message="n.message"
+        :duration="n.duration"
+        position="top-center"
+        @close="ui.dismissNotification"
+      />
+    </div>
   </UApp>
 </template>
 
@@ -15,21 +27,21 @@
 // Auto-imports: onMounted, useAuthStore, useUIStore (from Pinia)
 
 // Initialize stores using composable pattern
-const { initialize: initializeUI } = useUIStore()
-const { checkAuth: checkUserAuth } = useAuthStore()
+const ui = useUIStore();
+const { checkAuth: checkUserAuth } = useAuthStore();
 
 // Initialize on app start
 onMounted(async () => {
   try {
     // Initialize UI first
-    initializeUI()
+    ui.initialize();
 
     // Check authentication
-    await checkUserAuth()
+    await checkUserAuth();
   } catch (error) {
-    console.error('App initialization error:', error)
+    console.error('App initialization error:', error);
   }
-})
+});
 </script>
 
 <style>

@@ -1,9 +1,9 @@
-import { PrismaClient, UserRole, UserStatus, AuthProvider } from '@prisma/client'
+import { PrismaClient, UserRole, UserStatus, AuthProvider } from '@prisma/client';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding database...')
+  console.log('🌱 Seeding database...');
 
   // Create test users
   const users = await Promise.all([
@@ -97,18 +97,17 @@ async function main() {
         avatarUrl: 'https://via.placeholder.com/150',
       },
     }),
+  ]);
 
-  ])
-
-  console.log(`✅ Created ${users.length} users`)
-  console.log('🎉 Database seeded successfully!')
+  console.log(`✅ Created ${users.length} users`);
+  console.log('🎉 Database seeded successfully!');
 }
 
 main()
-  .catch((e) => {
-    console.error('❌ Error seeding database:', e)
-    process.exit(1)
+  .catch(e => {
+    console.error('❌ Error seeding database:', e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });

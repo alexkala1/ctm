@@ -1,24 +1,24 @@
-import prisma from '../../../../lib/prisma'
-import { getCurrentUser } from '../../../utils/auth'
-import { log } from '../../../utils/logger'
+import prisma from '../../../../lib/prisma';
+import { getCurrentUser } from '../../../utils/auth';
+import { log } from '../../../utils/logger';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     // Check authentication and admin role
-    const user = await getCurrentUser(event)
+    const user = await getCurrentUser(event);
     if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
       throw createError({
         statusCode: 401,
         statusMessage: 'Unauthorized - Admin access required',
-      })
+      });
     }
 
-    const userId = getRouterParam(event, 'id')
+    const userId = getRouterParam(event, 'id');
     if (!userId) {
       throw createError({
         statusCode: 400,
         statusMessage: 'User ID is required',
-      })
+      });
     }
 
     // Get user details
@@ -70,17 +70,17 @@ export default defineEventHandler(async (event) => {
           },
         },
       },
-    })
+    });
 
     if (!userDetails) {
       throw createError({
         statusCode: 404,
         statusMessage: 'User not found',
-      })
+      });
     }
 
     // Get who approved this user (if applicable)
-    let approvedByUser = null
+    let approvedByUser = null;
     if (userDetails.approvedBy) {
       approvedByUser = await prisma.user.findUnique({
         where: { id: userDetails.approvedBy },
@@ -89,13 +89,13 @@ export default defineEventHandler(async (event) => {
           name: true,
           email: true,
         },
-      })
+      });
     }
 
     log.info('Admin user details accessed', {
       adminId: user.id,
       targetUserId: userId,
-    })
+    });
 
     return {
       success: true,
@@ -103,16 +103,16 @@ export default defineEventHandler(async (event) => {
         ...userDetails,
         approvedByUser,
       },
-    }
+    };
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'statusCode' in error) {
-      throw error
+      throw error;
     }
 
-    log.error('Admin user details error', { error })
+    log.error('Admin user details error', { error });
     throw createError({
       statusCode: 500,
       statusMessage: 'Internal server error',
-    })
+    });
   }
-})
+});

@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest';
 
 import {
   createCompetitorExportData,
   createCompetitorImportSchema,
   validateImportFile,
   generateImportTemplate,
-} from '../../server/utils/importExport'
+} from '~/server/utils/importExport';
 
 describe('Import/Export Utilities', () => {
   describe('createCompetitorExportData', () => {
@@ -25,11 +25,11 @@ describe('Import/Export Utilities', () => {
           createdAt: '2024-01-01T00:00:00Z',
           updatedAt: '2024-01-01T00:00:00Z',
         },
-      ]
+      ];
 
-      const result = createCompetitorExportData(competitors)
+      const result = createCompetitorExportData(competitors);
 
-      expect(result).toHaveLength(1)
+      expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
         'Personal Number': 1,
         'First Name': 'John',
@@ -40,8 +40,8 @@ describe('Import/Export Utilities', () => {
         Status: 'PENDING',
         'Admin Notes': 'Test notes',
         'Registered At': '1/1/2024',
-      })
-    })
+      });
+    });
 
     it('should handle null/undefined values correctly', () => {
       const competitors = [
@@ -59,9 +59,9 @@ describe('Import/Export Utilities', () => {
           createdAt: '2024-01-01T00:00:00Z',
           updatedAt: '2024-01-01T00:00:00Z',
         },
-      ]
+      ];
 
-      const result = createCompetitorExportData(competitors)
+      const result = createCompetitorExportData(competitors);
 
       expect(result[0]).toEqual({
         'Personal Number': 1,
@@ -73,13 +73,13 @@ describe('Import/Export Utilities', () => {
         Status: 'APPROVED',
         'Admin Notes': '',
         'Registered At': '1/1/2024',
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('createCompetitorImportSchema', () => {
     it('should return correct schema structure', () => {
-      const schema = createCompetitorImportSchema()
+      const schema = createCompetitorImportSchema();
 
       expect(schema).toEqual({
         type: 'object',
@@ -91,65 +91,65 @@ describe('Import/Export Utilities', () => {
           category: { type: 'string', minLength: 1 },
           team: { type: 'string', nullable: true },
         },
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('validateImportFile', () => {
     it('should accept valid CSV files', () => {
-      const file = new File(['test'], 'test.csv', { type: 'text/csv' })
-      const result = validateImportFile(file)
+      const file = new File(['test'], 'test.csv', { type: 'text/csv' });
+      const result = validateImportFile(file);
 
-      expect(result.valid).toBe(true)
-      expect(result.error).toBeUndefined()
-    })
+      expect(result.valid).toBe(true);
+      expect(result.error).toBeUndefined();
+    });
 
     it('should accept valid Excel files', () => {
       const file = new File(['test'], 'test.xlsx', {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-      const result = validateImportFile(file)
+      });
+      const result = validateImportFile(file);
 
-      expect(result.valid).toBe(true)
-      expect(result.error).toBeUndefined()
-    })
+      expect(result.valid).toBe(true);
+      expect(result.error).toBeUndefined();
+    });
 
     it('should reject invalid file types', () => {
-      const file = new File(['test'], 'test.txt', { type: 'text/plain' })
-      const result = validateImportFile(file)
+      const file = new File(['test'], 'test.txt', { type: 'text/plain' });
+      const result = validateImportFile(file);
 
-      expect(result.valid).toBe(false)
-      expect(result.error).toContain('File type not supported')
-    })
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('File type not supported');
+    });
 
     it('should reject files that are too large', () => {
-      const largeContent = 'x'.repeat(11 * 1024 * 1024) // 11MB
-      const file = new File([largeContent], 'test.csv', { type: 'text/csv' })
-      const result = validateImportFile(file)
+      const largeContent = 'x'.repeat(11 * 1024 * 1024); // 11MB
+      const file = new File([largeContent], 'test.csv', { type: 'text/csv' });
+      const result = validateImportFile(file);
 
-      expect(result.valid).toBe(false)
-      expect(result.error).toContain('File size exceeds 10MB limit')
-    })
-  })
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('File size exceeds 10MB limit');
+    });
+  });
 
   describe('generateImportTemplate', () => {
     it('should generate competitor template with correct structure', () => {
-      const template = generateImportTemplate('competitor')
+      const template = generateImportTemplate('competitor');
 
-      expect(template).toHaveLength(1)
+      expect(template).toHaveLength(1);
       expect(template[0]).toEqual({
         firstName: 'John',
         lastName: 'Doe',
         gender: 'MALE',
         category: 'Open',
         team: 'Sample Team',
-      })
-    })
+      });
+    });
 
     it('should generate tournament template with correct structure', () => {
-      const template = generateImportTemplate('tournament')
+      const template = generateImportTemplate('tournament');
 
-      expect(template).toHaveLength(1)
+      expect(template).toHaveLength(1);
       expect(template[0]).toEqual({
         name: 'Sample Tournament',
         tournamentStart: '2024-01-01',
@@ -158,7 +158,7 @@ describe('Import/Export Utilities', () => {
         tournamentRegistrationEnd: '2023-12-31',
         categories: 'Open,U18',
         hasTeams: false,
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});

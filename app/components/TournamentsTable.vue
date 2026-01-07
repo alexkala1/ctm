@@ -3,15 +3,12 @@
     <!-- Header -->
     <div>
       <h1 class="text-3xl font-bold text-neutral-900 dark:text-white">Tournaments</h1>
-      <p class="mt-2 text-neutral-600 dark:text-neutral-400">
-        Discover and manage chess tournaments
-      </p>
+      <p class="mt-2 text-neutral-600 dark:text-neutral-400">Discover and manage chess tournaments</p>
     </div>
 
     <!-- Sticky Search and Sort Bar -->
     <div
       class="sticky top-0 z-20 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-card backdrop-blur-sm bg-white/95 dark:bg-neutral-800/95"
-      style="position: sticky; z-index: 20"
     >
       <!-- Search Input - Full Width -->
       <div class="mb-4">
@@ -51,9 +48,7 @@
             />
 
             <UButton
-              :icon="
-                sortOrder === 'asc' ? 'i-heroicons-bars-arrow-up' : 'i-heroicons-bars-arrow-down'
-              "
+              :icon="sortOrder === 'asc' ? 'i-heroicons-bars-arrow-up' : 'i-heroicons-bars-arrow-down'"
               variant="soft"
               size="sm"
               class="flex-shrink-0"
@@ -71,14 +66,9 @@
             color="primary"
             size="sm"
             class="w-full sm:w-auto"
+            icon="i-heroicons-plus"
             @click="showCreateModal = true"
           >
-            <template #icon>
-              <Icon
-                name="i-heroicons-plus"
-                class="w-4 h-4 mr-1.5"
-              />
-            </template>
             <span class="hidden sm:inline">Create Tournament</span>
             <span class="sm:hidden">Create</span>
           </UButton>
@@ -207,38 +197,19 @@
     >
       <template #body>
         <div class="flex items-start space-x-2">
-          <Icon
-            name="i-heroicons-exclamation-triangle"
-            class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"
-          />
+          <Icon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            <strong>{{ tournamentToDelete?.name }}</strong> will be archived and removed from the
-            active tournaments list.
+            <strong>{{ tournamentToDelete?.name }}</strong> will be archived and removed from the active tournaments
+            list.
           </p>
         </div>
       </template>
 
       <template #footer>
         <div class="flex justify-end space-x-3">
-          <UButton
-            color="neutral"
-            variant="soft"
-            :disabled="isDeleting"
-            @click="cancelDelete"
-          >
-            Cancel
-          </UButton>
-          <UButton
-            color="error"
-            :loading="isDeleting"
-            :disabled="isDeleting"
-            @click="confirmDelete"
-          >
-            <Icon
-              v-if="!isDeleting"
-              name="i-heroicons-trash"
-              class="w-6 h-6 mr-2"
-            />
+          <UButton color="neutral" variant="soft" :disabled="isDeleting" @click="cancelDelete"> Cancel </UButton>
+          <UButton color="error" :loading="isDeleting" :disabled="isDeleting" @click="confirmDelete">
+            <Icon v-if="!isDeleting" name="i-heroicons-trash" class="w-6 h-6 mr-2" />
             {{ isDeleting ? 'Deleting...' : 'Delete Tournament' }}
           </UButton>
         </div>
@@ -246,18 +217,10 @@
     </UModal>
 
     <!-- Empty States -->
-    <div
-      v-if="!props.tournaments || props.tournaments.length === 0"
-      class="px-8 py-16 text-center"
-    >
+    <div v-if="!props.tournaments || props.tournaments.length === 0" class="px-8 py-16 text-center">
       <div class="mx-auto max-w-sm">
-        <div
-          class="mx-auto h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
-        >
-          <Icon
-            name="i-heroicons-trophy"
-            class="h-8 w-8 text-gray-400 dark:text-gray-500"
-          />
+        <div class="mx-auto h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <Icon name="i-heroicons-trophy" class="h-8 w-8 text-gray-400 dark:text-gray-500" />
         </div>
         <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No tournaments yet</h3>
         <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -269,32 +232,19 @@
             variant="solid"
             color="primary"
             size="md"
+            icon="i-heroicons-plus"
             @click="openCreateModal"
           >
-            <template #icon>
-              <Icon
-                name="i-heroicons-plus"
-                class="w-6 h-6 mr-2"
-              />
-            </template>
             Create Tournament
           </UButton>
         </div>
       </div>
     </div>
 
-    <div
-      v-else-if="filteredTournaments.length === 0"
-      class="px-8 py-16 text-center"
-    >
+    <div v-else-if="filteredTournaments.length === 0" class="px-8 py-16 text-center">
       <div class="mx-auto max-w-sm">
-        <div
-          class="mx-auto h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
-        >
-          <Icon
-            name="i-heroicons-magnifying-glass"
-            class="h-8 w-8 text-gray-400 dark:text-gray-500"
-          />
+        <div class="mx-auto h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <Icon name="i-heroicons-magnifying-glass" class="h-8 w-8 text-gray-400 dark:text-gray-500" />
         </div>
         <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No tournaments found</h3>
         <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -304,11 +254,7 @@
     </div>
 
     <!-- Tournament Cards Grid -->
-    <div
-      v-else
-      class="tournament-grid"
-      style="position: relative; z-index: 0"
-    >
+    <div v-else class="tournament-grid">
       <div
         v-for="tournament in filteredTournaments"
         :key="tournament.id"
@@ -325,11 +271,7 @@
             >
               {{ tournament.name }}
             </h3>
-            <UiStatusBadge
-              :status="tournament.status"
-              variant="soft"
-              size="xs"
-            />
+            <UiStatusBadge :status="tournament.status" variant="soft" size="xs" />
           </div>
           <div class="flex flex-wrap gap-1">
             <template v-if="!expandedCategories[tournament.id]">
@@ -375,10 +317,7 @@
           <div class="mb-3">
             <div class="flex items-center justify-between text-sm">
               <div class="flex items-center space-x-2">
-                <Icon
-                  name="i-heroicons-calendar-days"
-                  class="w-6 h-6 text-gray-500 dark:text-gray-400"
-                />
+                <Icon name="i-heroicons-calendar-days" class="w-6 h-6 text-gray-500 dark:text-gray-400" />
                 <span class="text-gray-600 dark:text-gray-400 font-medium">Registration Ends</span>
               </div>
               <span class="font-semibold text-gray-900 dark:text-white">
@@ -389,33 +328,23 @@
 
           <!-- Quick Links -->
           <div class="space-y-1 mb-3">
-            <div
-              v-if="tournament.proclamations"
-              class="flex items-center space-x-2"
-            >
-              <Icon
-                name="i-heroicons-document-text"
-                class="w-6 h-6 text-gray-500 dark:text-gray-400"
-              />
+            <div v-if="tournament.proclamations" class="flex items-center space-x-2">
+              <Icon name="i-heroicons-document-text" class="w-6 h-6 text-gray-500 dark:text-gray-400" />
               <a
                 :href="tournament.proclamations"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium hover:underline"
               >
                 Proclamations
               </a>
             </div>
-            <div
-              v-if="tournament.chessResults"
-              class="flex items-center space-x-2"
-            >
-              <Icon
-                name="i-heroicons-trophy"
-                class="w-6 h-6 text-gray-500 dark:text-gray-400"
-              />
+            <div v-if="tournament.chessResults" class="flex items-center space-x-2">
+              <Icon name="i-heroicons-trophy" class="w-6 h-6 text-gray-500 dark:text-gray-400" />
               <a
                 :href="tournament.chessResults"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium hover:underline"
               >
                 Chess Results
@@ -439,10 +368,7 @@
                 size="sm"
                 class="flex-1 flex items-center justify-center gap-2 font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200"
               >
-                <Icon
-                  name="i-heroicons-eye"
-                  class="w-4 h-4"
-                />
+                <Icon name="i-heroicons-eye" class="w-4 h-4" />
                 <span>View</span>
               </UButton>
               <UButton
@@ -453,10 +379,7 @@
                 class="flex-1 flex items-center justify-center gap-2 font-medium hover:bg-info-50 dark:hover:bg-info-900/20 transition-all duration-200"
                 @click="openEditModal(tournament)"
               >
-                <Icon
-                  name="i-heroicons-pencil"
-                  class="w-4 h-4"
-                />
+                <Icon name="i-heroicons-pencil" class="w-4 h-4" />
                 <span>Edit</span>
               </UButton>
               <UButton
@@ -467,10 +390,7 @@
                 class="flex-1 flex items-center justify-center gap-2 font-medium hover:bg-error-50 dark:hover:bg-error-900/20 transition-all duration-200"
                 @click="handleDeleteTournament(tournament)"
               >
-                <Icon
-                  name="i-heroicons-trash"
-                  class="w-4 h-4"
-                />
+                <Icon name="i-heroicons-trash" class="w-4 h-4" />
                 <span>Delete</span>
               </UButton>
             </div>
@@ -482,34 +402,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { format } from 'date-fns'
-import { useRouter } from 'vue-router'
-// Auto-imports: useUIStore (from Pinia)
-// Components are auto-imported from app/components/
-import type { TournamentApiResponse } from '../../types'
+import { format } from 'date-fns';
+import type { TournamentApiResponse } from '~/types';
 
 // Import TournamentEditModal for ref typing
-import TournamentEditModal from './tournament/TournamentEditModal.vue'
+import TournamentEditModal from './tournament/TournamentEditModal.vue';
 // Import TournamentCreateModal for ref typing
-import TournamentCreateModal from './tournament/TournamentCreateModal.vue'
+import TournamentCreateModal from './tournament/TournamentCreateModal.vue';
 
 // Use navigateTo from Nuxt
-const navigateTo = useRouter().push
+const navigateTo = useRouter().push;
 
 // Notification store
-const { showNotification } = useUIStore()
+const { showNotification } = useUIStore();
 
 interface Props {
-  tournaments: TournamentApiResponse[]
-  isAdmin: boolean
+  tournaments: TournamentApiResponse[];
+  isAdmin: boolean;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Search state
-const searchQuery = ref('')
-const statusFilter = ref('all')
+const searchQuery = ref('');
+const statusFilter = ref('all');
 
 // Status filter options - dynamically set based on user role
 const statusOptions = computed(() => {
@@ -517,49 +433,49 @@ const statusOptions = computed(() => {
     { label: 'All Statuses', value: 'all' },
     { label: 'Open', value: 'OPEN' },
     { label: 'In Progress', value: 'IN_PROGRESS' },
-  ]
+  ];
 
   // Only show Draft and Finished for admins
   if (props.isAdmin) {
-    baseOptions.push({ label: 'Draft', value: 'DRAFT' }, { label: 'Finished', value: 'FINISHED' })
+    baseOptions.push({ label: 'Draft', value: 'DRAFT' }, { label: 'Finished', value: 'FINISHED' });
   }
 
-  return baseOptions
-})
+  return baseOptions;
+});
 
 // Sort state
-const sortBy = ref('createdAt')
-const sortOrder = ref<'asc' | 'desc'>('desc')
+const sortBy = ref('createdAt');
+const sortOrder = ref<'asc' | 'desc'>('desc');
 
 // Categories expansion state
-const expandedCategories = ref<Record<string, boolean>>({})
+const expandedCategories = ref<Record<string, boolean>>({});
 
 // Modal state
-const showCreateModal = ref(false)
-const showEditModal = ref(false)
-const selectedTournament = ref<TournamentApiResponse | null>(null)
-const showDeleteConfirmation = ref(false)
-const tournamentToDelete = ref<TournamentApiResponse | null>(null)
-const isDeleting = ref(false)
+const showCreateModal = ref(false);
+const showEditModal = ref(false);
+const selectedTournament = ref<TournamentApiResponse | null>(null);
+const showDeleteConfirmation = ref(false);
+const tournamentToDelete = ref<TournamentApiResponse | null>(null);
+const isDeleting = ref(false);
 
 // Edit modal ref
-const editModalRef = useTemplateRef<InstanceType<typeof TournamentEditModal>>('editModalRef')
+const editModalRef = useTemplateRef<InstanceType<typeof TournamentEditModal>>('editModalRef');
 // Create modal ref
-const createModalRef = useTemplateRef<InstanceType<typeof TournamentCreateModal>>('createModalRef')
+const createModalRef = useTemplateRef<InstanceType<typeof TournamentCreateModal>>('createModalRef');
 
 // Add handleUpdateTournament method
 const handleUpdateTournament = async () => {
   if (editModalRef.value) {
-    await editModalRef.value.submitForm()
+    await editModalRef.value.submitForm();
   }
-}
+};
 
 // Add handleCreateTournament method
 const handleCreateTournament = async () => {
   if (createModalRef.value) {
-    await createModalRef.value.submitForm()
+    await createModalRef.value.submitForm();
   }
-}
+};
 
 // Sort options
 const sortOptions = [
@@ -569,72 +485,72 @@ const sortOptions = [
   { label: 'Tournament Start', value: 'tournamentStart' },
   { label: 'Status', value: 'status' },
   { label: 'Most Participants', value: 'competitors' },
-]
+];
 
 // Handle search
 const handleSearch = (value: string) => {
-  searchQuery.value = value
-}
+  searchQuery.value = value;
+};
 
 // Handle status filter
 const handleStatusFilter = (value: string) => {
-  statusFilter.value = value
-}
+  statusFilter.value = value;
+};
 
 // Handle sort change
 const handleSortChange = (value: string) => {
-  sortBy.value = value
-}
+  sortBy.value = value;
+};
 
 // Toggle sort order
 const toggleSortOrder = () => {
-  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-}
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+};
 
 // Toggle categories expansion
 const toggleCategories = (tournamentId: string) => {
-  expandedCategories.value[tournamentId] = !expandedCategories.value[tournamentId]
-}
+  expandedCategories.value[tournamentId] = !expandedCategories.value[tournamentId];
+};
 
 // Navigate to tournament page
 const navigateToTournament = (tournamentId: string) => {
-  navigateTo(`/tournaments/${tournamentId}`)
-}
+  navigateTo(`/tournaments/${tournamentId}`);
+};
 
 // Computed property for filtered and sorted tournaments
 const filteredTournaments = computed(() => {
-  let tournaments = props.tournaments || []
+  let tournaments = props.tournaments || [];
 
   // Apply search filter
   if (searchQuery.value && searchQuery.value.trim() !== '') {
-    const query = searchQuery.value.toLowerCase().trim()
+    const query = searchQuery.value.toLowerCase().trim();
     tournaments = tournaments.filter(
       tournament =>
         tournament.name.toLowerCase().includes(query) ||
         tournament.status.toLowerCase().includes(query) ||
         tournament.categories?.some((cat: string) => cat.toLowerCase().includes(query)) ||
         tournament.creator?.name?.toLowerCase().includes(query)
-    )
+    );
   }
 
   // Apply status filter
   if (statusFilter.value && statusFilter.value !== 'all') {
-    tournaments = tournaments.filter(tournament => tournament.status === statusFilter.value)
+    tournaments = tournaments.filter(tournament => tournament.status === statusFilter.value);
   }
 
   // Apply sorting
   return tournaments.sort((a, b) => {
-    const aValue = a[sortBy.value as keyof TournamentApiResponse]
-    const bValue = b[sortBy.value as keyof TournamentApiResponse]
+    const aValue = a[sortBy.value as keyof TournamentApiResponse];
+    const bValue = b[sortBy.value as keyof TournamentApiResponse];
 
     // Handle null/undefined values
-    if (aValue == null && bValue == null) return 0
-    if (aValue == null) return sortOrder.value === 'asc' ? 1 : -1
-    if (bValue == null) return sortOrder.value === 'asc' ? -1 : 1
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return sortOrder.value === 'asc' ? 1 : -1;
+    if (bValue == null) return sortOrder.value === 'asc' ? -1 : 1;
 
     // Get comparable values based on the sort field
-    let aComparable: string | number
-    let bComparable: string | number
+    let aComparable: string | number;
+    let bComparable: string | number;
 
     // Handle date sorting
     if (
@@ -642,28 +558,28 @@ const filteredTournaments = computed(() => {
       sortBy.value === 'tournamentStart' ||
       sortBy.value === 'tournamentRegistrationEnd'
     ) {
-      aComparable = new Date(aValue as string).getTime()
-      bComparable = new Date(bValue as string).getTime()
+      aComparable = new Date(aValue as string).getTime();
+      bComparable = new Date(bValue as string).getTime();
     }
     // Handle array sorting (competitors)
     else if (Array.isArray(aValue) && Array.isArray(bValue)) {
-      aComparable = aValue.length
-      bComparable = bValue.length
+      aComparable = aValue.length;
+      bComparable = bValue.length;
     }
     // Handle string sorting (case insensitive)
     else if (typeof aValue === 'string' && typeof bValue === 'string') {
-      aComparable = aValue.toLowerCase()
-      bComparable = bValue.toLowerCase()
+      aComparable = aValue.toLowerCase();
+      bComparable = bValue.toLowerCase();
     }
     // Handle number sorting
     else if (typeof aValue === 'number' && typeof bValue === 'number') {
-      aComparable = aValue
-      bComparable = bValue
+      aComparable = aValue;
+      bComparable = bValue;
     }
     // Handle boolean sorting
     else if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
-      aComparable = aValue ? 1 : 0
-      bComparable = bValue ? 1 : 0
+      aComparable = aValue ? 1 : 0;
+      bComparable = bValue ? 1 : 0;
     }
     // Handle object sorting (creator name)
     else if (
@@ -673,86 +589,79 @@ const filteredTournaments = computed(() => {
       typeof aValue === 'object' &&
       typeof bValue === 'object'
     ) {
-      const aCreator = aValue as { name?: string | null }
-      const bCreator = bValue as { name?: string | null }
-      aComparable = (aCreator.name || '').toLowerCase()
-      bComparable = (bCreator.name || '').toLowerCase()
+      const aCreator = aValue as { name?: string | null };
+      const bCreator = bValue as { name?: string | null };
+      aComparable = (aCreator.name || '').toLowerCase();
+      bComparable = (bCreator.name || '').toLowerCase();
     }
     // Fallback to string conversion
     else {
-      aComparable = String(aValue).toLowerCase()
-      bComparable = String(bValue).toLowerCase()
+      aComparable = String(aValue).toLowerCase();
+      bComparable = String(bValue).toLowerCase();
     }
 
-    if (aComparable < bComparable) return sortOrder.value === 'asc' ? -1 : 1
-    if (aComparable > bComparable) return sortOrder.value === 'asc' ? 1 : -1
-    return 0
-  })
-})
+    if (aComparable < bComparable) return sortOrder.value === 'asc' ? -1 : 1;
+    if (aComparable > bComparable) return sortOrder.value === 'asc' ? 1 : -1;
+    return 0;
+  });
+});
 
 const formatDate = (dateString: string) => {
-  return format(new Date(dateString), 'MMM dd, yyyy')
-}
+  return format(new Date(dateString), 'MMM dd, yyyy');
+};
 
 // Modal methods
 const openCreateModal = () => {
-  showCreateModal.value = true
-}
+  showCreateModal.value = true;
+};
 
 const handleTournamentCreated = (tournament: TournamentApiResponse) => {
-  if (process.env.NODE_ENV === 'development') console.log('Tournament created:', tournament)
-
   // Show success notification
   showNotification({
     title: 'Tournament Created',
     message: `"${tournament.name}" has been successfully created.`,
     type: 'success',
-  })
+  });
 
   // Emit event to parent to refresh the tournaments list
-  emit('tournament-created', tournament)
-  showCreateModal.value = false
-}
+  emit('tournament-created', tournament);
+  showCreateModal.value = false;
+};
 
 const openEditModal = (tournament: TournamentApiResponse) => {
-  selectedTournament.value = tournament
-  showEditModal.value = true
-}
+  selectedTournament.value = tournament;
+  showEditModal.value = true;
+};
 
 const handleTournamentUpdated = (tournament: TournamentApiResponse) => {
-  if (process.env.NODE_ENV === 'development') console.log('Tournament updated:', tournament)
-
   // Show success notification
   showNotification({
     title: 'Tournament Updated',
     message: `"${tournament.name}" has been successfully updated.`,
     type: 'success',
-  })
+  });
 
   // Emit event to parent to refresh the tournaments list
-  emit('tournament-updated', tournament)
-  showEditModal.value = false
-  selectedTournament.value = null
-}
+  emit('tournament-updated', tournament);
+  showEditModal.value = false;
+  selectedTournament.value = null;
+};
 
 const handleDeleteTournament = async (tournament: TournamentApiResponse) => {
-  showDeleteConfirmation.value = true
-  tournamentToDelete.value = tournament
-}
+  showDeleteConfirmation.value = true;
+  tournamentToDelete.value = tournament;
+};
 
 const confirmDelete = async () => {
-  if (!tournamentToDelete.value) return
+  if (!tournamentToDelete.value) return;
 
-  const tournamentName = tournamentToDelete.value.name
-  isDeleting.value = true
+  const tournamentName = tournamentToDelete.value.name;
+  isDeleting.value = true;
 
   try {
-    const response = await $fetch<{ success: boolean }>(
-      `/api/tournaments/${tournamentToDelete.value.id}`,
-      {
-        method: 'DELETE',
-      }
-    )
+    const response = await $fetch<{ success: boolean }>(`/api/tournaments/${tournamentToDelete.value.id}`, {
+      method: 'DELETE',
+    });
 
     if (response.success) {
       // Show success notification
@@ -760,39 +669,39 @@ const confirmDelete = async () => {
         title: 'Tournament Deleted',
         message: `"${tournamentName}" has been successfully deleted.`,
         type: 'success',
-      })
+      });
 
-      emit('tournament-deleted', tournamentToDelete.value.id)
-      showDeleteConfirmation.value = false
-      tournamentToDelete.value = null
+      emit('tournament-deleted', tournamentToDelete.value.id);
+      showDeleteConfirmation.value = false;
+      tournamentToDelete.value = null;
     } else {
-      throw new Error('Failed to delete tournament')
+      throw new Error('Failed to delete tournament');
     }
   } catch (error: unknown) {
-    if (process.env.NODE_ENV === 'development') console.error('Error deleting tournament:', error)
+    if (process.env.NODE_ENV === 'development') console.error('Error deleting tournament:', error);
 
     // Show error notification
     showNotification({
       title: 'Delete Failed',
       message: `Failed to delete "${tournamentName}". Please try again.`,
       type: 'error',
-    })
+    });
   } finally {
-    isDeleting.value = false
+    isDeleting.value = false;
   }
-}
+};
 
 const cancelDelete = () => {
-  showDeleteConfirmation.value = false
-  tournamentToDelete.value = null
-}
+  showDeleteConfirmation.value = false;
+  tournamentToDelete.value = null;
+};
 
 // Emits
 const emit = defineEmits<{
-  'tournament-created': [tournament: TournamentApiResponse]
-  'tournament-updated': [tournament: TournamentApiResponse]
-  'tournament-deleted': [tournamentId: string]
-}>()
+  'tournament-created': [tournament: TournamentApiResponse];
+  'tournament-updated': [tournament: TournamentApiResponse];
+  'tournament-deleted': [tournamentId: string];
+}>();
 </script>
 
 <style scoped>

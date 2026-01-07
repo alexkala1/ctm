@@ -12,16 +12,10 @@
             class="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 hover:scale-105"
           >
             <div class="flex-shrink-0">
-              <img
-                src="/icon.svg"
-                alt="Chess Tournament Manager"
-                class="h-8 w-8"
-              >
+              <img src="/icon.svg" alt="Chess Tournament Manager" class="h-8 w-8" />
             </div>
             <div class="hidden sm:block">
-              <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Chess Tournament Manager
-              </h1>
+              <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Chess Tournament Manager</h1>
             </div>
             <div class="sm:hidden">
               <h1 class="text-lg font-bold text-gray-900 dark:text-white">CTM</h1>
@@ -35,28 +29,13 @@
           <ThemeToggle />
 
           <!-- User Actions -->
-          <div
-            v-if="!isLoading"
-            class="flex items-center space-x-2 sm:space-x-4"
-          >
+          <div v-if="!isLoading" class="flex items-center space-x-2 sm:space-x-4">
             <!-- Not Authenticated -->
             <template v-if="!isAuthenticated">
-              <UButton
-                to="/auth/login"
-                variant="soft"
-                color="neutral"
-                size="sm"
-                class="hidden sm:inline-flex"
-              >
+              <UButton to="/auth/login" variant="soft" color="neutral" size="sm" class="hidden sm:inline-flex">
                 Login
               </UButton>
-              <UButton
-                to="/auth/register"
-                variant="solid"
-                color="primary"
-                size="sm"
-                class="hidden sm:inline-flex"
-              >
+              <UButton to="/auth/register" variant="solid" color="primary" size="sm" class="hidden sm:inline-flex">
                 Register
               </UButton>
               <!-- Mobile Auth Buttons -->
@@ -68,25 +47,14 @@
                   size="sm"
                   icon="i-heroicons-arrow-right-on-rectangle"
                 />
-                <UButton
-                  to="/auth/register"
-                  color="primary"
-                  size="sm"
-                  icon="i-heroicons-user-plus"
-                />
+                <UButton to="/auth/register" color="primary" size="sm" icon="i-heroicons-user-plus" />
               </div>
             </template>
 
             <!-- Authenticated -->
-            <div
-              v-else
-              class="flex items-center space-x-2 sm:space-x-4"
-            >
+            <div v-else class="flex items-center space-x-2 sm:space-x-4">
               <!-- User Dropdown -->
-              <div
-                class="relative"
-                @click.stop
-              >
+              <div class="relative" @click.stop>
                 <UButton
                   variant="soft"
                   color="neutral"
@@ -95,18 +63,12 @@
                   @click="toggleUserMenu"
                 >
                   <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon
-                      name="i-heroicons-user"
-                      class="h-5 w-5 text-primary"
-                    />
+                    <Icon name="i-heroicons-user" class="h-5 w-5 text-primary" />
                   </div>
                   <span class="hidden sm:block text-sm font-medium text-gray-900 dark:text-white">
                     {{ user?.name || 'User' }}
                   </span>
-                  <Icon
-                    name="i-heroicons-chevron-down"
-                    class="h-4 w-4 text-gray-500"
-                  />
+                  <Icon name="i-heroicons-chevron-down" class="h-4 w-4 text-gray-500" />
                 </UButton>
 
                 <!-- Dropdown Menu -->
@@ -122,10 +84,7 @@
                       class="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       @click="navigateTo('/profile')"
                     >
-                      <Icon
-                        name="i-heroicons-user"
-                        class="w-4 h-4 mr-3"
-                      />
+                      <Icon name="i-heroicons-user" class="w-4 h-4 mr-3" />
                       Profile
                     </UButton>
 
@@ -136,10 +95,7 @@
                       class="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       @click="handleLogout"
                     >
-                      <Icon
-                        name="i-heroicons-arrow-right-on-rectangle"
-                        class="w-4 h-4 mr-3"
-                      />
+                      <Icon name="i-heroicons-arrow-right-on-rectangle" class="w-4 h-4 mr-3" />
                       Logout
                     </UButton>
                   </div>
@@ -149,10 +105,7 @@
           </div>
 
           <!-- Loading State -->
-          <div
-            v-else
-            class="flex items-center space-x-2 sm:space-x-4"
-          >
+          <div v-else class="flex items-center space-x-2 sm:space-x-4">
             <div class="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             <div class="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
           </div>
@@ -163,38 +116,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 // Auth composable
-const authStore = useAuthStore()
-const { user, isAuthenticated } = storeToRefs(authStore)
-const { logout: signOut } = authStore
+const authStore = useAuthStore();
+const { user, isAuthenticated } = storeToRefs(authStore);
+const { logout: signOut } = authStore;
 
 // Dropdown state
-const showUserMenu = ref(false)
-const isLoading = ref(false)
+const showUserMenu = ref(false);
+const isLoading = ref(false);
 
 // Toggle user menu
 const toggleUserMenu = () => {
-  showUserMenu.value = !showUserMenu.value
-}
+  showUserMenu.value = !showUserMenu.value;
+};
 
 // Handle logout
 const handleLogout = async () => {
-  console.log('Logout button clicked')
-  showUserMenu.value = false
-  isLoading.value = true
+  showUserMenu.value = false;
+  isLoading.value = true;
   try {
-    await signOut()
+    await signOut();
   } catch (error) {
-    console.error('Logout error:', error)
+    console.error('Logout error:', error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Close menu when clicking outside
 const closeMenu = () => {
-  showUserMenu.value = false
-}
+  showUserMenu.value = false;
+};
 </script>
